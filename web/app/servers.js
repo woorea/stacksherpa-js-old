@@ -1,0 +1,287 @@
+var keyPairs = [
+	{"name" : "eureka.1"},
+	{"name" : "eureka.2"},
+	{"name" : "eureka.3"}
+]
+var securityGroups = [
+	{"id" : "sg.1", "name" : "eureka.1"},
+	{"id" : "sg.2", "name" : "eureka.2"},
+	{"id" : "sg.3", "name" : "eureka.3"}
+]
+var images = [
+	{"id" : "image.1", "name" : "eureka.1"},
+	{"id" : "image.2", "name" : "eureka.2"},
+	{"id" : "image.3", "name" : "eureka.3"}
+]
+var servers = [
+	{"id" : "server.1", "name" : "eureka.1", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"},
+	{"id" : "server.2", "name" : "eureka.2", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"},
+	{"id" : "server.3", "name" : "eureka.3", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"}
+]
+stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile, Servers, Flavor, Image) {
+	
+	$scope.page = 'views/compute/servers/list.html'
+	
+	$scope.onLaunch = function() {
+		
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/launch.html'});
+		
+	}
+
+	$scope.onDelete = function() {
+		
+		$("tbody input[type=checkbox]").each(function(index) {
+			if($(this).is(":checked")) {
+				servers[index].toDelete = true
+			}
+		});
+		
+		$scope.servers = servers = servers.filter(function(server) {
+			return !server.toDelete;
+		});
+		
+		if(!servers.length) {
+			$("thead input[type=checkbox]").prop("checked", false)
+		}
+	}
+
+	$scope.onRefresh = function() {
+		
+		Servers.get(function(data) {
+			
+			$scope.servers = data.servers;
+			$.each($scope.servers, function(idx, server) {
+				Flavor.get({"flavorId" : server.flavor.id}, function(data) {
+					$scope.servers[idx].flavor = data.flavor;
+				});
+				Image.get({"imageId" : server.image.id}, function(data) {
+					$scope.servers[idx].image = data.image;
+				});
+			});
+			
+		});
+	}
+	
+	$scope.onRefresh();
+
+});
+stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routeParams, $location, Server, Flavor, Image) {
+	
+	$scope.page = 'views/compute/servers/show.html'
+	
+	$scope.onReboot = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/reboot.html'});
+	}
+	
+	$scope.onPause = function() {
+		$scope.server.status = 'PAUSED';
+	}
+	
+	$scope.onUnpause = function() {
+		$scope.server.status = 'ACTIVE';
+	}
+	
+	$scope.onSuspend = function() {
+		$scope.server.status = 'SUSPENDED';
+	}
+	
+	$scope.onResume = function() {
+		$scope.server.status = 'ACTIVE';
+	}
+	
+	$scope.onLock = function() {
+		$scope.server.status = 'LOCKED';
+	}
+	
+	$scope.onUnlock = function() {
+		$scope.server.status = 'ACTIVE';
+	}
+	
+	$scope.onShowConsoleOutput = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/console.html'});
+	}
+	
+	$scope.onShowSSHConnectionInformation = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/sshinfo.html'});
+	}
+	
+	$scope.onVNCConnection = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/vnc.html'});
+	}
+	
+	$scope.onCreateImage = function() {
+		alert('create image');
+	}
+	
+	$scope.onChangePassword = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/change-password.html'});
+	}
+	
+	$scope.onCreateBackup = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/backup.html'});
+	}
+	
+	$scope.onRebuild = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/rebuild.html'});
+	}
+	
+	$scope.onResize = function() {
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/servers/resize.html'});
+	}
+	
+	$scope.onResizeConfirm = function() {
+		alert('resize confirm');
+	}
+	
+	$scope.onResizeRevert = function() {
+		alert('resize revert');
+	}
+	
+	/*
+	$scope.server = servers.filter(function(server) {
+		return server.id == $routeParams.serverId
+	})[0];
+	*/
+	
+	$scope.onDelete = function() {
+		$scope.servers = servers = servers.filter(function(server) {
+			return !(server.id == $scope.server.id);
+		});
+		$location.path("/servers")
+	}
+
+	$scope.onRefresh = function() {
+		Server.get(function(data) {
+			$scope.server = data.server;
+			Flavor.get({"flavorId" : data.server.flavor.id}, function(data) {
+				$scope.server.flavor = data.flavor;
+			});
+			Image.get({"imageId" : data.server.image.id}, function(data) {
+				$scope.server.image = data.image;
+			});
+		});
+	}
+
+	$scope.onRefresh();
+
+});
+
+stacksherpa.controller("ServerRebootCtrl", function($rootScope, $scope) {
+	
+	$scope.onReboot = function() {
+		$rootScope.$broadcast('modal.hide');
+	}
+	
+});
+
+stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
+	
+	$scope.server = {
+		metadata : {},
+		personality : [],
+		securityGroups : []
+	}
+	
+	var $steps = $('.step')
+	
+	var $footer = $('.modal-footer')
+	var $previous = $footer.find('.btn-previous')
+	var $next = $footer.find('.btn-next')
+	var $finish = $footer.find('.btn-finish')
+	
+	var ui = function() {
+		$previous.prop("disabled", $scope.step == 0)
+		$next.hide();
+		$finish.hide();
+		if($scope.step == $steps.length - 1) {
+			$next.hide();
+			$finish.show();
+		} else {
+			$next.show();
+			$finish.hide();
+		}
+	}
+	
+	$scope.show = function(step) {
+		if(step >= 0 && step < $steps.length) {
+			$scope.step = step;
+			$steps.hide().filter(":eq("+step+")").show();
+			ui();
+		}
+	}
+	
+	$scope.onCancel = function() {
+		$rootScope.$broadcast('modal.hide');
+	}
+	
+	$scope.onPrevious = function() {
+		$scope.show($scope.step - 1)
+	}
+	
+	$scope.onNext = function() {
+		$scope.show($scope.step + 1)
+	}
+	
+	$scope.onFinish = function() {
+		$scope.onCancel();
+	}
+	
+	$scope.totalSteps = $steps.length;
+	
+	$scope.show(0);
+	
+});
+stacksherpa.controller("LaunchServerSelectImageCtrl",function($scope) {
+
+	$scope.images = images
+	
+	$scope.onSelectImage = function() {
+		$scope.onNext()
+	}
+	
+});
+stacksherpa.controller("LaunchServerConfigurationCtrl",function($scope) {
+
+	$scope.images = images
+	
+	$scope.onSelectImage = function() {
+		$scope.onNext()
+	}
+	
+});
+stacksherpa.controller("LaunchServerMetadataCtrl",function($scope) {
+	
+	$scope.onAddMetadata = function() {
+		$scope.server.metadata[$scope.key] = $scope.value;
+		$scope.key = $scope.value = ''
+	}
+	
+	$scope.onRemoveMetadata = function(key) {
+		delete $scope.server.metadata[key]
+	}
+	
+});
+stacksherpa.controller("LaunchServerPersonalityCtrl",function($scope) {
+	
+	$scope.onAddPersonality = function() {
+		$scope.server.personality.push({"path" : $scope.path, "contents" : $scope.contents});
+		$scope.path = $scope.contents = ''
+	}
+	
+	$scope.onRemovePersonality = function(path) {
+		$scope.server.personality = $scope.server.personality.filter(function(item) {
+			return !(item.path == path);
+		})
+	}
+	
+});
+stacksherpa.controller("LaunchServerSecurityCtrl",function($scope) {
+	$scope.keyPairs = keyPairs
+	
+	$scope.securityGroups = $.map(securityGroups, function(securityGroup) {
+		return {"name" : securityGroup.name}
+	});
+});
+stacksherpa.controller("LaunchServerSummaryCtrl",function($scope) {
+	
+});

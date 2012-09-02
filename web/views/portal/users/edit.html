@@ -1,0 +1,51 @@
+<fieldset>
+	<table style="width: 100%">
+		<tr>
+			<td colspan="2">
+				<label>Company</label>
+				<input type="text" name="company" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>First Name</label>
+				<input type="text" name="firstName" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+			<td>
+				<label>Last Name</label>
+				<input type="text" name="lastName" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>eMail</label>
+				<input type="text" name="email" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+			<td>
+				<label>Phone</label>
+				<input type="text" name="phone" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Language</label>
+				<input type="text" name="language" placeholder="Type something…" />
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+			<td>
+				<label>Currency</label>
+				<select name="currency.id" from="${org.stacksherpa.portal.Currency.list()}" optionKey="id" optionValue="code" class="span12"></select>
+				<span class="help-block">Example block-level help text here.</span>
+			</td>
+		</tr>
+	</table>
+</fieldset>
+<div class="form-actions">
+	<button type="submit" class="btn btn-primary">Update</button>
+	<button class="btn">Cancel</button>
+</div>

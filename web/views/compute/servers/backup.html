@@ -1,0 +1,51 @@
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">Create Backup</h3>
+	</div>
+	<div class="modal-body">
+			<fieldset>
+				<table style="width: 100%">
+					<tr>
+						<td>
+							<label>Name</label>
+							<g:textField name="name" class="span8" />
+							<span class="help-block"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Type</label>
+							<g:select name="type.id" from="[:]" class="span8" />
+							<span class="help-block"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>Rotation</label>
+							<g:textField name="rotation" class="span8" />
+							<span class="help-block"></span>
+						</td>
+					</tr>
+				</table>
+				<hr />
+				<h2>Metadata</h2>
+				<table style="width: 100%; table-layout: fixed">
+					<tr>
+						<th style="text-align: left">Key</th>
+						<th style="text-align: left">Value</th>
+					</tr>
+					<g:each in="${0..5}">
+					<tr>
+						<td><g:textField name="metadata.${it}.key" class="span12" /></td>
+						<td><g:textField name="metadata.${it}.value" class="span12" /></td>
+					</tr>
+					</g:each>
+				</table>
+			</fieldset>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn btn-primary">Backup</button>
+	</div>
+</div>

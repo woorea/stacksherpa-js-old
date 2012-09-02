@@ -1,0 +1,28 @@
+body {
+	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+#server-launch.modal {
+	width: 860px;
+	margin: -250px 0 0 -430px;
+}
+table.details {
+	table-layout: fixed;
+	width: 100%;
+}
+table.details th {
+	text-align: left;
+}
+
+.logo img {
+	display: block;
+	margin: 10px auto 20px;
+}
+.logo .logo-container {
+	height: 130px;
+}
+.logo p {
+	text-align: center
+}
+.white {
+	background-color: white !important;
+}

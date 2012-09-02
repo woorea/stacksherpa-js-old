@@ -1,0 +1,120 @@
+<div class="container-fluid">
+	<div class="row-fluid">
+		<h2>Identity</h2>
+		<div class="span4">
+			<h3>Identity</h3>
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+			<div class="btn-group">
+				<a href="#/identity/tenants" class="btn btn-primary">Manage Identity</a>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<h2>Infrastructure</h2>
+		<hr />
+		<g:set var="compute" value="${serviceCatalog.find {it.type == 'compute'} }" />
+		<g:if test="${compute}">
+		<div class="span4">
+			<h3>Compute (${compute.name})</h3>
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+			<div class="btn-group">
+				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+				<g:each in="${compute.endpoints}" var="endpoint" status="endpointIndex">
+					<li><a href="#/projects/1/region/A/servers">${endpoint.region}</a></li>
+				</g:each>
+				</ul>
+			</div>
+		</div>
+		</g:if>
+		<g:set var="objectStore" value="${serviceCatalog.find {it.type == 'object-store'} }" />
+		<g:if test="${objectStore}">
+		<div class="span4">
+			<h2>Object Storage (${objectStore.name})</h2>
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+			<div class="btn-group">
+				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+				<g:each in="${objectStore.endpoints}" var="endpoint" status="endpointIndex">
+					<li><a href="${createLink(controller : 'containers', action : 'list', params : [tenantId : params.tenantId, regionName : endpoint.region])}">${endpoint.region}</a></li>
+				</g:each>
+				</ul>
+			</div>
+		</div>
+		</g:if>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<h2>Platforms</h2>
+			<hr />
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span3 logo">
+			<div class="well white">
+				<h3>VoIP</h3>
+				<div class="logo-container">
+					<img src="images/paas/asterisk.jpg" />
+				</div>
+				<p><a class="btn stacksherpa-modal" href="${createLink(controller : 'asterisk', action : 'install')}">Install &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+		<div class="span3 logo">
+			<div class="well">
+				<h3>SQL Database</h3>
+				<div class="logo-container">
+					<img src="images/paas/mysql.png" />
+				</div>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+		<div class="span3 logo">
+			<div class="well white">
+				<h3>AMQP</h3>
+				<div class="logo-container">
+					<img src="images/paas/rabbitmq.png" />
+				</div>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+		<div class="span3 logo">
+			<div class="well">
+				<h3>NoSQL Database</h3>
+				<div class="logo-container">
+					<img src="images/paas/mongodb.png" />
+				</div>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+	</div>
+	<div class="row-fluid">
+		<div class="span3 logo">
+			<div class="well white">
+				<h3>Web Container</h3>
+				<div class="logo-container">
+					<img src="images/paas/tomcat.gif" />
+				</div>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+		<div class="span3 logo">
+			<div class="well">
+				<h3>Web Server</h3>
+				<div class="logo-container">
+					<img src="images/paas/apache.png" />
+				</div>
+				<p><a class="btn" href="#">View details &raquo;</a></p>
+			</div>
+		</div><!--/span-->
+</div>
+<div id="stacksherpa-modal" class="modal hide fade" style="width: 960px; margin: -250px 0 0 -480px">
+	<div class="modal-header">
+		<button class="close" data-dismiss="modal">x</button>
+		<h3>Install Asterisk Wizard</h3>
+	</div>
+	<div class="modal-body" style="height: 550px; overflow: hidden">
+		<object type="text/html" id="stacksherpa-modal-body" style="width: 930px; height: 500px"></object>
+	</div>
+</div>

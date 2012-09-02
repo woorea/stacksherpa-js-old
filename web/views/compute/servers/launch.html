@@ -1,0 +1,44 @@
+<div data-ng-controller="ServerLaunchCtrl">
+	<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCancel()">×</button>
+			<h3 id="myModalLabel">Launch Server</h3>
+		</div>
+		<div class="modal-body">
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-select-image.html'"></div>
+			</div>
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-configuration.html'"></div>
+			</div>
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-metadata.html'"></div>
+			</div>
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-personality.html'"></div>
+			</div>
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-security.html'"></div>
+			</div>
+			<div class="step">
+				<div ng-include src="'views/compute/servers/launch-summary.html'"></div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			
+			<table style="width: 100%">
+				<tr>
+					<td style="text-align: left">
+						<a data-ng-click="onCancel()">Cancel</a>
+					</td>
+					<td style="text-align: right">
+						<button class="btn btn-previous" data-ng-click="onPrevious()">Previous</button>
+						<button class="btn btn-next" data-ng-click="onNext()">Next</button>
+						<button class="btn btn-finish" data-ng-click="onFinish()">Finish</button>
+					</td>
+				</tr>
+			</table>
+			
+		</div>
+	</div>
+</div>

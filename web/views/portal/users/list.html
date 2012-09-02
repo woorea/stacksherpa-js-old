@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="layout" content="admin"/>
+		<title>Welcome to Grails</title>
+	</head>
+	<body>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Company</th>
+					<th>Contact</th>
+					<th>Email</th>
+					<th>Phone</th>
+					<th>Since</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<g:each in="${accounts}" var="account" status="status">
+				<tr>
+					<td>${account.id}</td>
+					<td><g:link action="show" id="${account.id}">${account.company}</g:link></td>
+					<td>${account.firstName} ${account.lastName}</td>
+					<td>${account.email}</td>
+					<td>${account.phone}</td>
+					<td>${account.dateCreated}</td>
+					<td><a href="${createLink(action : 'show', id : account.id)}" class="btn">Details</a></td>
+				</tr>
+				</g:each>
+			</tbody>
+		</table>
+
+		<div id="delete-modal" class="modal hide fade">
+		    <div class="modal-header">
+		      <button class="close" data-dismiss="modal">x</button>
+		      <h3>Delete Account</h3>
+		    </div>
+		    <div class="modal-body">
+		      <p>You are about to delete this account, this procedure is irreversible.</p>
+		      <p>Do you want to proceed?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#" class="btn danger">Yes</a>
+		      <a href="#" data-dismiss="modal" class="btn secondary">No</a>
+		    </div>
+		</div>
+	</body>
+</html>

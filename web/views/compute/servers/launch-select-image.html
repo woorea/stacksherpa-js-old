@@ -1,0 +1,20 @@
+<div data-ng-controller="LaunchServerSelectImageCtrl">
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th><br /></th>
+			<th>Image</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-ng-repeat="image in images">
+			<td>[logo]</td>
+			<td>{{image.name}}</td>
+			<td style="text-align: center">
+				<button class="btn" data-ng-click="onSelectImage()"><span class="icon-ok"></span> Select Image</a>
+			</td>
+		</tr>
+	<tbody>
+</table>
+</div>

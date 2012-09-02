@@ -1,0 +1,24 @@
+<h1>Extensions</h1>
+<hr />
+<table class="table">
+	<thead>
+		<tr>
+			<th>Alias</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Namespace</th>
+			<th>Updated</th>
+		</tr>
+	</thead>
+	<tbody style="font-size: 0.9em">
+	<g:each in="${extensions}" var="extension" status="status">
+		<tr>
+			<td>${extension.alias}</td>
+			<td>${extension.name}</td>
+			<td>${extension.description}</td>
+			<td>${extension.namespace}</td>
+			<td>${extension.updated.time}</td>
+		</tr>
+	</g:each>
+	</tbody>
+</table>

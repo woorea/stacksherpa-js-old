@@ -1,0 +1,46 @@
+<div data-ng-controller="LaunchServerConfigurationCtrl">
+	<h1>Server Configuration</h1>
+	
+	<div style="overflow-y: auto">
+	<table class="table">
+		<tr>
+			<td colspan="2">
+				<label>Name</label>
+				<input placeholder="Type something…" ng-model="server.name" />
+				<span class="help-block"></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Administration Password</label>
+				<input type="password" ng-model="server.adminPass" />
+				<span class="help-block"></span>
+			</td>
+			<td class="form-inline">
+				<label>Flavor</label>
+				<select ng-model="flavorRef" from="${flavors}" optionKey="id" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}" value="${serverForCreate?.flavorRef}"></select>
+				<span class="help-block"></span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label>Min.</label>
+				<input name="min" type="number" ng-model="server.min" />
+				<span class="help-block"></span>
+			</td>
+			<td>
+				<label>Max.</label>
+				<input name="max" type="number" ng-model="server.max" />
+				<span class="help-block"></span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<label>Disk Config</label>
+				<select ng-model="diskConfig" ng-options="opt for opt in ['MANUAL','AUTO']" />
+				<span class="help-block"></span>
+			</td>
+		</tr>
+	</table>
+	</div>
+</div>

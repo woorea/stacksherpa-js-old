@@ -1,0 +1,58 @@
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">Create Flavor</h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<table class="table-form">
+				<tr>
+					<td colspan="2">
+						<label>Name</label>
+						<input type="text" name="name" placeholder="Type something…" value="${fieldValue(bean : item, field : 'name')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="name"/></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>RAM</label>
+						<input type="text" name="ram" placeholder="Type something…" value="${fieldValue(bean : item, field : 'ram')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="ram"/></span>
+					</td>
+					<td>
+						<label>vCPUs</label>
+						<input type="text" name="vcpus" placeholder="Type something…" value="${fieldValue(bean : item, field : 'vcpus')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="vcpus"/></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Root Disk (Gb)</label>
+						<input type="text" name="disk" placeholder="Type something…" value="${fieldValue(bean : item, field : 'disk')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="disk"/></span>
+					</td>
+					<td>
+						<label>Swap</label>
+						<input type="text" name="swap" value="${fieldValue(bean : item, field : 'swap')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="swap"/></span>
+					</td>
+				</tr>
+				</tr>
+					<td>
+						<label>Ephemeral Disk (Gb)</label>
+						<input type="text" name="ephemeralGb" value="${fieldValue(bean : item, field : 'ephemeralGb')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="ephemeralGb"/></span>
+					</td>
+					<td>
+						<label>RX/TX</label>
+						<input type="text" name="rxtxFactor" value="${fieldValue(bean : item, field : 'rxtxFactor')}">
+						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="rxtxFactor"/></span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+	</div>
+</div>

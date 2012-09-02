@@ -1,0 +1,19 @@
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">SSH Connection Information</h3>
+	</div>
+	<div class="modal-body">
+		<div class="well">
+			<p><span class="label label-info">Info</span> Here are the steps to connect to this server</p>
+			<ol>
+				<li>Find your private key. This is <strong>${item.keyName}.pem</strong></li>
+				<li>Ensure your key is protected:<br /><strong>chmod 400 ${item.keyName}.pem</strong></li>
+				<li>You can connect using:<br /><strong>ssh -i ${item.keyName}.pem root@${item.addresses.private[1].addr}</strong></li>
+			</ol>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+	</div>
+</div>

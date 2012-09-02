@@ -1,0 +1,53 @@
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">Create Volume</h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<label>Snapshot</label>
+						<select name="snapshotId" from="${snapshots}" class="span8" optionKey="id" optionValue="name" noSelection="${['null':'Select One Snapshot (optional) ...']}" value="${item.snapshotId}"></select>
+						<span class="help-block"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Size</label>
+						<input type="text" name="size" />
+						<span class="help-block">Size in GB.</span>
+					</td>
+				</tr>
+				<!--
+				<tr>
+					<td>
+						<label>Availability Zone</label>
+						<g:textField name="zone" class="span8" />
+						<span class="help-block"></span>
+					</td>
+				</tr>
+				-->
+				<tr>
+					<td>
+						<label>Name</label>
+						<input type="text" name="name" />
+						<span class="help-block"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Description</label>
+						<textarea name="description" class="span8"></textarea>
+						<span class="help-block"></span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+	</div>
+</div>
+

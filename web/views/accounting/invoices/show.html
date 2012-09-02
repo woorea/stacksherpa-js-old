@@ -1,0 +1,52 @@
+<h1 style="margin-bottom: 20px">Invoice ${invoice.id}</h1>
+<table cellspacing="4" cellpadding="4" style="margin-bottom: 20px">
+	<tr>
+		<th style="text-align: right">Issued</th>
+		<td><g:formatDate format="dd MMM yyyy" date="${invoice.issued}" /></td>
+	</tr>
+	<tr>
+		<th style="text-align: right">Due</th>
+		<td><g:formatDate format="dd MMM yyyy" date="${invoice.due}" /></td>
+	</tr>
+	<tr>
+		<th style="text-align: right">Client</th>
+		<td>${invoice.account.company}</td>
+	</tr>
+</table>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>TITLE</th>
+			<th>QTY.</th>
+			<th>PRICE</th>
+			<th>SUBTOTAL</th>
+		</tr>
+	</thead>
+	<tfoot style="font-size: 1.4em">
+		<tr>
+			<td colspan="2"><br /></td>
+			<td style="text-align: right">TAX1 (${invoice.account.tax1})</td>
+			<td style="text-align: right">${invoice.tax1}</td>
+		</tr>
+		<tr>
+			<td colspan="2"><br /></td>
+			<td style="text-align: right">TAX2 (${invoice.account.tax2})</td>
+			<td style="text-align: right">${invoice.tax2}</td>
+		</tr>
+		<tr>
+			<td colspan="2"><br /></td>
+			<td style="text-align: right">TOTAL</td>
+			<td style="text-align: right; font-weight: bold">${invoice.total}</td>
+		</tr>
+	</tfoot>
+	<tbody>
+		<g:each in="${invoice.lines}" var="line" status="status">
+		<tr>
+			<td>${line.title}</td>
+			<td style="text-align: right">${line.quantity}</td>
+			<td style="text-align: right">${line.price}</td>
+			<td style="text-align: right">${line.subtotal}</td>
+		</tr>
+		</g:each>
+	</tbody>
+</table>

@@ -1,0 +1,40 @@
+{
+	"image" : {
+		"OS-DCF:diskConfig": "AUTO",
+		"created": "2012-08-01T00:37:12Z",
+		"id": "d531a2dd-7ae9-4407-bb5a-e5ea03303d98",
+		"links": [{
+			"href": "https://dfw.servers.api.rackspacecloud.com/v2/345789/images/d531a2dd-7ae9-4407-bb5a-e5ea03303d98",
+			"rel": "self"
+		}, {
+			"href": "https://dfw.servers.api.rackspacecloud.com/345789/images/d531a2dd-7ae9-4407-bb5a-e5ea03303d98",
+			"rel": "bookmark"
+		}, {
+			"href": "https://dfw.servers.api.rackspacecloud.com/345789/images/d531a2dd-7ae9-4407-bb5a-e5ea03303d98",
+			"rel": "alternate",
+			"type": "application/vnd.openstack.image"
+		}],
+		"metadata": {
+			"auto_disk_config": "true",
+			"com.rackspace__1__build_core": "1",
+			"com.rackspace__1__build_managed": "1",
+			"com.rackspace__1__build_rackconnect": "1",
+			"com.rackspace__1__options": "0",
+			"com.rackspace__1__visible_core": "1",
+			"com.rackspace__1__visible_managed": "1",
+			"com.rackspace__1__visible_rackconnect": "1",
+			"image_type": "base",
+			"org.openstack__1__architecture": "x64",
+			"org.openstack__1__os_distro": "org.ubuntu",
+			"org.openstack__1__os_version": "10.04",
+			"os_distro": "ubuntu",
+			"os_type": "linux"
+		},
+		"minDisk": 10,
+		"minRam": 512,
+		"name": "Ubuntu 10.04 LTS (Lucid Lynx)",
+		"progress": 100,
+		"status": "ACTIVE",
+		"updated": "2012-08-01T00:37:41Z"
+	}
+}

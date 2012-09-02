@@ -1,0 +1,26 @@
+<div id="login" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">Login</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			<label for='username'>Username:</label>
+			<input type='text' class='text_' name='j_username' id='username' value="user" />
+		</p>
+
+		<p>
+			<label for='password'>Password:</label>
+			<input type='password' class='text_' name='j_password' id='password' value="secret0"/>
+		</p>
+
+		<p id="remember_me_holder">
+			<label class="checkbox">Remember me
+			<input type='checkbox' class='chk' name='${rememberMeParameter}' id='remember_me' />
+			</label>
+		</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onLogin()">Login</button>
+	</div>
+</div>

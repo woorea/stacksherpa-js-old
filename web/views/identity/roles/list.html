@@ -1,0 +1,46 @@
+<h1>Role List</h1>
+<hr />
+<div class="well">
+	<table class="actions">
+		<tr>
+			<td>
+				<button data-ng-click="onCreate()" class="btn"><i class="icon-plus"></i> Create</button>
+				<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
+			</td>
+			<td class="right">
+				<button data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><input type="checkbox" /></th>
+			<th>Id</th>
+			<th>Name</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<g:each in="${items.list}" var="item" status="status">
+		<tr>
+			<td><input type="checkbox" /></td>
+			<td>${item.id}</td>
+			<td>${item.name}</td>
+			<td class="btn-toolbar">
+				<div class="btn-group" style="float: right; margin-right: 35px">
+					<button data-toggle="dropdown" class="btn dropdown-toggle">
+						Quick Actions<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a href="${g.createLink(action : 'edit', params : [roleId : item.id])}"><i class="icon-pencil"></i> Edit</a></li>
+						<li class="divider"></li>
+						<li><a href="${g.createLink(action : 'delete', params : [roleId : item.id])}" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+					</ul>
+				</div>
+			</td>
+		</tr>
+		</g:each>
+	</tbody>
+</table>

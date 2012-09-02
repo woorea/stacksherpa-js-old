@@ -1,0 +1,28 @@
+<div class="well">
+	<ul class="nav nav-list">
+		<li>
+			<div class="btn-group">
+				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Region Name <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+				<g:each in="${serviceCatalog.find { it.type == 'compute'}.endpoints}" var="endpoint" status="endpointIndex">
+					<li><a href="#/projects/1/region/A/servers">${endpoint.region}</a></li>
+				</g:each>
+				</ul>
+			</div>
+		</li>
+		<li class="nav-header">Compute</li>
+		<li><a href="#/projects/1/region/A/servers">Servers</a></li>
+		<li><a href="#/images">Images</a></li>
+		<li><a href="#/flavors">Flavors</a></li>
+		<li class="nav-header">Networking</li>
+		<li><a href="#/floating-ips">Floating Ips</a></li>
+		<li class="nav-header">Block Storage</li>
+		<li><a href="#/volumes">Volumes</a></li>
+		<li><a href="#/snapshots">Snapshots</a></li>
+		<li class="nav-header">Security</li>
+		<li><a href="#/key-pairs">Key Pairs</a></li>
+		<li><a href="#/security-groups">Security Groups</a></li>
+		<li class="divider"></li>
+		<li><a href="#/help">Help</a></li>
+	</ul>
+</div>

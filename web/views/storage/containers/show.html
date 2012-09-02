@@ -1,0 +1,62 @@
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th><input type="checkbox" /></th>
+			<th>Name</th>
+			<th>Size</th>
+			<th>Last Modified</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td></td>
+			<td colspan="4"><a href="${parentLink}">..</td>
+		</tr>
+		<g:each in="${items}" var="item" status="status">
+		<tr>
+			<td><input type="checkbox" /></td>
+			<g:if test="${item.contentType == 'application/directory'}">
+				<td><i class="icon-folder-close"></i> <a href="${createLink(action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, path : item.name])}">${item.name.replaceAll(params.path + '/',"")}</a></td>
+				<td colspan="2"></td>
+				<td style="text-align: center"><a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, objectName : item.name])}" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
+			</g:if>
+			<g:elseif test="${item.contentType != 'application/directory'}">
+				<td><i class="icon-file"></i> <a href="${createLink(action : 'download', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, objectName : item.name])}">${item.name.replaceAll(params.path + '/',"")}</a></td>
+				<td>${item.bytes}</td>
+				<td>${item.lastModified.time}</td>
+				<td class="btn-toolbar" style="text-align: center">
+					<div class="btn-group" style="float: none;">
+						<button data-toggle="dropdown" class="btn dropdown-toggle">
+							Available Actions<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<g:if test="${item.contentType != 'application/directory'}">
+								<li><a href="${createLink(action : 'show', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerId, objectName : item.name])}">Show</a></li>
+								<li><a href="${createLink(action : 'download', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerId, objectName : item.name])}">Download</a></li>
+							</g:if>
+							<li class="divider"></li>
+							<li><a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, objectName : item.name])}" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+						</ul>
+					</div>
+				</td>
+			</g:elseif>
+		</tr>
+		</g:each>
+	</tbody>
+</table>
+
+<div id="delete-modal" class="modal hide fade">
+    <div class="modal-header">
+      <button class="close" data-dismiss="modal">x</button>
+      <h3>Delete Object</h3>
+    </div>
+    <div class="modal-body">
+      <p>You are about to delete this object, this procedure is irreversible.</p>
+      <p>Do you want to proceed?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn danger">Yes</a>
+      <a href="#" data-dismiss="modal" class="btn secondary">No</a>
+    </div>
+</div>

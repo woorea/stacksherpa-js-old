@@ -1,0 +1,15 @@
+<div data-ng-controller="LaunchServerSecurityCtrl">
+<table class="table table-stripped">
+	<tbody>
+		<tr>
+			<td>Key Pair</td>
+			<td><select data-ng-model="server.keyPairName" data-ng-options="keyPair.name as keyPair.name for keyPair in keyPairs"></select></td>
+		</tr>
+		<tr>
+			<td>Security Groups</td>
+			<td><select data-ng-model="server.securityGroups" data-ng-options="securityGroup as securityGroup.name for securityGroup in securityGroups" multiple="multiple"></select></td>
+		</tr>
+	<tbody>
+</table>
+</div>
+{{server|json}}
