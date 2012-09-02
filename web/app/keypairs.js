@@ -41,21 +41,6 @@ stacksherpa.controller("KeyPairListCtrl", function($rootScope, $scope, $compile)
 			}
 		})
 		
-		/*
-		Servers.get(function(data) {
-			
-			
-			$.each($scope.servers, function(idx, server) {
-				Flavor.get({"flavorId" : server.flavor.id}, function(data) {
-					$scope.servers[idx].flavor = data.flavor;
-				});
-				Image.get({"imageId" : server.image.id}, function(data) {
-					$scope.servers[idx].image = data.image;
-				});
-			});
-			
-		});
-		*/
 	}
 	
 	$scope.onRefresh();

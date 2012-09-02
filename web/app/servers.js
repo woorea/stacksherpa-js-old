@@ -18,7 +18,7 @@ var servers = [
 	{"id" : "server.2", "name" : "eureka.2", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"},
 	{"id" : "server.3", "name" : "eureka.3", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"}
 ]
-stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile, Servers, Flavor, Image) {
+stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) {
 	
 	$scope.page = 'views/compute/servers/list.html'
 	
@@ -47,25 +47,24 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile, 
 
 	$scope.onRefresh = function() {
 		
-		Servers.get(function(data) {
-			
+		nova.listServers(function(data) {
 			$scope.servers = data.servers;
 			$.each($scope.servers, function(idx, server) {
-				Flavor.get({"flavorId" : server.flavor.id}, function(data) {
+				nova.showFlavor({"id" : server.flavor.id}, function(data) {
 					$scope.servers[idx].flavor = data.flavor;
 				});
-				Image.get({"imageId" : server.image.id}, function(data) {
+				nova.showImage({"id" : server.image.id}, function(data) {
 					$scope.servers[idx].image = data.image;
 				});
 			});
-			
 		});
+		
 	}
 	
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routeParams, $location, Server, Flavor, Image) {
+stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routeParams, $location) {
 	
 	$scope.page = 'views/compute/servers/show.html'
 	
@@ -151,15 +150,7 @@ stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routePara
 	}
 
 	$scope.onRefresh = function() {
-		Server.get(function(data) {
-			$scope.server = data.server;
-			Flavor.get({"flavorId" : data.server.flavor.id}, function(data) {
-				$scope.server.flavor = data.flavor;
-			});
-			Image.get({"imageId" : data.server.image.id}, function(data) {
-				$scope.server.image = data.image;
-			});
-		});
+		
 	}
 
 	$scope.onRefresh();
