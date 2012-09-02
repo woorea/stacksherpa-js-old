@@ -10,7 +10,7 @@ Keystone.prototype.login = function(auth, success) {
 			alert("success");
 		}
 	})
-	*/
+	
 	$.ajax({
 		crossDomain: true,
 		type : "POST",
@@ -22,6 +22,7 @@ Keystone.prototype.login = function(auth, success) {
 		dataType: "json",
 		success : success
 	})
+	*/
 }
 
 Keystone.prototype.listTenants = function(success) {

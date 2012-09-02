@@ -1,6 +1,4 @@
-var loggedin = false;
-
-var stacksherpa = angular.module("stacksherpa",['ngResource'], function($routeProvider, $locationProvider) {
+var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when("/",{controller : "StackSherpaCtrl", templateUrl : "views/login.html"})
 		
@@ -44,6 +42,7 @@ String.prototype.startsWith = function(prefix) {
     return(this.indexOf(prefix) == 0);
 };
 
+/*
 stacksherpa.factory('Tokens', function($resource) {
 	var res = $resource('data/servers/list.json')
 	//var res = $resource('http://localhost:8080/stacksherpa-http/proxy')
@@ -82,7 +81,9 @@ stacksherpa.factory('Image', function($resource) {
 	return res;
 });
 
-stacksherpa.controller("StackSherpaCtrl", function($scope, $location) {
+*/
+
+stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieStore) {
 	
 	$scope.modal = ''
 
@@ -99,18 +100,23 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location) {
 	}
 	
 	$scope.onLogin = function() {
-		loggedin = true;
+		
+		$cookieStore.put("session", {
+			authenticated : true
+		})
 		$location.path("/projects/1")
 	}
 	
 	$scope.onLogout = function() {
-		loggedin = false;
+		$cookieStore.remove("session")
 		$location.path("/")
 	}
 	
 	$scope.isLoggedIn = function() {
-		return loggedin;
+		return $cookieStore.get("session");
 	}
+	
+	
 
 })
 
