@@ -2,6 +2,8 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 	$routeProvider
 		.when("/",{controller : "StackSherpaCtrl", templateUrl : "views/login.html"})
 		
+		.when("/unscoped-token",{controller : "UnscopedTokenCtrl", templateUrl : "views/portal/unscoped.html"})
+		
 		.when("/portal/myaccount",{controller : "PortalUserEditCtrl", templateUrl : "views/portal/layout.html"})
 		.when("/portal/usage",{controller : "PortalUsageListCtrl", templateUrl : "views/portal/layout.html"})
 		.when("/portal/usage/aggregate",{controller : "PortalUsageAggregateListCtrl", templateUrl : "views/portal/layout.html"})
@@ -42,47 +44,6 @@ String.prototype.startsWith = function(prefix) {
     return(this.indexOf(prefix) == 0);
 };
 
-/*
-stacksherpa.factory('Tokens', function($resource) {
-	var res = $resource('data/servers/list.json')
-	//var res = $resource('http://localhost:8080/stacksherpa-http/proxy')
-	return res;
-});
-
-stacksherpa.factory('Servers', function($resource) {
-	var res = $resource('data/servers/list.json')
-	//var res = $resource('http://localhost:8080/stacksherpa-proxy/proxy')
-	console.log(res)
-	return res;
-});
-
-stacksherpa.factory('Server', function($resource) {
-	var res = $resource('data/servers/show.json')
-	return res;
-});
-
-stacksherpa.factory('Flavors', function($resource) {
-	var res = $resource('data/flavors/list.json')
-	return res;
-});
-
-stacksherpa.factory('Flavor', function($resource) {
-	var res = $resource('data/flavors/show.json')
-	return res;
-});
-
-stacksherpa.factory('Images', function($resource) {
-	var res = $resource('data/images/list.json')
-	return res;
-});
-
-stacksherpa.factory('Image', function($resource) {
-	var res = $resource('data/images/show.json')
-	return res;
-});
-
-*/
-
 stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieStore) {
 	
 	$scope.modal = ''
@@ -101,25 +62,79 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 	
 	$scope.onLogin = function() {
 		
-		$cookieStore.put("session", {
-			authenticated : true
-		})
-		$location.path("/projects/1")
+		keystone.login({
+			auth : {
+				passwordCredentials : {
+					username : $scope.username,
+					password : $scope.password
+				}
+			}
+		}, function(data) {
+			$cookieStore.put("access", data.access)
+			keystone.listTenants(function(data) {
+				$cookieStore.put("tenants", data.tenants);
+				
+				$location.path("/unscoped-token");
+				$scope.$apply();
+			});	
+		});
 	}
 	
 	$scope.onLogout = function() {
-		$cookieStore.remove("session")
+		$cookieStore.remove("access")
 		$location.path("/")
 	}
 	
 	$scope.isLoggedIn = function() {
-		return $cookieStore.get("session");
+		var access = $cookieStore.get("access");
+		return access != null;
 	}
 	
+})
+
+stacksherpa.controller("UnscopedTokenCtrl", function($scope, $location, $cookieStore) {
 	
+	$scope.tenants = $cookieStore.get("tenants");
+	
+	$scope.onTenantSelected = function(tenant) {
+		keystone.exchangeToken(function(data) {
+			$cookieStore.put("access", data.access)
+			$location.path("/projects/" + tenant.id)
+			$scope.$apply();
+		});
+	}
+	/*
+	if($scope.tenants == null) {
+		keystone.listTenants(function(data) {
+			$scope.tenants = data.tenants
+			$cookieStore.put("tenants", data.tenants)
+		});
+	}
+	*/
 
 })
 
-stacksherpa.controller("ProjectCtrl", function($scope, $location) {
+stacksherpa.controller("ProjectCtrl", function($scope, $location, $cookieStore) {
+	
+	var access = $cookieStore.get("access")
+	
+	$scope.tenantId = access.token.tenant.id
+	
+	$scope.isKeystoneAdmin = access.user.roles.filter(function(role){
+		return role.name == 'KeystoneAdmin'
+	}).length > 1;
+	
+	if($scope.isKeystoneAdmin) {
+		$scope.identity = access.serviceCatalog.filter(function(service) {
+			return service.type == 'identity'
+		})[0]
+	}
+
+	$scope.compute = access.serviceCatalog.filter(function(service) {
+		return service.type == 'compute'
+	})[0]
+	$scope.storage = access.serviceCatalog.filter(function(service) {
+		return service.type == 'object-store'
+	})[0]
 	
 })

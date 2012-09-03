@@ -48,15 +48,18 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) 
 	$scope.onRefresh = function() {
 		
 		nova.listServers(function(data) {
-			$scope.servers = data.servers;
-			$.each($scope.servers, function(idx, server) {
+			var servers = data.servers;
+			$.each(servers, function(idx, server) {
 				nova.showFlavor({"id" : server.flavor.id}, function(data) {
-					$scope.servers[idx].flavor = data.flavor;
+					servers[idx].flavor = data.flavor;
+					$scope.$digest();
 				});
 				nova.showImage({"id" : server.image.id}, function(data) {
-					$scope.servers[idx].image = data.image;
+					servers[idx].image = data.image;
+					$scope.$digest();
 				});
 			});
+			$scope.servers = servers;
 		});
 		
 	}

@@ -11,7 +11,7 @@
 	</head>
 	<body data-ng-controller="StackSherpaCtrl">
 		
-		<div ng-include src="'views/common/top.html'" ></div>
+		<div ng-include src="'views/common/top.html'" ng-show="isLoggedIn()"></div>
 		
 		<div class="container" data-ng-view=""></div>
 		<div id="modal" ng-include src="modal"></div>

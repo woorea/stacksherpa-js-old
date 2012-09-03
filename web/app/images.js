@@ -34,6 +34,7 @@ stacksherpa.controller("ImageListCtrl", function($rootScope, $scope, $compile) {
 	$scope.onRefresh = function() {
 		nova.listImages(function(data) {
 			$scope.images = data.images;
+			$scope.$apply();
 		});
 	}
 	
@@ -51,6 +52,8 @@ stacksherpa.controller("ImageListCtrl", function($rootScope, $scope, $compile) {
 			return 'images/icons/linux.png';
 		}
 	}
+	
+	$scope.onRefresh();
 
 });
 stacksherpa.controller("ImageShowCtrl", function($rootScope, $scope, $routeParams, $location) {

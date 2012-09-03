@@ -1,5 +1,5 @@
 <div class="container-fluid">
-	<div class="row-fluid">
+	<div class="row-fluid" ng-show="isKeystoneAdmin">
 		<h2>Identity</h2>
 		<div class="span4">
 			<h3>Identity</h3>
@@ -12,39 +12,35 @@
 	<div class="row-fluid">
 		<h2>Infrastructure</h2>
 		<hr />
-		<g:set var="compute" value="${serviceCatalog.find {it.type == 'compute'} }" />
-		<g:if test="${compute}">
-		<div class="span4">
-			<h3>Compute (${compute.name})</h3>
+		
+		<div class="span4" ng-show="compute != null">
+			<h3>Compute ({{compute.name}})</h3>
 			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
 			<div class="btn-group">
 				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 				<ul class="dropdown-menu">
-				<g:each in="${compute.endpoints}" var="endpoint" status="endpointIndex">
-					<li><a href="#/projects/1/region/A/servers">${endpoint.region}</a></li>
-				</g:each>
+					<li ng-repeat="endpoint in compute.endpoints">
+						<a href="#/projects/{{tenantId}}/region/{{endpoint.region}}/servers">{{endpoint.region}}</a>
+					</li>
 				</ul>
 			</div>
 		</div>
-		</g:if>
-		<g:set var="objectStore" value="${serviceCatalog.find {it.type == 'object-store'} }" />
-		<g:if test="${objectStore}">
-		<div class="span4">
-			<h2>Object Storage (${objectStore.name})</h2>
+		
+		<div class="span4" ng-show="storage != null">
+			<h2>Object Storage ({{storage.name}})</h2>
 			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
 			<div class="btn-group">
 				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 				<ul class="dropdown-menu">
-				<g:each in="${objectStore.endpoints}" var="endpoint" status="endpointIndex">
-					<li><a href="${createLink(controller : 'containers', action : 'list', params : [tenantId : params.tenantId, regionName : endpoint.region])}">${endpoint.region}</a></li>
-				</g:each>
+					<li ng-repeat="endpoint in storage.endpoints">
+						<a href="#/projects/{{tenantId}}/region/{{endpoint.region}}/containers">${endpoint.region}</a>
+					</li>
 				</ul>
 			</div>
 		</div>
-		</g:if>
 	</div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" ng-show="false">
 	<div class="row-fluid">
 		<div class="span12">
 			<h2>Platforms</h2>
