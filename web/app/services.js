@@ -28,6 +28,7 @@ stacksherpa.controller("ServiceListCtrl", function($rootScope, $scope, $compile)
 	$scope.onRefresh = function() {
 		keystone.listServices(function(data) {
 			$scope.services = data.services;
+			$scope.$apply();
 		});
 	}
 	

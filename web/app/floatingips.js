@@ -45,19 +45,10 @@ stacksherpa.controller("FloatingIpListCtrl", function($rootScope, $scope, $compi
 
 	$scope.onRefresh = function() {
 		
-		$.ajax({
-			crossDomain: true,
-			type : "GET",
-			url : "data/flavors/list.json",
-			headers : {
-				//"X-URL" : "/tenants",
-				//"X-Auth-Token" : data.access.token.id
-			},
-			dataType: "json",
-			success : function(data) {
-				$scope.images = data.images;
-			}
-		})
+		nova.listFloatingIps(function(data) {
+			$scope.floating_ips = data.floating_ips;
+			$scope.$apply();
+		});
 		
 	}
 	

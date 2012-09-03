@@ -28,6 +28,7 @@ stacksherpa.controller("EndpointListCtrl", function($rootScope, $scope, $compile
 	$scope.onRefresh = function() {
 		keystone.listEndpoints(function(data) {
 			$scope.endpoints = data.endpoints;
+			$scope.$apply();
 		});
 	}
 	

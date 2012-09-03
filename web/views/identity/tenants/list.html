@@ -24,16 +24,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="tenant in tenants">
 			<td><input type="checkbox" /></td>
-			<td><a href="#/identity/tenants/1">${item.name}</a></td>
-			<td>${item.description}</td>
-			<td>${item.enabled}</td>
+			<td><a href="#/identity/tenants/{{tenant.id}}">{{tenant.name}}</a></td>
+			<td>{{item.description}}</td>
+			<td>{{item.enabled}}</td>
 			<td class="right">
-				<a href="${createLink(action : 'delete', params : [tenantId : item.id])}" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
+				<button ng-click="onDelete()" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

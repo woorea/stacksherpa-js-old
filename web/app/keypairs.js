@@ -27,19 +27,10 @@ stacksherpa.controller("KeyPairListCtrl", function($rootScope, $scope, $compile)
 
 	$scope.onRefresh = function() {
 		
-		$.ajax({
-			crossDomain: true,
-			type : "GET",
-			url : "data/flavors/list.json",
-			headers : {
-				//"X-URL" : "/tenants",
-				//"X-Auth-Token" : data.access.token.id
-			},
-			dataType: "json",
-			success : function(data) {
-				$scope.images = data.images;
-			}
-		})
+		nova.listKeyPairs(function(data) {
+			$scope.keypairs = data.keypairs;
+			$scope.$apply();
+		});
 		
 	}
 	

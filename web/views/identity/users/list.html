@@ -26,26 +26,20 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list.sort { it.tenantId }}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="item in users">
 			<td><input type="checkbox" /></td>
-			<td>${item.id}</td>
-			<td>${item.name}</td>
-			<td>${item.email}</td>
+			<td>{{item.id}}</td>
+			<td>{{item.name}}</td>
+			<td>{{item.email}}</td>
 			<td>
-				<g:if test="${item.tenantId}">
-				<a href="#/identity/tenants/1">${item.tenantId}</a>
-				</g:if>
-				<g:else>
-				N/A
-				</g:else>
+				<a href="#/identity/tenants/{{item.tenantId}}" ng-show="item.tenantId.length">{{item.tenantId}}</a>
+				<span ng-show="!item.tenantId.length">N/A</span>
 			</td>
-			<td>${item.enabled}</td>
+			<td>{{item.enabled}}</td>
 			<td style="text-align:right">
-				<a href="${g.createLink(action : 'delete', params : [userId : item.id])}" class="btn confirm-delete">
+				<button ng-click="onDelete()" class="btn confirm-delete">
 					<i class="icon-remove"></i> Delete</a>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

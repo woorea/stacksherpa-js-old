@@ -7,7 +7,7 @@
 				<button class="btn" data-ng-click="onCreateVolume()"><i class="icon-plus"></i> Create Volume</button>
 			</td>
 			<td class="right">
-				<a href="${createLink(action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName])}" class="btn"><i class="icon-refresh"></i> Refresh</a>
+				<a data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
 			</td>
 		</tr>
 	</table>
@@ -26,28 +26,26 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="item in snapshots">
 			<td><input type="checkbox" /></td>
-			<td>${item.id}</td>
-			<td>${item.name}</td>
-			<td>${item.description}</td>
-			<td>${item.volumeId}</td>
-			<td>${item.status}</td>
-			<td>${item.created}</td>
+			<td>{{item.id}}</td>
+			<td>{{item.displayName}}</td>
+			<td>{{item.displayDescription}}</td>
+			<td>{{item.volumeId}}</td>
+			<td>{{item.status}}</td>
+			<td>{{item.created}}</td>
 			<td class="btn-toolbar">
 				<div class="btn-group" style="float:right; margin-right: 35px">
 					<button data-toggle="dropdown" class="btn dropdown-toggle">
 						Available Actions<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<li><a href="${createLink(controller : 'volumes', action : 'create', params : [tenantId : params.tenantId, snapshotId : item.id])}">Create Volume</a></li>
+						<li><a ng-click="onCreateVolume(item)">Create Volume</a></li>
 						<li class="divider"></li>
-						<li><a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, snapshotId : item.id])}" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+						<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 					</ul>
 				</div>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

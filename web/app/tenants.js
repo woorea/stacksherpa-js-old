@@ -28,6 +28,7 @@ stacksherpa.controller("TenantListCtrl", function($rootScope, $scope, $location,
 	$scope.onRefresh = function() {
 		keystone.listTenants(function(data) {
 			$scope.tenants = data.tenants;
+			$scope.$apply();
 		});
 	}
 	

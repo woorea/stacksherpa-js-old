@@ -8,7 +8,7 @@
 				<button class="btn" data-ng-click="onDisassociate()"><i class="icon-minus"></i> Disassociate</a>
 			</td>
 			<td class="right">
-				<a href="${createLink(action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName])}" class="btn"><i class="icon-refresh"></i> Refresh</a>
+				<a data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
 			</td>
 		</tr>
 	</table>
@@ -25,19 +25,19 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr ng-repeat="item in floating_ips">
 			<td><input type="checkbox" /></td>
-			<td>${item.ip}</td>
-			<td>${item.fixedIp}</td>
-			<td>${item.instanceId}</td>
-			<td>${item.pool}</td>
+			<td>{{item.ip}}</td>
+			<td>{{item.fixedIp}}</td>
+			<td>{{item.instanceId}}</td>
+			<td>{{item.pool}}</td>
 			<td class="btn-toolbar">
 				<div class="btn-group" style="float:right; margin-right: 35px">
 					<button data-toggle="dropdown" class="btn dropdown-toggle">
 						Available Actions<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-					<g:if test="${item.instanceId}">
+					<g:if test="{{item.instanceId}}">
 						<li><a data-ng-click="onDisassociate()">Disassociate from server</a></li>
 					</g:if>
 					<g:else>

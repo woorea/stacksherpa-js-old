@@ -28,6 +28,7 @@ stacksherpa.controller("UserListCtrl", function($rootScope, $scope, $compile) {
 	$scope.onRefresh = function() {
 		keystone.listUsers(function(data) {
 			$scope.users = data.users;
+			$scope.$apply();
 		});
 	}
 	

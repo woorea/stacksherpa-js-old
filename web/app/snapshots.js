@@ -33,19 +33,10 @@ stacksherpa.controller("SnapshotListCtrl", function($rootScope, $scope, $compile
 
 	$scope.onRefresh = function() {
 		
-		$.ajax({
-			crossDomain: true,
-			type : "GET",
-			url : "data/flavors/list.json",
-			headers : {
-				//"X-URL" : "/tenants",
-				//"X-Auth-Token" : data.access.token.id
-			},
-			dataType: "json",
-			success : function(data) {
-				$scope.images = data.images;
-			}
-		})
+		nova.listSnapshots(function(data) {
+			$scope.snapshots = data.snapshots;
+			$scope.$apply();
+		});
 		
 	}
 	

@@ -25,26 +25,24 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="item in services">
 			<td><input type="checkbox" /></td>
-			<td>${item.id}</td>
-			<td>${item.type}</td>
-			<td><a href="#/identity/services/1">${item.name}</a></td>
-			<td>${item.description}</td>
+			<td>{{item.id}}</td>
+			<td>{{item.type}}</td>
+			<td><a href="#/identity/services/1">{{item.name}}</a></td>
+			<td>{{item.description}}</td>
 			<td class="btn-toolbar">
 				<div class="btn-group" style="float: right; margin-right: 35px">
 					<button data-toggle="dropdown" class="btn dropdown-toggle">
 						Quick Actions<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<li><a href="${createLink(controller : 'endpoints', action : 'create', params : [serviceId : item.id])}">Create Endpoint</a></li>
+						<li><a ng-click="onEdit"><span class="icon-pencil"></span> Edit</a></li>
 						<li class="divider"></li>
-						<li><a href="${createLink(action : 'delete', params : [serviceId : item.id])}" class="confirm-delete">Delete</a></li>
+						<li><a ng-click="onDelete()" class="confirm-delete"><span class="icon-trash"></span> Delete</a></li>
 					</ul>
 				</div>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

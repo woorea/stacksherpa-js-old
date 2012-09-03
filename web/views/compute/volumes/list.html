@@ -9,7 +9,7 @@
 				<button class="btn" data-ng-click="onCreateSnapshot()"><i class="icon-plus"></i> Create Snapshot</a>
 			</td>
 			<td class="right">
-				<a href="${createLink(action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName])}" class="btn"><i class="icon-refresh"></i> Refresh</a>
+				<a data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
 			</td>
 		</tr>
 	</table>
@@ -27,33 +27,29 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="item in volumes">
 			<td><input type="checkbox" /></td>
-			<td>${item.status}</td>
-			<td>${item.availabilityZone}</td>
-			<td>${item.name}</td>
-			<td>${item.sizeInGB}</td>
-			<td>${item.description}</td>
+			<td>{{item.status}}</td>
+			<td>{{item.availabilityZone}}</td>
+			<td>{{item.displayName}}</td>
+			<td>{{item.size}}</td>
+			<td>{{item.displayDescription}}</td>
 			<td class="btn-toolbar">
 				<div class="btn-group" style="float:right; margin-right: 35px">
 					<button data-toggle="dropdown" class="btn dropdown-toggle">
 						Available Actions<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<g:if test="${item.status != 'creating'}">
 							<!--
-							<li><a href="${createLink(action : 'attach', params : [tenantId : params.tenantId, volumeId : item.id])}">Attach to server</a></li>
+							<li><a href="">Attach to server</a></li>
 							-->
-							<li><a href="${createLink(action : 'attachments', params : [tenantId : params.tenantId, volumeId : item.id])}">Manage attachments</a></li>
-							<li><a href="${createLink(controller : 'snapshots', action : 'create', params : [tenantId : params.tenantId, volumeId : item.id])}">Create Snapshot</a></li>
+							<li ng-show="item.stauts != 'creating'"><a data-ng-click="onEdit(item)">Manage attachments</a></li>
+							<li ng-show="item.stauts != 'creating'"><a data-ng-click="onCreateSnapshot(item)">Create Snapshot</a></li>
 							<li class="divider"></li>
-						</g:if>
-						<li><a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, volumeId : item.id])}" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+						<li><a data-ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 					</ul>
 				</div>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

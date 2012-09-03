@@ -28,6 +28,7 @@ stacksherpa.controller("RoleListCtrl", function($rootScope, $scope, $compile) {
 	$scope.onRefresh = function() {
 		keystone.listRoles(function(data) {
 			$scope.roles = data.roles;
+			$scope.$apply();
 		});
 	}
 	

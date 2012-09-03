@@ -23,24 +23,22 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${items.list}" var="item" status="status">
-		<tr>
+		<tr ng-repeat="item in roles">
 			<td><input type="checkbox" /></td>
-			<td>${item.id}</td>
-			<td>${item.name}</td>
+			<td>{{item.id}}</td>
+			<td>{{item.name}}</td>
 			<td class="btn-toolbar">
 				<div class="btn-group" style="float: right; margin-right: 35px">
 					<button data-toggle="dropdown" class="btn dropdown-toggle">
 						Quick Actions<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<li><a href="${g.createLink(action : 'edit', params : [roleId : item.id])}"><i class="icon-pencil"></i> Edit</a></li>
+						<li><a href="#/identity/users/{{item.id}}"><i class="icon-pencil"></i> Edit</a></li>
 						<li class="divider"></li>
-						<li><a href="${g.createLink(action : 'delete', params : [roleId : item.id])}" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+						<li><a ng-click="onDelete()" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 					</ul>
 				</div>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>

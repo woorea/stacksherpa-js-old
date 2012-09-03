@@ -1,6 +1,6 @@
 def webServerConf = [
 	port : 8080,
-	host : 'localhost'//,
+	host : '0.0.0.0'//,
 	/*
 	bridge : true,
 	inbound_permitted : [
