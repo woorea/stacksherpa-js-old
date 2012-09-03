@@ -35,7 +35,7 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 		.when("/snapshots",{controller : "SnapshotListCtrl", templateUrl : "views/compute/layout.html"})
 		.when("/key-pairs",{controller : "KeyPairListCtrl", templateUrl : "views/compute/layout.html"})
 		.when("/security-groups",{controller : "SecurityGroupListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/security-groups/:securityGroupId",{controller : "SecurityGroupShowCtrl", templateUrl : "views/compute/layout.html"})
+		.when("/security-groups/:securityGroupId",{controller : "SecurityGroupEditCtrl", templateUrl : "views/compute/layout.html"})
 		
 		.otherwise({redirectTo : "/"})
 })

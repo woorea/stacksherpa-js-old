@@ -43,6 +43,8 @@ stacksherpa.controller("SecurityGroupListCtrl", function($rootScope, $scope, $co
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("SecurityGroupShowCtrl", function($rootScope, $scope, $routeParams, $location) {
+stacksherpa.controller("SecurityGroupEditCtrl", function($rootScope, $scope, $routeParams, $location) {
+
+	$scope.page = 'views/compute/securitygroups/edit.html'
 
 });
