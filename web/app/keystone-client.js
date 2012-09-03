@@ -67,20 +67,3 @@ Keystone.prototype.listEndpoints = function(success) {
 }
 
 var keystone = new Keystone("http://192.168.1.40:5000/v2.0");
-keystone.login('{"auth" : {"passwordCredentials":{"username":"demo", password:"secret0"}}}', function(data) {
-	/*
-	$.ajax({
-		crossDomain: true,
-		type : "GET",
-		url : "http://localhost:8080/cors-proxy/CorsServletProxy",
-		headers : {
-			"X-URL" : "/tenants",
-			"X-Auth-Token" : data.access.token.id
-		},
-		dataType: "json",
-		success : function(data) {
-			//alert(data);
-		}
-	})
-	*/
-});

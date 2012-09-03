@@ -2,6 +2,12 @@ stacksherpa.controller("ContainerListCtrl", function($rootScope, $scope, $locati
 	
 	$scope.page = 'views/storage/containers/list.html'
 	
+	$scope.projectId = $routeParams.projectId
+	
+	$scope.regionName = $routeParams.regionName
+	
+	console.log($routeParams)
+	
 	$scope.onCreate = function() {
 		
 		$rootScope.$broadcast('modal.show',{view : 'views/identity/tenants/create.html'});
@@ -27,7 +33,7 @@ stacksherpa.controller("ContainerListCtrl", function($rootScope, $scope, $locati
 
 	$scope.onRefresh = function() {
 		swift.listContainers(function(data) {
-			$scope.tenants = data.tenants;
+			$scope.containers = data;
 			$scope.$apply();
 		});
 	}
@@ -38,5 +44,22 @@ stacksherpa.controller("ContainerListCtrl", function($rootScope, $scope, $locati
 stacksherpa.controller("ContainerShowCtrl", function($rootScope, $scope, $routeParams, $location) {
 	
 	$scope.page = 'views/storage/containers/show.html'
+	
+	$scope.projectId = $routeParams.projectId
+	
+	$scope.regionName = $routeParams.regionName
+	
+	$scope.containerName = $routeParams.containerName
+	
+	$scope.onRefresh = function() {
+		
+		swift.listObjects(function(data) {
+			$scope.objects = data;
+			$scope.$apply();
+		});
+		
+	}
+	
+	$scope.onRefresh();
 
 });
