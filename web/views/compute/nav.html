@@ -2,11 +2,11 @@
 	<ul class="nav nav-list">
 		<li>
 			<div class="btn-group">
-				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Region Name <span class="caret"></span></button>
+				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 				<ul class="dropdown-menu">
-				<g:each in="${serviceCatalog.find { it.type == 'compute'}.endpoints}" var="endpoint" status="endpointIndex">
-					<li><a href="#/projects/1/region/A/servers">${endpoint.region}</a></li>
-				</g:each>
+					<li ng-repeat="endpoint in compute.endpoints">
+						<a href="#/projects/{{tenantId}}/region/{{endpoint.region}}/servers">{{endpoint.region}}</a>
+					</li>
 				</ul>
 			</div>
 		</li>

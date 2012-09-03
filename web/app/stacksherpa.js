@@ -1,6 +1,6 @@
 var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routeProvider, $locationProvider) {
 	$routeProvider
-		.when("/",{controller : "StackSherpaCtrl", templateUrl : "views/login.html"})
+		.when("/",{controller : "LoginCtrl", templateUrl : "views/login.html"})
 		
 		.when("/unscoped-token",{controller : "UnscopedTokenCtrl", templateUrl : "views/portal/unscoped.html"})
 		
@@ -60,6 +60,30 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 		$scope.modal = ''
 	}
 	
+	$scope.onLogout = function() {
+		$cookieStore.remove("access")
+		$location.path("/")
+	}
+	
+	$scope.isLoggedIn = function() {
+		var access = $cookieStore.get("access");
+		return access != null;
+	}
+	
+	//dirty
+	var access = $cookieStore.get("access")
+	if(access) {
+		$scope.compute = access.serviceCatalog.filter(function(service) {
+			return service.type == 'compute'
+		})[0]
+	}
+
+})
+
+stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore) {
+	
+	$cookieStore.remove("access")
+	
 	$scope.onLogin = function() {
 		
 		keystone.login({
@@ -79,18 +103,8 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 			});	
 		});
 	}
-	
-	$scope.onLogout = function() {
-		$cookieStore.remove("access")
-		$location.path("/")
-	}
-	
-	$scope.isLoggedIn = function() {
-		var access = $cookieStore.get("access");
-		return access != null;
-	}
-	
-})
+
+});
 
 stacksherpa.controller("UnscopedTokenCtrl", function($scope, $location, $cookieStore) {
 	
@@ -129,10 +143,11 @@ stacksherpa.controller("ProjectCtrl", function($scope, $location, $cookieStore) 
 			return service.type == 'identity'
 		})[0]
 	}
-
+	/* see stacksherpactrl
 	$scope.compute = access.serviceCatalog.filter(function(service) {
 		return service.type == 'compute'
 	})[0]
+	*/
 	$scope.storage = access.serviceCatalog.filter(function(service) {
 		return service.type == 'object-store'
 	})[0]
