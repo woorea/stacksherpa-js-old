@@ -39,7 +39,7 @@
 			</td>
 			<td>
 				<label>Currency</label>
-				<select name="currency.id" from="${org.stacksherpa.portal.Currency.list()}" optionKey="id" optionValue="code" class="span12"></select>
+				<select ng-model="currency" ng-options="currency for currency in ['EUR','USD']"></select>
 				<span class="help-block">Example block-level help text here.</span>
 			</td>
 		</tr>

@@ -1,0 +1,424 @@
+{
+  "resources": [
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.904000", 
+      "resource_id": 1, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.225"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.915000", 
+      "resource_id": 2, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.226"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.924000", 
+      "resource_id": 3, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.227"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.933000", 
+      "resource_id": 4, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.228"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.942000", 
+      "resource_id": 5, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.229"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.951000", 
+      "resource_id": 6, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.230"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:46.960000", 
+      "resource_id": 7, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.231"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.064000", 
+      "resource_id": 8, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.232"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.073000", 
+      "resource_id": 9, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.233"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.082000", 
+      "resource_id": 10, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.234"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.091000", 
+      "resource_id": 11, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.235"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.100000", 
+      "resource_id": 12, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.236"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.109000", 
+      "resource_id": 13, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.237"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.118000", 
+      "resource_id": 14, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "nova", 
+        "address": "172.24.4.238"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.127000", 
+      "resource_id": 15, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.1"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.135000", 
+      "resource_id": 16, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.2"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.144000", 
+      "resource_id": 17, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.3"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.153000", 
+      "resource_id": 18, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.4"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.163000", 
+      "resource_id": 19, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.5"
+      }
+    }, 
+    {
+      "project_id": null, 
+      "user_id": null, 
+      "received_timestamp": "2012-09-03T17:01:47.172000", 
+      "resource_id": 20, 
+      "timestamp": null, 
+      "meter": [
+        {
+          "counter_name": "floating_ip", 
+          "counter_type": "cumulative"
+        }
+      ], 
+      "source": "?", 
+      "metadata": {
+        "fixed_ip_id": null, 
+        "host": null, 
+        "auto_assigned": false, 
+        "pool": "test", 
+        "address": "192.168.253.6"
+      }
+    }
+  ]
+}
