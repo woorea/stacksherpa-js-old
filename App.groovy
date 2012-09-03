@@ -25,6 +25,5 @@ container.with {
 	}
 	*/
 	deployModule('vertx.web-server-v1.0', webServerConf)
-	
 }
 

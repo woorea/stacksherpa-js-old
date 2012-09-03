@@ -72,7 +72,7 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 	
 	//dirty
 	var access = $cookieStore.get("access")
-	if(access) {
+	if(access && angular.isArray(access.serviceCatalog)) {
 		$scope.compute = access.serviceCatalog.filter(function(service) {
 			return service.type == 'compute'
 		})[0]
