@@ -17,7 +17,7 @@
 		<tr>
 			<td><input type="checkbox" /></td>
 			<g:if test="${item.contentType == 'application/directory'}">
-				<td><i class="icon-folder-close"></i> <a href="${createLink(action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, path : item.name])}">${item.name.replaceAll(params.path + '/',"")}</a></td>
+				<td><i class="icon-folder-close"></i> <a href="#/storage/containers/{{container.name}}">${item.name.replaceAll(params.path + '/',"")}</a></td>
 				<td colspan="2"></td>
 				<td style="text-align: center"><a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : params.containerName, objectName : item.name])}" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
 			</g:if>

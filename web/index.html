@@ -20,6 +20,7 @@
 		
 		<script src="app/keystone-client.js"></script>
 		<script src="app/compute-client.js"></script>
+		<script src="app/storage/swift-client.js"></script>
 		<script src="app/stacksherpa.js"></script>
 		
 		<script src="app/portal/users.js"></script>
@@ -40,6 +41,9 @@
 		<script src="app/snapshots.js"></script>
 		<script src="app/keypairs.js"></script>
 		<script src="app/securitygroups.js"></script>
+		
+		<script src="app/storage/containers.js"></script>
+		
 		<script>
 			$(document).on("change", "thead input[type=checkbox]", function() {
 				$("tbody input[type=checkbox]").prop("checked", $(this).prop("checked"))

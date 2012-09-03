@@ -33,7 +33,7 @@
 				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li ng-repeat="endpoint in storage.endpoints">
-						<a href="#/projects/{{tenantId}}/region/{{endpoint.region}}/containers">${endpoint.region}</a>
+						<a href="#/projects/{{tenantId}}/region/{{endpoint.region}}/storage/containers">{{endpoint.region}}</a>
 					</li>
 				</ul>
 			</div>

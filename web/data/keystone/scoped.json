@@ -70,6 +70,16 @@
 				"internalURL": "http:\/\/192.168.1.40:5000\/v2.0"
 			}],
 			"type": "identity"
+		}, {
+			"endpoints_links": [],
+			"name": "Object Storage Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:5000\/v2.0",
+				"adminURL": "http:\/\/192.168.1.40:35357\/v2.0",
+				"internalURL": "http:\/\/192.168.1.40:5000\/v2.0"
+			}],
+			"type": "object-store"
 		}],
 		"user": {
 			"id": "e363261cc89f40d586b667d5e82f2e28",

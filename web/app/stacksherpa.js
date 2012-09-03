@@ -37,6 +37,9 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 		.when("/security-groups",{controller : "SecurityGroupListCtrl", templateUrl : "views/compute/layout.html"})
 		.when("/security-groups/:securityGroupId",{controller : "SecurityGroupEditCtrl", templateUrl : "views/compute/layout.html"})
 		
+		.when("/projects/:projectId/region/:regionName/storage/containers",{controller : "ContainerListCtrl", templateUrl : "views/storage/layout.html"})
+		.when("/projects/:projectId/region/:regionName/storage/containers/:containerName",{controller : "ContainerShowCtrl", templateUrl : "views/storage/layout.html"})
+		
 		.otherwise({redirectTo : "/"})
 })
 
@@ -47,6 +50,22 @@ String.prototype.startsWith = function(prefix) {
 stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieStore) {
 	
 	$scope.modal = ''
+	
+	var bindServices = function() {
+		var access = $cookieStore.get("access")
+		if(access && angular.isArray(access.serviceCatalog)) {
+			$scope.compute = access.serviceCatalog.filter(function(service) {
+				return service.type == 'compute'
+			})[0];
+			$scope.storage = access.serviceCatalog.filter(function(service) {
+				return service.type == 'object-store'
+			})[0];
+		}
+	} 
+	
+	$scope.$on('login', function(event, args) {
+		bindServices();
+	})
 
 	$scope.$on('modal.show', function(event, args) {
 		$scope.modal = args.view
@@ -69,15 +88,8 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 		var access = $cookieStore.get("access");
 		return access != null;
 	}
-	
-	//dirty
-	var access = $cookieStore.get("access")
-	if(access && angular.isArray(access.serviceCatalog)) {
-		$scope.compute = access.serviceCatalog.filter(function(service) {
-			return service.type == 'compute'
-		})[0]
-	}
 
+	bindServices();
 })
 
 stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore) {
@@ -106,7 +118,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore) {
 
 });
 
-stacksherpa.controller("UnscopedTokenCtrl", function($scope, $location, $cookieStore) {
+stacksherpa.controller("UnscopedTokenCtrl", function($rootScope, $scope, $location, $cookieStore) {
 	
 	$scope.tenants = $cookieStore.get("tenants");
 	
@@ -114,6 +126,7 @@ stacksherpa.controller("UnscopedTokenCtrl", function($scope, $location, $cookieS
 		keystone.exchangeToken(function(data) {
 			$cookieStore.put("access", data.access)
 			$location.path("/projects/" + tenant.id)
+			$rootScope.$broadcast('login');
 			$scope.$apply();
 		});
 	}
@@ -147,9 +160,10 @@ stacksherpa.controller("ProjectCtrl", function($scope, $location, $cookieStore) 
 	$scope.compute = access.serviceCatalog.filter(function(service) {
 		return service.type == 'compute'
 	})[0]
-	*/
 	$scope.storage = access.serviceCatalog.filter(function(service) {
 		return service.type == 'object-store'
 	})[0]
+	*/
+	
 	
 })

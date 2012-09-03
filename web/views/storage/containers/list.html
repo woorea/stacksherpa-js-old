@@ -1,19 +1,17 @@
 <h1>Container List</h1>
 <hr />
 <div class="well">
-<table style="width: 100%">
-<tr>
-<td>
-<form action="${createLink(action : 'save', params : [tenantId : params.tenantId])}" method="POST" class="form-inline" style="display: inline">
-<g:textField name="name" class="input-large" />
-<button class="btn"><i class="icon-plus"></i> Create</button>
-</form>
-</td>
-<td class="right">
-<a href="${createLink(action : 'create', params : [tenantId : params.tenantId])}" class="btn"><i class="icon-refresh"></i> Refresh</a>
-</td>
-</tr>
-</table>
+	<table style="width: 100%">
+		<tr>
+			<td>
+			<input type="text" name="name" class="input-large" />
+			<button class="btn"><i class="icon-plus"></i> Create</button>
+			</td>
+			<td class="right">
+			<a ng-click="onCreate()" class="btn"><i class="icon-refresh"></i> Refresh</a>
+			</td>
+		</tr>
+	</table>
 </div>
 <table class="table table-bordered">
 	<thead>
@@ -26,17 +24,15 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${containers}" var="container" status="status">
-		<tr>
+		<tr ng-repeat="container in containers">
 			<td><input type="checkbox" /></td>
-			<td><i class="icon-briefcase"></i> <a href="${createLink(controller : 'objects', action : 'list', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : container.name])}">${container.name}</a></td>
-			<td>${container.objectCount}</td>
-			<td>${container.bytesUsed}</td>
+			<td><i class="icon-briefcase"></i> <a href="#/storage/containers/{{container.name}}">{{container.name}}</a></td>
+			<td>{{container.objectCount}}</td>
+			<td>{{container.bytesUsed}}</td>
 			<td style="text-align: center">
-				<a href="${createLink(action : 'delete', params : [tenantId : params.tenantId, regionName : params.regionName, containerName : container.name])}" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
+				<a ng-click="onDelete(container)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
 			</td>
 		</tr>
-		</g:each>
 	</tbody>
 </table>
 
