@@ -1,0 +1,15 @@
+{
+	"security_groups": [{
+		"id": 1,
+		"description": "default",
+		"name": "default",
+		"tenant_id": "155a42feef2f41a3a1b4002238badbac",
+		"rules": []
+	}, {
+		"id": 2,
+		"description": "default",
+		"name": "default",
+		"tenant_id": "b0e1aea823d04de8ab11c7de0494f2ee",
+		"rules": []
+	}]
+}

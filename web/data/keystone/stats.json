@@ -1,0 +1,150 @@
+{
+	"OS-STATS:stats": [{
+		"extra": {
+			"path_qs": {
+				"\/v2.0\/OS-KSADM\/services": 2,
+				"\/v2.0\/tokens\/14b300f413ed401eb45c7046269a52ba": 1,
+				"\/v2.0\/tokens": 32,
+				"\/v2.0\/users": 6,
+				"\/v2.0\/tokens\/e52e24b0e23749c9904cb5a6c77a3421": 7,
+				"\/v2.0\/tokens\/b86c2149a2364418bab469ef3b9b6cd3": 3,
+				"\/v2.0\/tokens\/9e3c18cb65604ee5ad6a462f280850a6": 2,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/e5b2c90da7084ea380301461302d11ac": 1,
+				"\/v2.0\/tokens\/6806d2c6264f4ec2b657ebaf1016e22c": 1,
+				"\/v2.0\/tokens\/a253df56516b411b9130ab6085a430dd": 16,
+				"\/v2.0\/tokens\/58d822d086364187ac23801ecd42b01e": 2,
+				"\/v2.0\/tokens\/54cdc6f1553c46f9a3633ff5f0a7933a": 60,
+				"\/v2.0\/tokens\/8105fafe3c084cabaabb19ae6e339e7d": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/d3338460d2594988b6deb97aecf0d52c\/roles\/OS-KSADM\/9c0bd58c2bf949a681e14b2df8c9a179": 1,
+				"\/v2.0\/tenants": 8,
+				"\/v2.0\/tokens\/a12da5519bee4f6a8d176d836518e757": 1,
+				"\/v2.0\/tokens\/d9285a6ca1204bf8a5bf199ab6e29fce": 2,
+				"\/v2.0\/tokens\/06b031a82c10412f82e5ba4bdf08f0bf": 2,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/17bbfb42b50548c59947d0a579903fa5": 1,
+				"\/v2.0\/tokens\/ab96e3eaad2b4d3393380d4e52a990a8": 2,
+				"\/v2.0\/endpoints": 1,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/944f067512f74ce3a522ffa8c77a6e77\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/4e76cbc4f7a34375a6dbb033c647c51a": 1,
+				"\/v2.0\/tokens\/26af0f4b1ceb499eae374d429eaf4a40": 80,
+				"\/v2.0\/tokens\/ea7860245e8c4e36b0572f5741fb1bae": 1,
+				"\/v2.0\/tokens\/503b2e977fcf4ca68e0292cae1c4d4e3": 1,
+				"\/v2.0\/OS-KSADM\/roles": 7,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/e8c3c904604f45a0829b6d33ba6f4641\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/484abe4d04354abd867b0e3cde4297ea\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/4e76cbc4f7a34375a6dbb033c647c51a": 1,
+				"\/v2.0\/OS-STATS\/stats": 1,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/7e8a75da542b48fcb384bdad2eec516e": 1,
+				"\/v2.0\/tokens\/c07f8b6d93e64444a475f35e192d7597": 18,
+				"\/v2.0\/roles": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/d3338460d2594988b6deb97aecf0d52c\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tokens\/32c75ceb9a5d4da2a6e05399fa1138f1": 1,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1
+			},
+			"remote_addr": {
+				"192.168.1.40": 148,
+				"192.168.1.34": 31,
+				"127.0.0.1": 91
+			},
+			"path": {
+				"\/v2.0\/OS-KSADM\/services": 2,
+				"\/v2.0\/tokens\/14b300f413ed401eb45c7046269a52ba": 1,
+				"\/v2.0\/tokens": 32,
+				"\/v2.0\/users": 6,
+				"\/v2.0\/tokens\/e52e24b0e23749c9904cb5a6c77a3421": 7,
+				"\/v2.0\/tokens\/b86c2149a2364418bab469ef3b9b6cd3": 3,
+				"\/v2.0\/tokens\/9e3c18cb65604ee5ad6a462f280850a6": 2,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/e5b2c90da7084ea380301461302d11ac": 1,
+				"\/v2.0\/tokens\/6806d2c6264f4ec2b657ebaf1016e22c": 1,
+				"\/v2.0\/tokens\/a253df56516b411b9130ab6085a430dd": 16,
+				"\/v2.0\/tokens\/58d822d086364187ac23801ecd42b01e": 2,
+				"\/v2.0\/tokens\/54cdc6f1553c46f9a3633ff5f0a7933a": 60,
+				"\/v2.0\/tokens\/8105fafe3c084cabaabb19ae6e339e7d": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/d3338460d2594988b6deb97aecf0d52c\/roles\/OS-KSADM\/9c0bd58c2bf949a681e14b2df8c9a179": 1,
+				"\/v2.0\/tenants": 8,
+				"\/v2.0\/tokens\/a12da5519bee4f6a8d176d836518e757": 1,
+				"\/v2.0\/tokens\/d9285a6ca1204bf8a5bf199ab6e29fce": 2,
+				"\/v2.0\/tokens\/06b031a82c10412f82e5ba4bdf08f0bf": 2,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/17bbfb42b50548c59947d0a579903fa5": 1,
+				"\/v2.0\/tokens\/ab96e3eaad2b4d3393380d4e52a990a8": 2,
+				"\/v2.0\/endpoints": 1,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/944f067512f74ce3a522ffa8c77a6e77\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/4e76cbc4f7a34375a6dbb033c647c51a": 1,
+				"\/v2.0\/tokens\/26af0f4b1ceb499eae374d429eaf4a40": 80,
+				"\/v2.0\/tokens\/ea7860245e8c4e36b0572f5741fb1bae": 1,
+				"\/v2.0\/tokens\/503b2e977fcf4ca68e0292cae1c4d4e3": 1,
+				"\/v2.0\/OS-KSADM\/roles": 7,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/e8c3c904604f45a0829b6d33ba6f4641\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tenants\/484abe4d04354abd867b0e3cde4297ea\/users\/e363261cc89f40d586b667d5e82f2e28\/roles\/OS-KSADM\/4e76cbc4f7a34375a6dbb033c647c51a": 1,
+				"\/v2.0\/OS-STATS\/stats": 1,
+				"\/v2.0\/tenants\/b0e1aea823d04de8ab11c7de0494f2ee\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/7e8a75da542b48fcb384bdad2eec516e": 1,
+				"\/v2.0\/tokens\/c07f8b6d93e64444a475f35e192d7597": 18,
+				"\/v2.0\/roles": 1,
+				"\/v2.0\/tenants\/8a206ddcee484fd885dc672a3a0c897a\/users\/d3338460d2594988b6deb97aecf0d52c\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1,
+				"\/v2.0\/tokens\/32c75ceb9a5d4da2a6e05399fa1138f1": 1,
+				"\/v2.0\/tenants\/155a42feef2f41a3a1b4002238badbac\/users\/dd40a392157e46389d6c77df78df6708\/roles\/OS-KSADM\/39bc228b489f4f2d9667b8893f7e9778": 1
+			},
+			"application_url": {
+				"http:\/\/127.0.0.1:35357\/v2.0": 91,
+				"http:\/\/192.168.1.40:35357\/v2.0": 179
+			},
+			"method": {
+				"POST": 47,
+				"GET": 212,
+				"PUT": 11
+			},
+			"status_int": {
+				"404": 1,
+				"200": 263,
+				"401": 4,
+				"501": 1
+			}
+		},
+		"api": "admin",
+		"type": "identity"
+	}, {
+		"extra": {
+			"path_qs": {
+				"\/v2.0\/": 1,
+				"\/v2.0\/tokens": 182,
+				"\/v2.0\/tenants": 32,
+				"\/v2\/tokens": 1,
+				"\/tokens": 2,
+				"\/v2.0\/token": 1
+			},
+			"remote_addr": {
+				"192.168.1.40": 1,
+				"192.168.1.34": 146,
+				"127.0.0.1": 40,
+				"192.168.1.38": 32
+			},
+			"path": {
+				"\/v2.0\/": 1,
+				"\/v2.0\/tokens": 182,
+				"\/v2.0\/tenants": 32,
+				"\/v2\/tokens": 1,
+				"\/tokens": 2,
+				"\/v2.0\/token": 1
+			},
+			"application_url": {
+				"http:\/\/192.168.1.40:5000\/v2.0": 176,
+				"http:\/\/192.168.1.40:5000": 3,
+				"http:\/\/127.0.0.1:5000\/v2.0": 40
+			},
+			"method": {
+				"POST": 183,
+				"GET": 35,
+				"OPTIONS": 1
+			},
+			"status_int": {
+				"404": 2,
+				"200": 199,
+				"401": 2,
+				"400": 6,
+				"500": 5
+			}
+		},
+		"api": "public",
+		"type": "identity"
+	}]
+}

@@ -1,0 +1,90 @@
+{
+	"access": {
+		"token": {
+			"id": "ab7b1e2463b14abcbbaa176737c81b01",
+			"expires": "2012-09-04T00:07:50Z",
+			"tenant": {
+				"id": "155a42feef2f41a3a1b4002238badbac",
+				"enabled": true,
+				"description": {},
+				"name": "demo"
+			}
+		},
+		"serviceCatalog": [{
+			"endpoints_links": [],
+			"name": "Compute Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:8774\/v2\/155a42feef2f41a3a1b4002238badbac",
+				"adminURL": "http:\/\/192.168.1.40:8774\/v2\/155a42feef2f41a3a1b4002238badbac",
+				"internalURL": "http:\/\/192.168.1.40:8774\/v2\/155a42feef2f41a3a1b4002238badbac"
+			}],
+			"type": "compute"
+		}, {
+			"endpoints_links": [],
+			"name": "S3 Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:3333",
+				"adminURL": "http:\/\/192.168.1.40:3333",
+				"internalURL": "http:\/\/192.168.1.40:3333"
+			}],
+			"type": "s3"
+		}, {
+			"endpoints_links": [],
+			"name": "Image Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:9292",
+				"adminURL": "http:\/\/192.168.1.40:9292",
+				"internalURL": "http:\/\/192.168.1.40:9292"
+			}],
+			"type": "image"
+		}, {
+			"endpoints_links": [],
+			"name": "Volume Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:8776\/v1\/155a42feef2f41a3a1b4002238badbac",
+				"adminURL": "http:\/\/192.168.1.40:8776\/v1\/155a42feef2f41a3a1b4002238badbac",
+				"internalURL": "http:\/\/192.168.1.40:8776\/v1\/155a42feef2f41a3a1b4002238badbac"
+			}],
+			"type": "volume"
+		}, {
+			"endpoints_links": [],
+			"name": "EC2 Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:8773\/services\/Cloud",
+				"adminURL": "http:\/\/192.168.1.40:8773\/services\/Admin",
+				"internalURL": "http:\/\/192.168.1.40:8773\/services\/Cloud"
+			}],
+			"type": "ec2"
+		}, {
+			"endpoints_links": [],
+			"name": "Identity Service",
+			"endpoints": [{
+				"region": "RegionOne",
+				"publicURL": "http:\/\/192.168.1.40:5000\/v2.0",
+				"adminURL": "http:\/\/192.168.1.40:35357\/v2.0",
+				"internalURL": "http:\/\/192.168.1.40:5000\/v2.0"
+			}],
+			"type": "identity"
+		}],
+		"user": {
+			"id": "e363261cc89f40d586b667d5e82f2e28",
+			"username": "demo",
+			"name": "demo",
+			"roles": [{
+				"name": "anotherrole"
+			}, {
+				"name": "Member"
+			}],
+			"roles_links": []
+		},
+		"metadata": {
+			"is_admin": 0,
+			"roles": ["e5b2c90da7084ea380301461302d11ac", "4e76cbc4f7a34375a6dbb033c647c51a"]
+		}
+	}
+}

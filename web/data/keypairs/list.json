@@ -1,0 +1,9 @@
+{
+	"keypairs": [{
+		"keypair": {
+			"fingerprint": "d9:ad:69:84:f2:23:87:97:f5:3e:35:41:da:a9:3f:74",
+			"name": "woorea",
+			"public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC3iPBjRG3qcuGgw+13QHZMFWvHivrv3Iyhx0LYDWQER021WieV67m8TddlTb4ay55wjh+7xi0WzvLc0W058SRRZ9vniewTeJmopOHVfyyZFeREMcNYzZUUK18TNjd\/CksaXPbU6gxldD1ECtm2QIFudaaITgv2iChircxOchxUsQ== woorea@woorea\n"
+		}
+	}]
+}
