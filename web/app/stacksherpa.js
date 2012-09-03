@@ -136,7 +136,7 @@ stacksherpa.controller("ProjectCtrl", function($scope, $location, $cookieStore) 
 	
 	$scope.isKeystoneAdmin = access.user.roles.filter(function(role){
 		return role.name == 'KeystoneAdmin'
-	}).length > 1;
+	}).length > 0;
 	
 	if($scope.isKeystoneAdmin) {
 		$scope.identity = access.serviceCatalog.filter(function(service) {

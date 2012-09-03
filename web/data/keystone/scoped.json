@@ -76,7 +76,7 @@
 			"username": "demo",
 			"name": "demo",
 			"roles": [{
-				"name": "anotherrole"
+				"name": "KeystoneAdmin"
 			}, {
 				"name": "Member"
 			}],
