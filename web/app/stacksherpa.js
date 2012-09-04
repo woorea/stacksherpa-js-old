@@ -43,6 +43,34 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 		.otherwise({redirectTo : "/"})
 })
 
+/*
+stacksherpa.factory("eventbus", function($rootScope) {
+	
+	var eventbus;
+	
+	function init() {
+		
+		eb = new vertx.EventBus("http://localhost:8080/eventbus");
+
+		eb.onopen = function() {
+			alert('eventbus-onopen');
+			eb.publish("keystone", "hello world")
+		};
+
+		eb.onclose = function() {
+			alert('eventbus-onclose');
+			eb = null;
+		};
+		
+	}
+	
+	init()
+	
+	return eventbus;
+	
+});
+*/
+
 String.prototype.startsWith = function(prefix) {
     return(this.indexOf(prefix) == 0);
 };
