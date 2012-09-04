@@ -43,39 +43,38 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 		.otherwise({redirectTo : "/"})
 })
 
-/*
-stacksherpa.factory("eventbus", function($rootScope) {
+stacksherpa.factory("eb", function($rootScope) {
 	
-	var eventbus;
+	var eb;
 	
 	function init() {
 		
 		eb = new vertx.EventBus("http://localhost:8080/eventbus");
 
 		eb.onopen = function() {
-			alert('eventbus-onopen');
-			eb.publish("keystone", "hello world")
+			//alert('eventbus-onopen');
+			
 		};
 
 		eb.onclose = function() {
-			alert('eventbus-onclose');
+			//alert('eventbus-onclose');
 			eb = null;
 		};
 		
 	}
 	
-	init()
+	//working, but not enabled yet
+	//init()
 	
-	return eventbus;
+	return eb;
 	
 });
-*/
 
 String.prototype.startsWith = function(prefix) {
     return(this.indexOf(prefix) == 0);
 };
 
-stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieStore) {
+stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieStore, eb) {
 	
 	$scope.modal = ''
 	
@@ -120,11 +119,40 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 	bindServices();
 })
 
-stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore) {
+stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb) {
 	
 	$cookieStore.remove("access")
 	
+	
 	$scope.onLogin = function() {
+		/*
+		if(eb) {
+			
+			eb.registerHandler('rest', function(message) {
+
+				//message handler field to match $scope.$on(message.handler. fn)
+				//in controllers that match
+				//$rootScope.$broadcast(message.handler, message)
+
+				console.log('received a message:'); // + ;
+				console.log(message.body);
+
+			});
+			
+			eb.publish("rest", {
+				method : "post", 
+				payload : {
+					auth : {
+						passwordCredentials : {
+							username : $scope.username,
+							password : $scope.password
+						}
+					}
+				}
+			});
+			
+		}
+		*/
 		
 		keystone.login({
 			auth : {
@@ -143,7 +171,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore) {
 			});	
 		});
 	}
-
+	
 });
 
 stacksherpa.controller("UnscopedTokenCtrl", function($rootScope, $scope, $location, $cookieStore) {
