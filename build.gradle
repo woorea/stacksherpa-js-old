@@ -1,0 +1,19 @@
+allprojects {
+	repositories {
+		mavenCentral()
+	}
+}
+subprojects {
+	apply plugin : 'java'
+	apply plugin : 'eclipse'
+
+	task installModule(type : Copy, dependsOn:'classes') {
+		into "${project.rootProject.projectDir}/mods/${project.name}"
+		from "src/main/resources/mod.json"
+		from "build/classes/main"
+		into("lib") {
+			from configurations.compile
+		}
+	}
+}
+task installModules(dependsOn : subprojects.installModule)

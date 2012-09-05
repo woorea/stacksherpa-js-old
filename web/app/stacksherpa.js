@@ -52,6 +52,17 @@ stacksherpa.factory("eb", function($rootScope) {
 		eb = new vertx.EventBus("http://localhost:8080/eventbus");
 
 		eb.onopen = function() {
+			
+			eb.registerHandler('rest-broadcast-response', function(message) {
+
+				//message handler field to match $scope.$on(message.handler. fn)
+				//in controllers that match
+				//$rootScope.$broadcast(message.handler, message)
+
+				console.log(eval( "(" + message.json + ")" ));
+
+			});
+			
 			//alert('eventbus-onopen');
 			
 		};
@@ -125,22 +136,14 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 	
 	
 	$scope.onLogin = function() {
+		
 		/*
 		if(eb) {
 			
-			eb.registerHandler('rest', function(message) {
-
-				//message handler field to match $scope.$on(message.handler. fn)
-				//in controllers that match
-				//$rootScope.$broadcast(message.handler, message)
-
-				console.log('received a message:'); // + ;
-				console.log(message.body);
-
-			});
-			
-			eb.publish("rest", {
-				method : "post", 
+			eb.send("rest-request", {
+				endpoint : '/data/keystone/unscoped.json',
+				method : "POST",
+				headers : [],
 				payload : {
 					auth : {
 						passwordCredentials : {
@@ -149,6 +152,9 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 						}
 					}
 				}
+			}, function(reply) {
+				//alert(eval( "(" + reply.json + ")" ));
+				alert(reply.json)
 			});
 			
 		}
@@ -170,6 +176,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 				$scope.$apply();
 			});	
 		});
+		
 	}
 	
 });
