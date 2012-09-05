@@ -1,0 +1,4 @@
+{
+	"main" : "org.stacksherpa.ws.Server",
+	"preserve-cwd": true
+}

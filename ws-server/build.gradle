@@ -1,0 +1,17 @@
+configurations {
+	framework
+}
+
+dependencies {
+	framework 'org.vert-x:vertx-platform:1.2.3.final'
+}
+sourceSets {
+  main {
+    compileClasspath = compileClasspath + configurations.framework
+  }
+}
+eclipse {
+	classpath {
+		plusConfigurations += configurations.framework
+	}
+}

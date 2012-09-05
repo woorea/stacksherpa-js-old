@@ -1,1 +1,1 @@
-include 'rest-proxy'
+include 'rest-proxy','ws-server'
