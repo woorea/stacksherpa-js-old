@@ -9,6 +9,20 @@ Keystone.prototype.login = function(auth, success) {
 		dataType: "json",
 		success : success
 	})
+	
+	/*
+	$.ajax({
+		crossDomain: true,
+		type : "POST",
+		url : "http://localhost:9090",
+		headers : [
+			{"X-URI":"http://192.168.1.38:5000/v2.0/tokens"}
+		]
+		data : auth,
+		dataType: "json",
+		success : success
+	})
+	*/
 
 }
 

@@ -160,6 +160,16 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 		}
 		*/
 		
+		var callback = function(data) {
+			$cookieStore.put("access", data.access)
+			keystone.listTenants(function(data) {
+				$cookieStore.put("tenants", data.tenants);
+				
+				$location.path("/unscoped-token");
+				$scope.$apply();
+			});
+		}
+		
 		keystone.login({
 			auth : {
 				passwordCredentials : {
@@ -167,15 +177,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 					password : $scope.password
 				}
 			}
-		}, function(data) {
-			$cookieStore.put("access", data.access)
-			keystone.listTenants(function(data) {
-				$cookieStore.put("tenants", data.tenants);
-				
-				$location.path("/unscoped-token");
-				$scope.$apply();
-			});	
-		});
+		}, callback);
 		
 	}
 	

@@ -21,9 +21,9 @@ public class Server extends Verticle {
             System.out.println(key + ":" + req.headers().get(key));
           }
     	  
-          //TODO: populate response headers from proxy
-          //req.response.headers().put("Content-Type", "text/html; charset=UTF-8");
-    	  
+        //TODO: populate response headers from proxy
+    	req.response.headers().put("Access-Control-Allow-Origin", "*");
+		req.response.headers().put("Access-Control-Allow-Headers", "x-url,x-auth-token");
     	final Map<String, Object> response;
     	try {
     		
