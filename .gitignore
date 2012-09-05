@@ -1,3 +1,6 @@
 /mods/
 /.gradle/
 /rest-proxy/bin/
+/ws-server/build/
+/rest-proxy/build/
+/rest-proxy/.project

@@ -1,5 +1,7 @@
 package org.stacksherpa.ws;
 
+import java.io.File;
+
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -8,7 +10,7 @@ import org.vertx.java.deploy.Verticle;
 
 public class Server extends Verticle implements Handler<HttpServerRequest> {
 	
-	private String webRootPrefix = "web" + File.separator
+	private String webRootPrefix = "web" + File.separator;
 
 	public void start() {
 		vertx.createHttpServer()
