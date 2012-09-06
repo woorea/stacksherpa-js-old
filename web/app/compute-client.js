@@ -2,6 +2,39 @@ Nova = function(url, token) {
 	this.url = url;
 	this.token = token
 }
+Nova.prototype.get = function(path, success) {
+	
+	var headers = {
+		"X-URI" : this.url + path,
+		"X-Auth-Token" : this.token.id
+	}
+	
+	proxy.get(headers, success);
+	
+}
+Nova.prototype.post = function(path ,data, success) {
+	
+	var headers = {
+		"X-URI" : this.url + path,
+		"X-Auth-Token" : this.token.id
+	}
+	
+	proxy.post(headers, data, success);
+	
+}
+
+Nova.prototype.delete = function(path , success) {
+	
+	var headers = {
+		"X-URI" : this.url + path,
+		"X-Auth-Token" : this.token.id
+	}
+	
+	proxy.delete(headers, data, success);
+	
+}
+
+
 Nova.prototype.listServers = function(success) {
 	
 	var headers = {

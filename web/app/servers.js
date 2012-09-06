@@ -44,14 +44,14 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) 
 
 	$scope.onRefresh = function() {
 		
-		nova.listServers({}, function(data) {
+		nova.get("/servers/detail", function(data) {
 			var servers = data.servers;
 			$.each(servers, function(idx, server) {
-				nova.showFlavor({"id" : server.flavor.id}, function(data) {
+				nova.get("/flavors/" + server.flavor.id, function(data) {
 					servers[idx].flavor = data.flavor;
 					$scope.$digest();
 				});
-				nova.showImage({"id" : server.image.id}, function(data) {
+				nova.get("/images/" + server.image.id, function(data) {
 					servers[idx].image = data.image;
 					$scope.$digest();
 				});
@@ -150,7 +150,10 @@ stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routePara
 	}
 
 	$scope.onRefresh = function() {
-		
+		nova.get("/servers/" + $routeParams.serverId, function(data) {
+			$scope.server = data.server;
+			$scope.$digest();
+		});
 	}
 
 	$scope.onRefresh();
@@ -214,7 +217,10 @@ stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
 	}
 	
 	$scope.onFinish = function() {
-		$scope.onCancel();
+		nova.post('/servers', {server : $scope.server}, function(data) {
+			console.log(data);
+			$scope.onCancel();
+		});
 	}
 	
 	$scope.totalSteps = $steps.length;
@@ -233,7 +239,8 @@ stacksherpa.controller("LaunchServerSelectImageCtrl",function($scope) {
 		});
 	}
 	
-	$scope.onSelectImage = function() {
+	$scope.onSelectImage = function(image) {
+		$scope.server.imageRef = image.id;
 		$scope.onNext()
 	}
 	
