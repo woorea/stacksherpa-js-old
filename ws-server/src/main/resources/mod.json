@@ -1,4 +1,4 @@
 {
-	"main" : "org.stacksherpa.ws.Server",
+	"main" : "org.stacksherpa.mods.WebServer",
 	"preserve-cwd": true
 }

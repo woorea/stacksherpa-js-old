@@ -1,4 +1,4 @@
-package org.stacksherpa.restproxy;
+package org.stacksherpa.proxy;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -61,8 +61,6 @@ def webServerConf = [
 ]
 
 container.with {
-	deployModule('vertx.web-server-v1.0', webServerConf)
-	deployModule('rest-proxy')
-	deployModule('ws-server')
+	deployModule('ws-server', webServerConf)
 }
 println "App started!"
