@@ -61,6 +61,10 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) 
 		
 	}
 	
+	$scope.$on('servers.refresh', function(event, args) {
+		$scope.onRefresh();
+	})
+	
 	$scope.onRefresh();
 
 });
@@ -143,9 +147,9 @@ stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routePara
 	*/
 	
 	$scope.onDelete = function() {
-		alert('a');
 		nova.delete("/servers/" + $routeParams.serverId, function(data) {
-			$location.path("/servers");
+			$location.path("/projects/:projectId/region/:regionName/servers");
+			$scope.$apply();
 		});
 	}
 
@@ -173,7 +177,10 @@ stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
 	$scope.server = {
 		metadata : {},
 		personality : [],
-		securityGroups : []
+		securityGroups : [],
+		min : 1,
+		max : 1,
+		diskConfig : 'AUTO'
 	}
 	
 	var $steps = $('.step')
@@ -218,8 +225,9 @@ stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
 	
 	$scope.onFinish = function() {
 		nova.post('/servers', {server : $scope.server}, function(data) {
-			console.log(data);
+			$rootScope.$broadcast('servers.refresh');
 			$scope.onCancel();
+			$scope.$apply();
 		});
 	}
 	
