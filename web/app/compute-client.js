@@ -30,7 +30,7 @@ Nova.prototype.delete = function(path , success) {
 		"X-Auth-Token" : this.token.id
 	}
 	
-	proxy.delete(headers, data, success);
+	proxy.delete(headers, success);
 	
 }
 

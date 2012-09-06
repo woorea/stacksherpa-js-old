@@ -127,6 +127,7 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
         //TODO: populate response headers from proxy
     	req.response.headers().put("Access-Control-Allow-Origin", "*");
 		req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token");
+		req.response.headers().put("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
     	final Map<String, Object> response;
     	try {
     		

@@ -143,10 +143,10 @@ stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routePara
 	*/
 	
 	$scope.onDelete = function() {
-		$scope.servers = servers = servers.filter(function(server) {
-			return !(server.id == $scope.server.id);
+		alert('a');
+		nova.delete("/servers/" + $routeParams.serverId, function(data) {
+			$location.path("/servers");
 		});
-		$location.path("/servers")
 	}
 
 	$scope.onRefresh = function() {
