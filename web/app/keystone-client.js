@@ -86,5 +86,3 @@ Keystone.prototype.listEndpoints = function(success) {
 		success : success
 	})
 }
-
-var keystone = new Keystone("http://192.168.1.38:5000/v2.0");

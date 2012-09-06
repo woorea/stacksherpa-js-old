@@ -1,0 +1,26 @@
+<div class="modal-body">
+	
+	<p>
+		<label for='identity-endpoint'>Identity Endpoint:</label>
+		<input type='text' ng-model="providers[provider].identityEndpoint" style="width: 98%" />
+	</p>
+	
+	<p>
+		<label for='username'>Username:</label>
+		<input type='text' ng-model="username" value="demo" />
+	</p>
+
+	<p>
+		<label for='password'>Password:</label>
+		<input type='password' ng-model="password" value="secret0"/>
+	</p>
+
+	<p id="remember_me_holder">
+		<label class="checkbox">Remember me
+		<input type='checkbox' class='chk' name='${rememberMeParameter}' id='remember_me' />
+		</label>
+	</p>
+</div>
+<div class="modal-footer">
+	<button class="btn" data-ng-click="onLogin()">Login</button>
+</div>

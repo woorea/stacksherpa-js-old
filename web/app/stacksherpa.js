@@ -1,6 +1,16 @@
+var providers = {
+	openstack : {
+		identityEndpoint : "http://192.168.1.38:5000/v2.0",
+		view : "views/login/openstack.html"
+	},
+	hpcloud : {
+		identityEndpoint : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0",
+		view : "views/login/hpcloud.html"
+	}
+}
 var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routeProvider, $locationProvider) {
 	$routeProvider
-		.when("/",{controller : "LoginCtrl", templateUrl : "views/login.html"})
+		.when("/",{controller : "LoginCtrl", templateUrl : "views/login/layout.html"})
 		
 		.when("/unscoped-token",{controller : "UnscopedTokenCtrl", templateUrl : "views/portal/unscoped.html"})
 		
@@ -146,11 +156,46 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 	
 	$cookieStore.remove("access")
 	
+	$scope.providers = providers
+	
+	$scope.provider = "hpcloud"
+	
 	$scope.username = "demo"
 	$scope.password = "secret0"
 	
+	$scope.accessKey = ""
+	$scope.secretKey = ""
+	
+	var callback = function(data) {
+		$cookieStore.put("access", data.access)
+		keystone.listTenants(function(data) {
+			$cookieStore.put("tenants", data.tenants);
+			
+			$location.path("/unscoped-token");
+			$scope.$apply();
+		});
+	}
+	
+	
+	$scope.onHPCloudLogin = function() {
+		window.keystone = new Keystone($scope.providers[$scope.provider].identityEndpoint);
+		keystone.login({
+			apiAccessKeyCredentials : {
+				accessKey : $scope.accessKey,
+				secretKey : $scope.secretKey
+			}
+		}, callback);
+	}
 	
 	$scope.onLogin = function() {
+		window.keystone = new Keystone($scope.providers[$scope.provider].identityEndpoint);
+		
+		keystone.login({
+			passwordCredentials : {
+				username : $scope.username,
+				password : $scope.password
+			}
+		}, callback);
 		
 		/*
 		if(eb) {
@@ -174,24 +219,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 			
 		}
 		*/
-		
-		var callback = function(data) {
-			$cookieStore.put("access", data.access)
-			keystone.listTenants(function(data) {
-				$cookieStore.put("tenants", data.tenants);
-				
-				$location.path("/unscoped-token");
-				$scope.$apply();
-			});
-		}
-		
-		keystone.login({
-			passwordCredentials : {
-				username : $scope.username,
-				password : $scope.password
-			}
-		}, callback);
-		
+
 	}
 	
 });
