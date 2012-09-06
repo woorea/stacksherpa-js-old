@@ -98,6 +98,18 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 			$scope.storage = access.serviceCatalog.filter(function(service) {
 				return service.type == 'object-store'
 			})[0];
+			
+			$scope.tenantId = access.token.tenant.id
+
+			$scope.isKeystoneAdmin = access.user.roles.filter(function(role){
+				return role.name == 'KeystoneAdmin'
+			}).length > 0;
+
+			if($scope.isKeystoneAdmin) {
+				$scope.identity = access.serviceCatalog.filter(function(service) {
+					return service.type == 'identity'
+				})[0]
+			}
 		}
 	} 
 	
@@ -133,6 +145,9 @@ stacksherpa.controller("StackSherpaCtrl", function($scope, $location, $cookieSto
 stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb) {
 	
 	$cookieStore.remove("access")
+	
+	$scope.username = "demo"
+	$scope.password = "secret0"
 	
 	
 	$scope.onLogin = function() {
@@ -171,11 +186,9 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 		}
 		
 		keystone.login({
-			auth : {
-				passwordCredentials : {
-					username : $scope.username,
-					password : $scope.password
-				}
+			passwordCredentials : {
+				username : $scope.username,
+				password : $scope.password
 			}
 		}, callback);
 		
@@ -187,14 +200,23 @@ stacksherpa.controller("UnscopedTokenCtrl", function($rootScope, $scope, $locati
 	
 	$scope.tenants = $cookieStore.get("tenants");
 	
-	$scope.onTenantSelected = function(tenant) {
-		keystone.exchangeToken(function(data) {
-			$cookieStore.put("access", data.access)
-			$location.path("/projects/" + tenant.id)
-			$rootScope.$broadcast('login');
-			$scope.$apply();
-		});
+	var callback = function(data) {
+		$cookieStore.put("access", data.access)
+		$location.path("/projects/" + data.access.token.tenant.id)
+		$rootScope.$broadcast('login');
+		$scope.$apply();
 	}
+	
+	$scope.onTenantSelected = function(tenant) {
+		var access = $cookieStore.get("access")
+		keystone.login({
+			token : {
+				id : access.token.id
+			},
+			tenantId : tenant.id
+		}, callback);
+	}
+	
 	/*
 	if($scope.tenants == null) {
 		keystone.listTenants(function(data) {
@@ -208,27 +230,9 @@ stacksherpa.controller("UnscopedTokenCtrl", function($rootScope, $scope, $locati
 
 stacksherpa.controller("ProjectCtrl", function($scope, $location, $cookieStore) {
 	
-	var access = $cookieStore.get("access")
-	
-	$scope.tenantId = access.token.tenant.id
-	
-	$scope.isKeystoneAdmin = access.user.roles.filter(function(role){
-		return role.name == 'KeystoneAdmin'
-	}).length > 0;
-	
-	if($scope.isKeystoneAdmin) {
-		$scope.identity = access.serviceCatalog.filter(function(service) {
-			return service.type == 'identity'
-		})[0]
+	$scope.onRegionSelected = function(endpoint, location) {
+		window.nova = new Nova(endpoint.publicURL, keystone.access.token)
+		$location.path(location)
 	}
-	/* see stacksherpactrl
-	$scope.compute = access.serviceCatalog.filter(function(service) {
-		return service.type == 'compute'
-	})[0]
-	$scope.storage = access.serviceCatalog.filter(function(service) {
-		return service.type == 'object-store'
-	})[0]
-	*/
-	
 	
 })

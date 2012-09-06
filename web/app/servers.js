@@ -8,16 +8,13 @@ var securityGroups = [
 	{"id" : "sg.2", "name" : "eureka.2"},
 	{"id" : "sg.3", "name" : "eureka.3"}
 ]
-var images = [
-	{"id" : "image.1", "name" : "eureka.1"},
-	{"id" : "image.2", "name" : "eureka.2"},
-	{"id" : "image.3", "name" : "eureka.3"}
-]
+
 var servers = [
 	{"id" : "server.1", "name" : "eureka.1", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"},
 	{"id" : "server.2", "name" : "eureka.2", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"},
 	{"id" : "server.3", "name" : "eureka.3", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"}
 ]
+
 stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) {
 	
 	$scope.page = 'views/compute/servers/list.html'
@@ -47,7 +44,7 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) 
 
 	$scope.onRefresh = function() {
 		
-		nova.listServers(function(data) {
+		nova.listServers({}, function(data) {
 			var servers = data.servers;
 			$.each(servers, function(idx, server) {
 				nova.showFlavor({"id" : server.flavor.id}, function(data) {
@@ -226,21 +223,39 @@ stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
 	
 });
 stacksherpa.controller("LaunchServerSelectImageCtrl",function($scope) {
+	
+	$scope.images = []
 
-	$scope.images = images
+	$scope.onRender = function() {
+		nova.listImages({}, function(data) {
+			$scope.images = data.images;
+			$scope.$apply();
+		});
+	}
 	
 	$scope.onSelectImage = function() {
 		$scope.onNext()
 	}
+	
+	$scope.onRender();
 	
 });
 stacksherpa.controller("LaunchServerConfigurationCtrl",function($scope) {
 
-	$scope.images = images
+	$scope.flavors = []
+	
+	$scope.onRender = function() {
+		nova.listFlavors({}, function(data) {
+			$scope.flavors = data.flavors;
+			$scope.$apply();
+		});
+	}
 	
 	$scope.onSelectImage = function() {
 		$scope.onNext()
 	}
+	
+	$scope.onRender();
 	
 });
 stacksherpa.controller("LaunchServerMetadataCtrl",function($scope) {
@@ -270,11 +285,25 @@ stacksherpa.controller("LaunchServerPersonalityCtrl",function($scope) {
 	
 });
 stacksherpa.controller("LaunchServerSecurityCtrl",function($scope) {
-	$scope.keyPairs = keyPairs
 	
-	$scope.securityGroups = $.map(securityGroups, function(securityGroup) {
-		return {"name" : securityGroup.name}
-	});
+	$scope.keyPairs = []
+	$scope.securityGroups = []
+	
+	$scope.onRender = function() {
+		nova.listKeyPairs(function(data) {
+			$scope.keyPairs = data.keypairs;
+			$scope.$apply();
+		});
+		nova.listSecurityGroups(function(data) {
+			$scope.securityGroups = $.map(data["security_groups"], function(securityGroup) {
+				return {"name" : securityGroup.name}
+			});
+			$scope.$apply();
+		});
+	}
+	
+	$scope.onRender();
+	
 });
 stacksherpa.controller("LaunchServerSummaryCtrl",function($scope) {
 	

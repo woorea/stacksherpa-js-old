@@ -3,47 +3,52 @@ Keystone = function(url) {
 }
 Keystone.prototype.login = function(auth, success) {
 	
-	
+	/*
 	$.ajax({
 		type : "GET",
 		url : "data/keystone/unscoped.json",
 		dataType: "json",
 		success : success
 	})
-	
-	
-	/*
-	$.ajax({
-		//crossDomain: true,
-		type : "POST",
-		url : "http://localhost:8080/api",
-		headers : {
-			"X-URI":"http://192.168.1.38:5000/v2.0/tokens"
-		},
-		contentType : "application/json; charset=UTF-8",
-		data : JSON.stringify(auth),
-		dataType: "json",
-		success : success
-	})
 	*/
-}
-
-Keystone.prototype.exchangeToken = function(success) {
-	$.ajax({
-		type : "GET",
-		url : "data/keystone/scoped.json",
-		dataType: "json",
-		success : success
-	})
+	
+	var headers = {
+		"X-URI" : this.url + "/tokens"
+	}
+	
+	if(this.access) {
+		headers["X-Auth-Token"] = this.access.token.id
+	}
+	
+	var that = this;
+	
+	proxy.post(headers, {auth : auth}, function(data) {
+		that.access = data.access;
+		success.call(undefined, data);
+	});
+	
 }
 
 Keystone.prototype.listTenants = function(success) {
+	
+	var headers = {
+		"X-URI" : this.url + "/tenants"
+	}
+	
+	if(this.access) {
+		headers["X-Auth-Token"] = this.access.token.id
+	}
+	
+	proxy.get(headers, success);
+	
+	/*
 	$.ajax({
 		type : "GET",
 		url : "data/keystone/tenants.json",
 		dataType: "json",
 		success : success
 	})
+	*/
 }
 
 Keystone.prototype.listUsers = function(success) {
@@ -82,4 +87,4 @@ Keystone.prototype.listEndpoints = function(success) {
 	})
 }
 
-var keystone = new Keystone("http://192.168.1.40:5000/v2.0");
+var keystone = new Keystone("http://192.168.1.38:5000/v2.0");

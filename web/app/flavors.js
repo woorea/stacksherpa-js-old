@@ -26,7 +26,8 @@ stacksherpa.controller("FlavorListCtrl", function($rootScope, $scope, $compile) 
 	}
 
 	$scope.onRefresh = function() {
-		nova.listFlavors(function(data) {
+		nova.listFlavors({}, function(data) {
+			console.log(data);
 			$scope.flavors = data.flavors;
 			$scope.$apply();
 		});

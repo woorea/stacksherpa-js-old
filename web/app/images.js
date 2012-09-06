@@ -32,7 +32,7 @@ stacksherpa.controller("ImageListCtrl", function($rootScope, $scope, $compile) {
 	}
 
 	$scope.onRefresh = function() {
-		nova.listImages(function(data) {
+		nova.listImages({}, function(data) {
 			$scope.images = data.images;
 			$scope.$apply();
 		});
