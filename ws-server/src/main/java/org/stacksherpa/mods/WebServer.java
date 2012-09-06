@@ -18,65 +18,78 @@ import java.io.File;
 import org.stacksherpa.proxy.RestProxy;
 
 public class WebServer extends BusModBase implements Handler<HttpServerRequest> {
-
-  private String webRootPrefix;
-  private String indexPage;
-  private boolean gzipFiles;
-
-  public void start() {
-    super.start();
-
-    HttpServer server = vertx.createHttpServer();
-
-    if (getOptionalBooleanConfig("ssl", false)) {
-      server.setSSL(true).setKeyStorePassword(getOptionalStringConfig("key_store_password", "wibble"))
-                         .setKeyStorePath(getOptionalStringConfig("key_store_path", "server-keystore.jks"));
-    }
 	
-	/*
-	server.websocketHandler(new Handler<ServerWebSocket>() {
-		public void handle(final ServerWebSocket ws) {
-			if (ws.path.equals("/myapp")) {
-				ws.dataHandler(new Handler<Buffer>() {
-					public void handle(Buffer data) {
-						ws.writeTextFrame(data.toString()); // Echo it back
-					}
-				});
-			} else {
-				ws.reject();
-			}
+	private static final String API_CONTEXT_PATH = "/api";
+
+	private String webRootPrefix;
+	private String indexPage;
+	private boolean gzipFiles;
+
+	public void start() {
+		super.start();
+
+		HttpServer server = vertx.createHttpServer();
+
+		if (getOptionalBooleanConfig("ssl", false)) {
+			server.setSSL(true).setKeyStorePassword(getOptionalStringConfig("key_store_password", "wibble"))
+			.setKeyStorePath(getOptionalStringConfig("key_store_path", "server-keystore.jks"));
 		}
-	})
-	*/
-	
-    if (getOptionalBooleanConfig("static_files", true)) {
-      server.requestHandler(this);
-    }
 
-    boolean bridge = getOptionalBooleanConfig("bridge", false);
-    if (bridge) {
-      SockJSServer sjsServer = vertx.createSockJSServer(server);
-      JsonArray inboundPermitted = getOptionalArrayConfig("inbound_permitted", new JsonArray());
-      JsonArray outboundPermitted = getOptionalArrayConfig("outbound_permitted", new JsonArray());
+/*
+		server.websocketHandler(new Handler<ServerWebSocket>() {
+			public void handle(final ServerWebSocket ws) {
+				if (ws.path.equals("/myapp")) {
+					ws.dataHandler(new Handler<Buffer>() {
+						public void handle(Buffer data) {
+							ws.writeTextFrame(data.toString()); // Echo it back
+						}
+					});
+				} else {
+					ws.reject();
+				}
+			}
+		})
+*/
 
-      sjsServer.bridge(getOptionalObjectConfig("sjs_config", new JsonObject().putString("prefix", "/eventbus")),
-                       inboundPermitted, outboundPermitted,
-                       getOptionalLongConfig("auth_timeout", 5 * 60 * 1000),
-                       getOptionalStringConfig("auth_address", "vertx.basicauthmanager.authorise"));
-    }
+		if (getOptionalBooleanConfig("static_files", true)) {
+			server.requestHandler(this);
+		}
 
-    gzipFiles = getOptionalBooleanConfig("gzip_files", false);
-    String webRoot = getOptionalStringConfig("web_root", "web");
-    String index = getOptionalStringConfig("index_page", "index.html");
-    webRootPrefix = webRoot + File.separator;
-    indexPage = webRootPrefix + index;
+		boolean bridge = getOptionalBooleanConfig("bridge", false);
+		if (bridge) {
+			SockJSServer sjsServer = vertx.createSockJSServer(server);
+			JsonArray inboundPermitted = getOptionalArrayConfig("inbound_permitted", new JsonArray());
+			JsonArray outboundPermitted = getOptionalArrayConfig("outbound_permitted", new JsonArray());
 
-    server.listen(getOptionalIntConfig("port", 80), getOptionalStringConfig("host", "0.0.0.0"));
-  }
+			sjsServer.bridge(getOptionalObjectConfig("sjs_config", new JsonObject().putString("prefix", "/eventbus")),
+			inboundPermitted, outboundPermitted,
+			getOptionalLongConfig("auth_timeout", 5 * 60 * 1000),
+			getOptionalStringConfig("auth_address", "vertx.basicauthmanager.authorise"));
+		}
 
-  public void handle(HttpServerRequest req) {
-	handleWeb(req);
-  }
+		gzipFiles = getOptionalBooleanConfig("gzip_files", false);
+		String webRoot = getOptionalStringConfig("web_root", "web");
+		String index = getOptionalStringConfig("index_page", "index.html");
+		webRootPrefix = webRoot + File.separator;
+		indexPage = webRootPrefix + index;
+
+		server.listen(getOptionalIntConfig("port", 80), getOptionalStringConfig("host", "0.0.0.0"));
+	}
+
+	public void handle(HttpServerRequest req) {
+		/*
+		System.out.println("Got request: " + req.uri);
+		System.out.println("Headers are: ");
+		for (String key : req.headers().keySet()) {
+			System.out.println(key + ":" + req.headers().get(key));
+		}
+		*/
+		if(req.path.startsWith(API_CONTEXT_PATH)) {
+			handleApi(req);
+		} else {
+			handleWeb(req);
+		}
+	}
 
 	private void handleWeb(HttpServerRequest req) {
 		// browser gzip capability check
@@ -109,11 +122,7 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 	}
 
 	private void handleApi(final HttpServerRequest req) {
-		System.out.println("Got request: " + req.uri);
-          System.out.println("Headers are: ");
-          for (String key : req.headers().keySet()) {
-            System.out.println(key + ":" + req.headers().get(key));
-          }
+		
     	  
         //TODO: populate response headers from proxy
     	req.response.headers().put("Access-Control-Allow-Origin", "*");
@@ -122,6 +131,8 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
     	try {
     		
     		final String uri = req.headers().remove("X-URI");
+
+			System.out.println(uri);
     		
     		if(uri != null) {
     			if("GET".equals(req.method)) {

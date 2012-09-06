@@ -3,6 +3,7 @@ Keystone = function(url) {
 }
 Keystone.prototype.login = function(auth, success) {
 	
+	
 	$.ajax({
 		type : "GET",
 		url : "data/keystone/unscoped.json",
@@ -10,20 +11,21 @@ Keystone.prototype.login = function(auth, success) {
 		success : success
 	})
 	
+	
 	/*
 	$.ajax({
-		crossDomain: true,
+		//crossDomain: true,
 		type : "POST",
-		url : "http://localhost:9090",
-		headers : [
-			{"X-URI":"http://192.168.1.38:5000/v2.0/tokens"}
-		]
-		data : auth,
+		url : "http://localhost:8080/api",
+		headers : {
+			"X-URI":"http://192.168.1.38:5000/v2.0/tokens"
+		},
+		contentType : "application/json; charset=UTF-8",
+		data : JSON.stringify(auth),
 		dataType: "json",
 		success : success
 	})
 	*/
-
 }
 
 Keystone.prototype.exchangeToken = function(success) {

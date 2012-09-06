@@ -24,9 +24,24 @@ public class RestProxy {
 		
 		Map<String, Object> response = new HashMap<String, Object>();
 		
-		for(Map.Entry<String, String> header : headers.entrySet()) {
-			httpRequestBase.addHeader(header.getKey(), header.getValue());
+		
+		for(String headerName : new String[]{"Content-Type", "Accept", "X-Auth-Token"}) {
+			String headerValue = headers.get(headerName);
+			if(headerValue != null) {
+				System.out.println(headerName + ":" +  headerValue);
+				httpRequestBase.addHeader(headerName, headerValue);
+			}
 		}
+		
+		/*
+		for(Map.Entry<String, String> header : headers.entrySet()) {
+			
+			if("X-Auth-Token".equals(header.getKey())) {
+				System.out.println(header.getKey() + ":" +  header.getValue());
+				httpRequestBase.addHeader(header.getKey(), header.getValue());
+			}
+		}
+		*/
 		
 		HttpResponse httpResponse = proxy.execute(httpRequestBase);
 		
@@ -48,6 +63,7 @@ public class RestProxy {
 	}
 	
 	public static Map<String, Object> post(String uri, String entity, Map<String, String> headers) throws Exception {
+		System.out.println(entity);
 		HttpPost httpMethod = new HttpPost(uri);
 		httpMethod.setEntity(new StringEntity(entity));
 		return execute(httpMethod, headers);
