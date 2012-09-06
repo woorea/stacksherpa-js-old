@@ -63,7 +63,6 @@ public class RestProxy {
 	}
 	
 	public static Map<String, Object> post(String uri, String entity, Map<String, String> headers) throws Exception {
-		System.out.println(entity);
 		HttpPost httpMethod = new HttpPost(uri);
 		httpMethod.setEntity(new StringEntity(entity));
 		return execute(httpMethod, headers);

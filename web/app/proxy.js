@@ -1,11 +1,11 @@
 Proxy = function(url) {
-	this.url = url || "http://localhost:8080/api"
+	this.url = url || "http://192.168.1.34:8080/api"
 }
 
 Proxy.prototype.get = function(headers, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "GET",
 		url : this.url,
 		headers : headers,
@@ -18,7 +18,7 @@ Proxy.prototype.get = function(headers, success) {
 Proxy.prototype.post = function(headers, data, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "POST",
 		url : this.url,
 		headers : headers,
@@ -33,7 +33,7 @@ Proxy.prototype.post = function(headers, data, success) {
 Proxy.prototype.put = function(headers, data, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "PUT",
 		url : this.url,
 		headers : headers,
@@ -48,7 +48,7 @@ Proxy.prototype.put = function(headers, data, success) {
 Proxy.prototype.delete = function(headers, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "DELETE",
 		url : this.url,
 		headers : headers,
@@ -61,7 +61,7 @@ Proxy.prototype.delete = function(headers, success) {
 Proxy.prototype.head = function(headers, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "HEAD",
 		url : this.url,
 		headers : headers,
@@ -74,7 +74,7 @@ Proxy.prototype.head = function(headers, success) {
 Proxy.prototype.options = function(headers, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "OPTIONS",
 		url : this.url,
 		headers : headers,
@@ -87,7 +87,7 @@ Proxy.prototype.options = function(headers, success) {
 Proxy.prototype.trace = function(headers, success) {
 	
 	$.ajax({
-		//crossDomain: true,
+		crossDomain: true,
 		type : "TRACE",
 		url : this.url,
 		headers : headers,
