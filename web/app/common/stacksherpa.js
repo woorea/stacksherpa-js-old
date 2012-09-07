@@ -158,7 +158,7 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 	
 	$scope.providers = providers
 	
-	$scope.provider = "hpcloud"
+	$scope.provider = "openstack"
 	
 	$scope.username = "demo"
 	$scope.password = "secret0"
@@ -188,12 +188,13 @@ stacksherpa.controller("LoginCtrl", function($scope, $location, $cookieStore, eb
 	}
 	
 	$scope.onLogin = function() {
+		
 		window.keystone = new Keystone($scope.providers[$scope.provider].identityEndpoint);
 		
 		keystone.login({
 			passwordCredentials : {
-				username : $scope.username,
-				password : $scope.password
+				username : "admin",
+				password : "secret0"
 			}
 		}, callback);
 		

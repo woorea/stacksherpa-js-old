@@ -5,9 +5,8 @@
 		<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
 		<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
 		<link href="css/stacksherpa.css" rel="stylesheet" />
-		<script src="js/angular-1.0.1.min.js"></script>
-		<script src="js/angular-resource-1.0.1.min.js"></script>
-		<script src="js/angular-cookies-1.0.1.min.js"></script>
+		<script src="js/angular.min.js"></script>
+		<script src="js/angular-cookies.min.js"></script>
 	</head>
 	<body data-ng-controller="StackSherpaCtrl">
 		
@@ -22,32 +21,31 @@
 		<script src="js/sockjs-0.3.min.js"></script>
 		<script src="js/vertxbus.js"></script>
 		
-		<script src="app/proxy.js"></script>
+		<script src="app/common/proxy.js"></script>
+		<script src="app/common/stacksherpa.js"></script>
 		
-		<script src="app/keystone-client.js"></script>
-		<script src="app/compute-client.js"></script>
+		<script src="app/identity/keystone-client.js"></script>
+		<script src="app/compute/compute-client.js"></script>
 		<script src="app/storage/swift-client.js"></script>
-		
-		<script src="app/stacksherpa.js"></script>
 		
 		<script src="app/portal/users.js"></script>
 		<script src="app/portal/usage.js"></script>
 		<script src="app/portal/billing.js"></script>
 		
-		<script src="app/tenants.js"></script>
-		<script src="app/users.js"></script>
-		<script src="app/roles.js"></script>
-		<script src="app/services.js"></script>
-		<script src="app/endpoints.js"></script>
+		<script src="app/identity/tenants.js"></script>
+		<script src="app/identity/users.js"></script>
+		<script src="app/identity/roles.js"></script>
+		<script src="app/identity/services.js"></script>
+		<script src="app/identity/endpoints.js"></script>
 		
-		<script src="app/servers.js"></script>
-		<script src="app/images.js"></script>
-		<script src="app/flavors.js"></script>
-		<script src="app/floatingips.js"></script>
-		<script src="app/volumes.js"></script>
-		<script src="app/snapshots.js"></script>
-		<script src="app/keypairs.js"></script>
-		<script src="app/securitygroups.js"></script>
+		<script src="app/compute/servers.js"></script>
+		<script src="app/compute/images.js"></script>
+		<script src="app/compute/flavors.js"></script>
+		<script src="app/compute/floatingips.js"></script>
+		<script src="app/compute/volumes.js"></script>
+		<script src="app/compute/snapshots.js"></script>
+		<script src="app/compute/keypairs.js"></script>
+		<script src="app/compute/securitygroups.js"></script>
 		
 		<script src="app/storage/containers.js"></script>
 		
