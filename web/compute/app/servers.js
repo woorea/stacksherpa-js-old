@@ -15,7 +15,7 @@ var servers = [
 	{"id" : "server.3", "name" : "eureka.3", "flavor" : "1 vCPU, 1 Gb RAM, 20 Gb Disk", "image" : "ubuntu", "status" : "ACTIVE"}
 ]
 
-stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("ServerListCtrl", function($rootScope, $scope, $compile, nova) {
 	
 	$scope.page = 'views/compute/servers/list.html'
 	
@@ -68,7 +68,7 @@ stacksherpa.controller("ServerListCtrl", function($rootScope, $scope, $compile) 
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routeParams, $location) {
+compute.controller("ServerShowCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
 	
 	$scope.page = 'views/compute/servers/show.html'
 	
@@ -164,7 +164,7 @@ stacksherpa.controller("ServerShowCtrl", function($rootScope, $scope, $routePara
 
 });
 
-stacksherpa.controller("ServerRebootCtrl", function($rootScope, $scope) {
+compute.controller("ServerRebootCtrl", function($rootScope, $scope, nova) {
 	
 	$scope.onReboot = function() {
 		$rootScope.$broadcast('modal.hide');
@@ -172,7 +172,7 @@ stacksherpa.controller("ServerRebootCtrl", function($rootScope, $scope) {
 	
 });
 
-stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
+compute.controller("ServerLaunchCtrl", function($rootScope, $scope, nova) {
 	
 	$scope.server = {
 		metadata : {},
@@ -236,7 +236,7 @@ stacksherpa.controller("ServerLaunchCtrl", function($rootScope, $scope) {
 	$scope.show(0);
 	
 });
-stacksherpa.controller("LaunchServerSelectImageCtrl",function($scope) {
+compute.controller("LaunchServerSelectImageCtrl",function($scope, nova) {
 	
 	$scope.images = []
 
@@ -255,7 +255,7 @@ stacksherpa.controller("LaunchServerSelectImageCtrl",function($scope) {
 	$scope.onRender();
 	
 });
-stacksherpa.controller("LaunchServerConfigurationCtrl",function($scope) {
+compute.controller("LaunchServerConfigurationCtrl",function($scope, nova) {
 
 	$scope.flavors = []
 	
@@ -273,7 +273,7 @@ stacksherpa.controller("LaunchServerConfigurationCtrl",function($scope) {
 	$scope.onRender();
 	
 });
-stacksherpa.controller("LaunchServerMetadataCtrl",function($scope) {
+compute.controller("LaunchServerMetadataCtrl",function($scope) {
 	
 	$scope.onAddMetadata = function() {
 		$scope.server.metadata[$scope.key] = $scope.value;
@@ -285,7 +285,7 @@ stacksherpa.controller("LaunchServerMetadataCtrl",function($scope) {
 	}
 	
 });
-stacksherpa.controller("LaunchServerPersonalityCtrl",function($scope) {
+compute.controller("LaunchServerPersonalityCtrl",function($scope) {
 	
 	$scope.onAddPersonality = function() {
 		$scope.server.personality.push({"path" : $scope.path, "contents" : $scope.contents});
@@ -299,7 +299,7 @@ stacksherpa.controller("LaunchServerPersonalityCtrl",function($scope) {
 	}
 	
 });
-stacksherpa.controller("LaunchServerSecurityCtrl",function($scope) {
+compute.controller("LaunchServerSecurityCtrl",function($scope, nova) {
 	
 	$scope.keyPairs = []
 	$scope.securityGroups = []
@@ -320,6 +320,6 @@ stacksherpa.controller("LaunchServerSecurityCtrl",function($scope) {
 	$scope.onRender();
 	
 });
-stacksherpa.controller("LaunchServerSummaryCtrl",function($scope) {
+compute.controller("LaunchServerSummaryCtrl",function($scope) {
 	
 });

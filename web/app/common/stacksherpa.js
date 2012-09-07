@@ -32,20 +32,6 @@ var stacksherpa = angular.module("stacksherpa",['ngCookies'], function($routePro
 		.when("/identity/endpoints/:endpointId",{controller : "EndpointShowCtrl", templateUrl : "views/identity/layout.html"})
 		
 		.when("/projects/:projectId",{controller : "ProjectCtrl", templateUrl : "views/dashboard/project.html"})
-		.when("/projects/:projectId/region/:regionName/servers",{controller : "ServerListCtrl", templateUrl : "views/compute/layout.html"})
-		
-		.when("/servers/:serverId",{controller : "ServerShowCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/images",{controller : "ImageListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/images/:imageId",{controller : "ImageShowCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/flavors",{controller : "FlavorListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/flavors/:flavorId",{controller : "FlavorShowCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/floating-ips",{controller : "FloatingIpListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/volumes",{controller : "VolumeListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/volumes/:volumeId",{controller : "VolumeShowCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/snapshots",{controller : "SnapshotListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/key-pairs",{controller : "KeyPairListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/security-groups",{controller : "SecurityGroupListCtrl", templateUrl : "views/compute/layout.html"})
-		.when("/security-groups/:securityGroupId",{controller : "SecurityGroupEditCtrl", templateUrl : "views/compute/layout.html"})
 		
 		.when("/projects/:projectId/region/:regionName/storage/containers",{controller : "ContainerListCtrl", templateUrl : "views/storage/layout.html"})
 		.when("/projects/:projectId/region/:regionName/storage/containers/:containerName",{controller : "ContainerShowCtrl", templateUrl : "views/storage/layout.html"})

@@ -1,4 +1,4 @@
-stacksherpa.controller("ImageListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("ImageListCtrl", function($rootScope, $scope, $compile, nova) {
 	
 	$scope.page = 'views/compute/images/list.html'
 	
@@ -41,22 +41,22 @@ stacksherpa.controller("ImageListCtrl", function($rootScope, $scope, $compile) {
 	$scope.logo = function(name) {
 		name = name.toLowerCase();
 		if(name.startsWith('debian')) {
-			return 'images/icons/debian.png';
+			return '/images/icons/debian.png';
 		} else if (name.startsWith('ubuntu')){
-			return 'images/icons/ubuntu.png';
+			return '/images/icons/ubuntu.png';
 		} else if (name.startsWith('fedora')){
-			return 'images/icons/fedora.png';
+			return '/images/icons/fedora.png';
 		} else if (name.startsWith('windows')){
-			return 'images/icons/windows.png';
+			return '/images/icons/windows.png';
 		} else {
-			return 'images/icons/linux.png';
+			return '/images/icons/linux.png';
 		}
 	}
 	
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("ImageShowCtrl", function($rootScope, $scope, $routeParams, $location) {
+compute.controller("ImageShowCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
 
 	$scope.page = 'views/compute/images/show.html'
 

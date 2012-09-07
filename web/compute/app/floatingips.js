@@ -1,4 +1,4 @@
-stacksherpa.controller("FloatingIpListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("FloatingIpListCtrl", function($rootScope, $scope, $compile, nova) {
 	
 	$scope.page = 'views/compute/floatingips/list.html'
 	
@@ -55,6 +55,6 @@ stacksherpa.controller("FloatingIpListCtrl", function($rootScope, $scope, $compi
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("FloatingIpShowCtrl", function($rootScope, $scope, $routeParams, $location) {
+compute.controller("FloatingIpShowCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
 
 });

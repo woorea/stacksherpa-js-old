@@ -1,10 +1,10 @@
-stacksherpa.controller("KeyPairListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("FlavorListCtrl", function($rootScope, $scope, $compile, nova) {
 	
-	$scope.page = 'views/compute/keypairs/list.html'
+	$scope.page = 'views/compute/flavors/list.html'
 	
 	$scope.onCreate = function() {
 		
-		$rootScope.$broadcast('modal.show',{view : 'views/compute/keypairs/create.html'});
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/flavors/create.html'});
 		
 	}
 
@@ -26,14 +26,18 @@ stacksherpa.controller("KeyPairListCtrl", function($rootScope, $scope, $compile)
 	}
 
 	$scope.onRefresh = function() {
-		
-		nova.listKeyPairs(function(data) {
-			$scope.keypairs = data.keypairs;
+		nova.listFlavors({}, function(data) {
+			console.log(data);
+			$scope.flavors = data.flavors;
 			$scope.$apply();
 		});
-		
 	}
 	
 	$scope.onRefresh();
+
+});
+compute.controller("FlavorShowCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
+	
+	$scope.page = 'views/compute/flavors/show.html'
 
 });

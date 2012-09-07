@@ -1,4 +1,4 @@
-stacksherpa.controller("SecurityGroupListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("SecurityGroupListCtrl", function($rootScope, $scope, $compile, nova) {
 	
 	$scope.page = 'views/compute/securitygroups/list.html'
 	
@@ -43,7 +43,7 @@ stacksherpa.controller("SecurityGroupListCtrl", function($rootScope, $scope, $co
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("SecurityGroupEditCtrl", function($rootScope, $scope, $routeParams, $location) {
+compute.controller("SecurityGroupEditCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
 
 	$scope.page = 'views/compute/securitygroups/edit.html'
 

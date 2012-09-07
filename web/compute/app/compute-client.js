@@ -152,7 +152,7 @@ Nova.prototype.listFloatingIps = function(success) {
 Nova.prototype.listVolumes = function(success) {
 	$.ajax({
 		type : "GET",
-		url : "data/nova/volumes/list.json",
+		url : "/data/nova/volumes/list.json",
 		dataType: "json",
 		success : success
 	})
@@ -161,7 +161,7 @@ Nova.prototype.listVolumes = function(success) {
 Nova.prototype.listSnapshots = function(success) {
 	$.ajax({
 		type : "GET",
-		url : "data/nova/snapshots/list.json",
+		url : "/data/nova/snapshots/list.json",
 		dataType: "json",
 		success : success
 	})

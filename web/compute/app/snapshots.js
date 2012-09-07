@@ -1,10 +1,10 @@
-stacksherpa.controller("FlavorListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("SnapshotListCtrl", function($rootScope, $scope, $compile, nova) {
 	
-	$scope.page = 'views/compute/flavors/list.html'
+	$scope.page = 'views/compute/snapshots/list.html'
 	
 	$scope.onCreate = function() {
 		
-		$rootScope.$broadcast('modal.show',{view : 'views/compute/flavors/create.html'});
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/snapshots/create.html'});
 		
 	}
 
@@ -24,20 +24,22 @@ stacksherpa.controller("FlavorListCtrl", function($rootScope, $scope, $compile) 
 			$("thead input[type=checkbox]").prop("checked", false)
 		}
 	}
+	
+	$scope.onCreateVolume = function() {
+		
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/volumes/create.html'});
+		
+	}
 
 	$scope.onRefresh = function() {
-		nova.listFlavors({}, function(data) {
-			console.log(data);
-			$scope.flavors = data.flavors;
+		
+		nova.listSnapshots(function(data) {
+			$scope.snapshots = data.snapshots;
 			$scope.$apply();
 		});
+		
 	}
 	
 	$scope.onRefresh();
-
-});
-stacksherpa.controller("FlavorShowCtrl", function($rootScope, $scope, $routeParams, $location) {
-	
-	$scope.page = 'views/compute/flavors/show.html'
 
 });

@@ -20,7 +20,7 @@
 				<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li ng-repeat="endpoint in compute.endpoints">
-						<a ng-click="onRegionSelected(endpoint,'/projects/' + tenantId + '/region/' + endpoint.region + '/servers')">{{endpoint.region}}</a>
+						<a href="compute/index.html#{{tenantId}}/{{endpoint.region}}/servers">{{endpoint.region}}</a>
 					</li>
 				</ul>
 			</div>

@@ -1,4 +1,4 @@
-stacksherpa.controller("VolumeListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("VolumeListCtrl", function($rootScope, $scope, $compile, nova) {
 	
 	$scope.page = 'views/compute/volumes/list.html'
 	
@@ -54,6 +54,6 @@ stacksherpa.controller("VolumeListCtrl", function($rootScope, $scope, $compile) 
 	$scope.onRefresh();
 
 });
-stacksherpa.controller("VolumeShowCtrl", function($rootScope, $scope, $routeParams, $location) {
+compute.controller("VolumeShowCtrl", function($rootScope, $scope, $routeParams, $location, nova) {
 
 });

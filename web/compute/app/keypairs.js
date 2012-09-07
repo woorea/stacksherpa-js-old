@@ -1,10 +1,10 @@
-stacksherpa.controller("SnapshotListCtrl", function($rootScope, $scope, $compile) {
+compute.controller("KeyPairListCtrl", function($rootScope, $scope, $compile, nova) {
 	
-	$scope.page = 'views/compute/snapshots/list.html'
+	$scope.page = 'views/compute/keypairs/list.html'
 	
 	$scope.onCreate = function() {
 		
-		$rootScope.$broadcast('modal.show',{view : 'views/compute/snapshots/create.html'});
+		$rootScope.$broadcast('modal.show',{view : 'views/compute/keypairs/create.html'});
 		
 	}
 
@@ -24,17 +24,11 @@ stacksherpa.controller("SnapshotListCtrl", function($rootScope, $scope, $compile
 			$("thead input[type=checkbox]").prop("checked", false)
 		}
 	}
-	
-	$scope.onCreateVolume = function() {
-		
-		$rootScope.$broadcast('modal.show',{view : 'views/compute/volumes/create.html'});
-		
-	}
 
 	$scope.onRefresh = function() {
 		
-		nova.listSnapshots(function(data) {
-			$scope.snapshots = data.snapshots;
+		nova.listKeyPairs(function(data) {
+			$scope.keypairs = data.keypairs;
 			$scope.$apply();
 		});
 		
