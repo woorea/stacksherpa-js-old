@@ -4,3 +4,7 @@
 /ws-server/build/
 /rest-proxy/build/
 /rest-proxy/.project
+/ws-server/.project
+/ws-server/.classpath
+/ws-server/.settings/
+/ws-server/bin/

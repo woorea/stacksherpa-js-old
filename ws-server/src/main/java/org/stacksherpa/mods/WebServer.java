@@ -1,23 +1,23 @@
 package org.stacksherpa.mods;
 
+import java.io.File;
 import java.util.Map;
 
+import org.stacksherpa.proxy.RestProxy;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.file.impl.PathAdjuster;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.ServerWebSocket;
+import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.sockjs.SockJSServer;
 
-import java.io.File;
-
-import org.stacksherpa.proxy.RestProxy;
-
 public class WebServer extends BusModBase implements Handler<HttpServerRequest> {
+	
+	
 	
 	private static final String API_CONTEXT_PATH = "/api";
 
@@ -27,6 +27,38 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 
 	public void start() {
 		super.start();
+		
+		RouteMatcher rm = new RouteMatcher();
+		
+		rm.all("/api", new Handler<HttpServerRequest>() {
+
+			@Override
+			public void handle(HttpServerRequest event) {
+				handleApi(event);
+			}
+		
+		});
+		
+		rm.get("/:provider/:tenant/compute/:region", new Handler<HttpServerRequest>() {
+
+			@Override
+			public void handle(HttpServerRequest event) {
+				
+				event.response.sendFile("web/compute/index.html");
+			}
+		
+		});
+		
+		rm.noMatch(new Handler<HttpServerRequest>() {
+
+			@Override
+			public void handle(HttpServerRequest event) {
+				
+				handleWeb(event);
+			}
+		
+		});
+		
 
 		HttpServer server = vertx.createHttpServer();
 
@@ -52,7 +84,8 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 */
 
 		if (getOptionalBooleanConfig("static_files", true)) {
-			server.requestHandler(this);
+			//server.requestHandler(this);
+			server.requestHandler(rm);
 		}
 
 		boolean bridge = getOptionalBooleanConfig("bridge", false);
