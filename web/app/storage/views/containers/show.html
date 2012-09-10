@@ -10,8 +10,7 @@
 							<td>
 								
 								<input type="text" ng-model="name" class="input-medium" />
-								<input type="text" ng-model="contentType" value="application/directory" />
-								<button class="btn"><i class="icon-plus"></i> Create Directory</button>
+								<button ng-click="onCreateDirectory()" class="btn"><i class="icon-plus"></i> Create Directory</button>
 								
 								
 								<input type="file" name="file" class="input-medium" />
@@ -20,7 +19,7 @@
 								<button ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
 							</td>
 							<td class="right">
-								<a ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
+								<button ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
 							</td>
 						</tr>
 					</table>
@@ -43,13 +42,13 @@
 				</tr>
 			</tbody>
 			<tbody ng-repeat="item in objects">
-				<tr ng-show="item.content_type == 'application/directory'">
+				<tr ng-show="item.content_type.indexOf('application/directory') != - 1">
 					<td><input type="checkbox" /></td>
 					<td><i class="icon-folder-close"></i> <a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers/{{$routeParams.container}}">{{item.name}}</a></td>
 					<td colspan="2"></td>
 					<td style="text-align: center"><a href="onDelete(object)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
 				</tr>
-				<tr ng-show="item.content_type != 'application/directory'">
+				<tr ng-show="item.content_type.indexOf('application/directory') == - 1">
 					<td><input type="checkbox" /></td>
 					<td><i class="icon-file"></i> <a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers/{{$routeParams.container}}">{{item.name}}</a></td>
 					<td>{{item.bytes}}</td>
@@ -65,7 +64,7 @@
 									<li><a ng-click="onDownload(object)">Download</a></li>
 								</g:if>
 								<li class="divider"></li>
-								<li><a ng-click="onDelete(object)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+								<li><a ng-click="onDelete(object)" class="confirm-delete"><i class="icon-trash"></i> Delete</a></li>
 							</ul>
 						</div>
 					</td>
