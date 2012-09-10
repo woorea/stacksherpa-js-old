@@ -1,0 +1,66 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/storage/views/common/nav.html'"></div>
+	<div class="span10">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th><input type="checkbox" /></th>
+					<th>Name</th>
+					<th>Size</th>
+					<th>Last Modified</th>
+					<th><br /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td colspan="4"><a href="#/projects/{{projectId}}/region/{{regionName}}/storage/containers">..</td>
+				</tr>
+			</tbody>
+			<tbody ng-repeat="item in objects">
+				<tr ng-show="item.content_type == 'application/directory'">
+					<td><input type="checkbox" /></td>
+					<td><i class="icon-folder-close"></i> <a href="#/projects/{{projectId}}/region/{{regionName}}/storage/containers/{{container.name}}">{{item.name}}</a></td>
+					<td colspan="2"></td>
+					<td style="text-align: center"><a href="onDelete(object)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
+				</tr>
+				<tr ng-show="item.content_type != 'application/directory'">
+					<td><input type="checkbox" /></td>
+					<td><i class="icon-file"></i> <a href="#/projects/{{projectId}}/region/{{regionName}}/storage/containers/{{containerName}}">{{item.name}}</a></td>
+					<td>{{item.bytes}}</td>
+					<td>{{item.last_modified}}</td>
+					<td class="btn-toolbar" style="text-align: center">
+						<div class="btn-group" style="float: none;">
+							<button data-toggle="dropdown" class="btn dropdown-toggle">
+								Available Actions<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<g:if test="${item.contentType != 'application/directory'}">
+									<li><a ng-click="onShow(object)">Show</a></li>
+									<li><a ng-click="onDownload(object)">Download</a></li>
+								</g:if>
+								<li class="divider"></li>
+								<li><a ng-click="onDelete(object)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div id="delete-modal" class="modal hide fade">
+		    <div class="modal-header">
+		      <button class="close" data-dismiss="modal">x</button>
+		      <h3>Delete Object</h3>
+		    </div>
+		    <div class="modal-body">
+		      <p>You are about to delete this object, this procedure is irreversible.</p>
+		      <p>Do you want to proceed?</p>
+		    </div>
+		    <div class="modal-footer">
+		      <a href="#" class="btn danger">Yes</a>
+		      <a href="#" data-dismiss="modal" class="btn secondary">No</a>
+		    </div>
+		</div>
+	</div>
+</div>

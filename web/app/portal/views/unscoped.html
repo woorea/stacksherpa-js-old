@@ -1,0 +1,16 @@
+<table class="table table-stripped">	
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="tenant in tenants">
+			<td>{{tenant.name}}</td>
+			<td style="text-align: right">
+				<button data-ng-click="onTenantSelected(tenant)" class="btn">Select Project</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

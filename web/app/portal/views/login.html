@@ -1,0 +1,45 @@
+<div id="login" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+		<h3>Login on
+			<select ng-init="provider='hpcloud'" ng-model="selectedProvider" ng-options="name for name in ['openstack', 'hpcloud']" class="pull-right">
+			</select>
+		</h3>
+	</div>
+		<div class="modal-body">
+			<p>
+				<label for='identity-endpoint'>Authentication URL:</label>
+				<input type='text' ng-model="providers[selectedProvider].indentityURL" style="width: 98%" />
+			</p>
+			<ng-switch on="selectedProvider">
+			<div ng-switch-when="openstack">			
+			<p>
+				<label for='username'>Username:</label>
+				<input type="text" data-ng-model="providers[selectedProvider].auth.passwordCredentials.username" />
+			</p>
+
+			<p>
+				<label for='password'>Password:</label>
+				<input type="password" data-ng-model="providers[selectedProvider].auth.passwordCredentials.password" />
+			</p>
+			</div>
+			<div ng-switch-when="hpcloud">
+			<p>
+				<label for='access-key'>Access Key:</label>
+				<input type='text' ng-model="providers[selectedProvider].auth.apiAccessKeyCredentials.accessKey" />
+			</p>
+			<p>
+				<label for='secret-key'>Secret Key:</label>
+				<input type='password' ng-model="providers[selectedProvider].auth.apiAccessKeyCredentials.secretKey" />
+			</p>
+			</div>
+			</ng-switch>
+			<p id="remember_me_holder">
+				<label class="checkbox">Remember me
+					<input type='checkbox' />
+				</label>
+			</p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onLogin()">Login</button>
+	</div>
+</div>

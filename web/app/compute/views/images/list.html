@@ -1,0 +1,60 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
+	<div class="span10">
+		<div id="image-list">
+			<div class="well">
+			<table style="width: 100%">
+				<tbody>
+					<tr>
+						<td>
+							<button class="btn btn-launch" data-ng-click="onCreate()"><span class="icon-play"></span> Create</button>
+						</td>
+						<td style="text-align: right">
+							<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
+							<a class="btn btn-refresh" data-ng-click="onRefresh()"><span class="icon-refresh"></span> Refresh</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div class="list">
+				<table class="table table-striped" with-selection-checkboxes="images">
+					<thead>
+						<tr>
+							<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+							<th><br /></th>
+							<th>Name</th>
+							<th>RAM (min)</th>
+							<th>HHD (min)</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="image in images">
+							<td><input type="checkbox" ng-model="image.checked"/></td>
+							<td>
+								<img ng-src="{{logo(image.name)}}" style="width: 32px" />
+							</td>
+							<td><a href="${g.createLink(action : 'show', params : [tenantId : params.tenantId, imageId : item.id])}">{{image.name}}</a></td>
+							<td>{{image.metadata.min_ram}}</td>
+							<td>{{image.metadata.min_disk}}</td>
+							<td><span class="label label-success">{{image.status}}</span></td>
+							<td class="btn-toolbar">
+								<div class="btn-group" style="float: right; margin-right: 35px">
+									<button data-toggle="dropdown" class="btn dropdown-toggle">Actions <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu">
+										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/images/{{image.id}}">Show</a></li>
+										<li><a data-ng-click="onLaunch()">Launch</a></li>
+										<li class="divider"></li>
+										<li><a href="${g.createLink(action : 'delete', params : [tenantId : params.tenantId, imageId : item.id])}" class="confirm-delete">Delete ...</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

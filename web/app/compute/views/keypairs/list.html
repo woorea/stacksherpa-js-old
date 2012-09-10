@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
+	<div class="span10">
+		<div class="well">
+		<table class="actions">
+		<tr>
+		<td>
+		<button ng-click="onCreate()" class="btn"><i class="icon-plus"></i> Create</button>
+		<button ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
+		</td>
+		<td class="right">
+		<button ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
+		</td>
+		</tr>
+		</table>
+		</div>
+		<table class="table table-striped" with-selection-checkboxes="keypairs">
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th>Name</th>
+					<th>Fingerprint</th>
+					<th><br /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in keypairs">
+					<td><input type="checkbox" ng-model="item.checked" /></td>
+					<td>{{item.keypair.name}}</td>
+					<td>{{item.keypair.fingerprint}}</td>
+					<td class="btn-toolbar">
+						<div class="btn-group" style="float:right; margin-right: 35px">
+							<button data-toggle="dropdown" class="btn dropdown-toggle">
+								Available Actions<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a ng-click="onDelete(item.keypair.name)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

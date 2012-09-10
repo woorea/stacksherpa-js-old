@@ -156,34 +156,35 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 
 	private void handleApi(final HttpServerRequest req) {
 		
-    	  
-        //TODO: populate response headers from proxy
+		//TODO: populate response headers from proxy
     	req.response.headers().put("Access-Control-Allow-Origin", "*");
-		req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token");
+		req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token,x-requested-with");
 		req.response.headers().put("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
+		
     	final Map<String, Object> response;
     	try {
     		
     		final String uri = req.headers().remove("X-URI");
 
-			System.out.println(uri);
+    		System.out.println(uri);
+			
     		
     		if(uri != null) {
     			if("GET".equals(req.method)) {
-        			req.response.end((String) RestProxy.get(uri, req.headers()).get("entity"));
+					handleResponse(req, RestProxy.get(uri, req.headers()));
+					
             	} else if ("POST".equals(req.method)) {
+            		System.out.println(req.method);
             		req.bodyHandler(new Handler<Buffer>() {
 
     					@Override
     					public void handle(Buffer event) {
     						try {
-								String osr = (String) RestProxy.post(uri, event.toString("UTF-8"), req.headers()).get("entity");
-								
-    							req.response.end(osr);
+    							System.out.println(event.toString("UTF-8"));
+    							handleResponse(req, RestProxy.post(uri, event.toString("UTF-8"), req.headers()));
     						} catch (Exception e) {
     							e.printStackTrace();
     						}
-    						
     					}
     				
             		});
@@ -194,7 +195,7 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
     					@Override
     					public void handle(Buffer event) {
     						try {
-    							req.response.end((String) RestProxy.put(uri, event.toString("UTF-8"), req.headers()).get("entity"));
+    							handleResponse(req, RestProxy.put(uri, event.toString("UTF-8"), req.headers()));
     						} catch (Exception e) {
     							e.printStackTrace();
     						}
@@ -202,14 +203,11 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
     				
             		});
             	} else if ("DELETE".equals(req.method)) {
-            		RestProxy.delete(uri, req.headers());
-            		req.response.end();
+            		handleResponse(req, RestProxy.delete(uri, req.headers()));
             	} else if ("HEAD".equals(req.method)) {
-					RestProxy.head(uri, req.headers());
-            		req.response.end();
+            		handleResponse(req, RestProxy.head(uri, req.headers()));
             	} else if ("OPTIONS".equals(req.method)) {
-					//cors
-            		req.response.end();
+            		//handleResponse(req, RestProxy.options(uri, req.headers()));
             	}
     		} else {
     			req.response.end("No X-URI HTTP Header found in this request");
@@ -217,6 +215,30 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+	}
+	
+	public void handleResponse(HttpServerRequest req, Map<String, Object> proxyResponse) {
+		
+		System.out.println(proxyResponse);
+		
+		req.response.statusCode = (Integer) proxyResponse.get("status");
+		
+		
+		
+		Map<String,String> proxyResponseHeaders = (Map<String, String>) proxyResponse.get("headers");
+		
+		for(Map.Entry<String, String> proxyResponseHeader : proxyResponseHeaders.entrySet()) {
+			System.out.println(">>" + proxyResponseHeader.getKey() + ":" + proxyResponseHeader.getValue());
+		}
+		
+		
+		Object entity = proxyResponse.get("entity");
+		if(entity != null) {
+			System.out.println(">>" + entity);
+			req.response.end((String) entity);
+		} else {
+			req.response.end();
+		}
 	}
 
 }

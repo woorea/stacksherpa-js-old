@@ -1,0 +1,48 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
+	<div class="span10">
+		<div id="server-list">
+			<div class="well">
+			<table style="width: 100%">
+				<tbody>
+					<tr>
+						<td>
+							<button class="btn btn-launch" data-ng-click="onLaunch()"><span class="icon-play"></span> Launch</button>
+						</td>
+						<td style="text-align: right">
+							<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
+							<a class="btn btn-refresh" data-ng-click="onRefresh()"><span class="icon-refresh"></span> Refresh</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div class="list">
+			<table class="table table-stripped" with-selection-checkboxes="servers">
+				<thead>
+					<tr>
+						<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+						<th>Name</th>
+						<th>Flavor</th>
+						<th>Image</th>
+						<th>Status</th>
+						<th><br /></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="server in servers">
+						<td><input type="checkbox" ng-model="server.checked"></td>
+						<td>{{server.name}}</td>
+						<td>{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk</td>
+						<td>{{server.image.name}}</td>
+						<td>{{server.status}}</td>
+						<td>
+							<a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/servers/{{server.id}}" class="btn btn-show"><span class="icon-eye-open"></span> Show</a>
+						</td>
+					</tr>
+				<tbody>
+			</table>
+			</div>
+		</div>
+	</div>
+</div>

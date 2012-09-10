@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
+	<div class="span10">
+		<h1>Attach Volume</h1>
+		<form action="${createLink(controller : 'volumes', action : 'attach', params : [tenantId : params.tenantId, volumeId : params.volumeId])}" method="POST">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th style="width: 5%"><input type="checkbox" /></th>
+					<th style="width: 20%">Server</th>
+					<th style="width: 20%">Device</th>
+					<th style="width: 15%"><br /></th>
+				</tr>
+				<tr>
+					<td><br /></td>
+					<td><g:select name="serverId" from="${servers}" class="span8" optionKey="id" optionValue="name" /></td>
+					<td><g:textField name="device" class="span8" /></td>
+					<td><button class="btn"><i class="icon-ok"></i> Attach</button></td>
+				</tr>
+			</thead>
+			<tbody>
+				<g:each in="${volume.attachments}" var="attachment" status="status">
+					<g:if test="${attachment.serverId}">
+					<tr>
+						<td><input type="checkbox" /></td>
+						<td>${attachment.serverId}</td>
+						<td>${attachment.device}</td>
+						<td>
+							<a href="${createLink(action : 'detach', params : [tenantId : params.tenantId, serverId : attachment.serverId, volumeId : attachment.volumeId])}" class="btn"><i class="icon-remove"></i> Detach</a>
+						</td>
+					</tr>
+					</g:if>
+				</g:each>
+			</tbody>
+		</table>
+		</form>
+	</div>
+</div>

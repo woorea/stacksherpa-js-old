@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
+	<div class="span10">
+		<div class="well">
+		<table style="width: 100%">
+			<tbody>
+				<tr>
+					<td>
+						<button class="btn btn-launch" data-ng-click="onCreate()"><span class="icon-play"></span> Create</button>
+					</td>
+					<td style="text-align: right">
+						<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
+						<a class="btn btn-refresh" data-ng-click="onRefresh()"><span class="icon-refresh"></span> Refresh</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		<table class="table table-striped" with-selection-checkboxes="flavors">
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th>Id</th>
+					<th>Name</th>
+					<th>RAM</th>
+					<th>vCPUs</th>
+					<th>Disk</th>
+					<th>RX / TX</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="flavor in flavors">
+					<td><input id="checkbox-flavor-{{flavor.id}" type="checkbox" ng-model="item.checked" /></td>
+					<td>{{flavor.id}}</td>
+					<td>{{flavor.name}}</td>
+					<td>{{flavor.ram}}</td>
+					<td>{{flavor.vcpus}}</td>
+					<td>{{flavor.disk}}</td>
+					<td>{{flavor.rxTxFactor}}</td>
+					<td class="right"><a href="${createLink(action: 'delete', params : [flavorId : item.id])}" class="btn"><i class="icon-remove"></i> Delete</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

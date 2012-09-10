@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="span12">
+		<ng-include src="'app/identity/views/common/nav.html'">
+	</div>
+</div>
+<div class="row">
+	<div class="span12">
+		<h1>Tenant List</h1>
+		<hr />
+		<div class="well">
+			<table class="actions">
+				<tr>
+					<td>
+						<button data-ng-click="onCreate()" class="btn"><i class="icon-plus"></i> Create</button>
+						<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
+					</td>
+					<td class="right">
+						<button data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table class="table table-stripped" with-selection-checkboxes="tenants">
+			<thead>
+				<tr>
+					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Enabled</th>
+					<th><br /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="tenant in tenants">
+					<td><input type="checkbox" ng-model="tenant.checked" /></td>
+					<td><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}">{{tenant.name}}</a></td>
+					<td>{{item.description}}</td>
+					<td>{{item.enabled}}</td>
+					<td class="right">
+						<button ng-click="onDelete()" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

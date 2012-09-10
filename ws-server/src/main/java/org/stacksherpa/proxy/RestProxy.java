@@ -3,6 +3,7 @@ package org.stacksherpa.proxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,20 +29,9 @@ public class RestProxy {
 		for(String headerName : new String[]{"Content-Type", "Accept", "X-Auth-Token"}) {
 			String headerValue = headers.get(headerName);
 			if(headerValue != null) {
-				System.out.println(headerName + ":" +  headerValue);
 				httpRequestBase.addHeader(headerName, headerValue);
 			}
 		}
-		
-		/*
-		for(Map.Entry<String, String> header : headers.entrySet()) {
-			
-			if("X-Auth-Token".equals(header.getKey())) {
-				System.out.println(header.getKey() + ":" +  header.getValue());
-				httpRequestBase.addHeader(header.getKey(), header.getValue());
-			}
-		}
-		*/
 		
 		HttpResponse httpResponse = proxy.execute(httpRequestBase);
 		
@@ -52,7 +42,14 @@ public class RestProxy {
 			EntityUtils.consume(httpEntity);
 		}
 		
-		System.out.println(response.get("entity"));
+		
+		Map<String, String> responseHeaders = new HashMap<>();
+		for(Header header : httpResponse.getAllHeaders()) {
+			responseHeaders.put(header.getName(), header.getValue());
+		}
+		
+		response.put("headers", responseHeaders);
+		response.put("status", httpResponse.getStatusLine().getStatusCode());
 		
 		return response;
 	}
