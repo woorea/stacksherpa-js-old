@@ -52,4 +52,26 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 });
 storage.controller("ContainerShowCtrl",function($scope) {
 	
+	$scope.onRefresh = function() {
+		
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/" + $routeParams.name + "?format=json"
+		}).success(function(data, status, headers, config) {
+			$scope.objects = data;
+			/*
+			$scope.servers = [];
+			angular.forEach(data.servers, function(server) {
+				server.checked = false;
+				$scope.servers.push(server);
+			});
+			*/
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+	
+	$scope.onRefresh();
+	
+	
 });
