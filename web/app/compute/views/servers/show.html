@@ -38,7 +38,7 @@
 												</td>
 												<td style="border: 0; text-align: right">
 													<div ng-show="server.status == 'ACTIVE'">
-													<a data-ng-click="onReboot()">Reboot</a>
+													<a data-bootstrap-modal="app/compute/views/servers/reboot.html">Reboot</a>
 													| <a data-ng-click="onPause()">Pause</a>
 													| <a data-ng-click="onSuspend()">Suspend</a>
 													| <a data-ng-click="onLock()">Lock</a>
@@ -76,9 +76,9 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<a data-ng-click="onShowConsoleOutput()">Show console output</a> |
-									<a data-ng-click="onShowSSHConnectionInformation()">SSH Connection Information</a> | 
-									<a data-ng-click="onVNCConnection()">VNC Connection</a>
+									<a data-bootstrap-modal="app/compute/views/servers/console.html">Show console output</a> |
+									<a data-bootstrap-modal="app/compute/views/servers/sshinfo.html">SSH Connection Information</a> | 
+									<a data-bootstrap-modal="app/compute/views/servers/vnc.html">VNC Connection</a>
 								</td>
 							</tr>
 							<tr>
@@ -88,12 +88,12 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<a data-ng-click="onChangePassword()">Change Password</a>
+									<a data-bootstrap-modal="app/compute/views/servers/change-password.html">Change Password</a>
 								</td>
 							</tr>
 							<tr>
 								<td colspan="2">
-									<a data-ng-click="onCreateBackup()">Create Backup</a>
+									<a data-bootstrap-modal="app/compute/views/servers/backup.html">Create Backup</a>
 								</td>
 							</tr>
 						</tbody>
@@ -112,7 +112,7 @@
 											<tr>
 												<td style="border: 0; text-align: right">{{server.image.name}}</td>
 												<td style="border: 0; text-align: right">
-													<a data-ng-click="onRebuild()" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
+													<a data-bootstrap-modal="app/compute/views/servers/rebuild.html" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
 												</td>
 											</tr>
 										</tbody>
@@ -130,7 +130,7 @@
 												</td>
 												<g:if test="{{server.status == 'ACTIVE'}}">
 													<td style="border: 0">
-														<a data-ng-click="onResize()">Resize</a>
+														<a data-bootstrap-modal="app/compute/views/servers/resize.html">Resize</a>
 													</td>
 												</g:if>
 											</tr>

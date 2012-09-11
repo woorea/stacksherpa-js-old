@@ -41,11 +41,15 @@
 							
 							
 							$scope.$on('modal.show', function(event, args) {
+							
 								$scope.modal = args.view
+								console.log($scope);
+								$scope.$apply();
 							})
 
 							$scope.$on('modal.hide', function(event, args) {
 								$scope.modal = ''
+								$scope.$apply();
 							})
 							
 
@@ -85,7 +89,15 @@
 									}
 								};
 							}
+						})
+						.directive('bootstrapModal', function() {
+							return function(scope, element, attrs) {
+								element.click(function() {
+									scope.$root.$broadcast('modal.show',{view : attrs.bootstrapModal});
+								});
+							}
 						});
+						
 					angular.bootstrap(document, ["stacksherpa","openstack","portal","compute","identity","storage"]);
 				}
 			);

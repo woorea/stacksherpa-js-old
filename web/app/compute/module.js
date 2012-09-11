@@ -102,7 +102,21 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onReboot = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/reboot.html'});
+		
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $routeParams.id + "/action",
+			data : {
+				reboot : {
+					type : $scope.type
+				}
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+		
 	}
 	
 	$scope.onPause = function() {
@@ -201,36 +215,8 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 	
-	$scope.onShowConsoleOutput = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/console.html'});
-	}
-	
-	$scope.onShowSSHConnectionInformation = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/sshinfo.html'});
-	}
-	
-	$scope.onVNCConnection = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/vnc.html'});
-	}
-	
 	$scope.onCreateImage = function() {
 		alert('create image');
-	}
-	
-	$scope.onChangePassword = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/change-password.html'});
-	}
-	
-	$scope.onCreateBackup = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/backup.html'});
-	}
-	
-	$scope.onRebuild = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/rebuild.html'});
-	}
-	
-	$scope.onResize = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/resize.html'});
 	}
 	
 	$scope.onResizeConfirm = function() {
@@ -305,27 +291,6 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 
 	$scope.onRefresh();
 
-});
-compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
-	
-	$scope.onReboot = function() {
-		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				reboot : {
-					type : $scope.type
-				}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
-		
-	}
-	
 });
 
 compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams, OpenStack) {
