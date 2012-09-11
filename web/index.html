@@ -71,7 +71,7 @@
 
 								scope.allChecked = function() {
 									var items = scope[attrs.withSelectionCheckboxes];
-									if(items.length) {
+									if(items && items.length) {
 										var isCheckedAll = true;
 										angular.forEach(items, function(item) {
 										    if (!item.checked) {
