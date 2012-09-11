@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -59,15 +60,15 @@ public class RestProxy {
 		return execute(httpMethod, headers);
 	}
 	
-	public static Map<String, Object> post(String uri, String entity, Map<String, String> headers) throws Exception {
+	public static Map<String, Object> post(String uri, byte[] entity, Map<String, String> headers) throws Exception {
 		HttpPost httpMethod = new HttpPost(uri);
-		httpMethod.setEntity(new StringEntity(entity));
+		httpMethod.setEntity(new ByteArrayEntity(entity));
 		return execute(httpMethod, headers);
 	}
 	
-	public static Map<String, Object> put(String uri, String entity, Map<String, String> headers) throws Exception {
+	public static Map<String, Object> put(String uri, byte[] entity, Map<String, String> headers) throws Exception {
 		HttpPut httpMethod = new HttpPut(uri);
-		httpMethod.setEntity(new StringEntity(entity));
+		httpMethod.setEntity(new ByteArrayEntity(entity));
 		return execute(httpMethod, headers);
 	}
 	
@@ -79,17 +80,6 @@ public class RestProxy {
 	public static Map<String, Object> head(String uri, Map<String, String> headers) throws Exception {
 		HttpHead httpMethod = new HttpHead(uri);
 		return execute(httpMethod, headers);
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void execute() throws Exception {
-		String json = "{\"auth\":{\"passwordCredentials\":{\"username\":\"demo\",\"password\":\"secret0\"}, \"tenantName\" : \"demo\"}}";
-		post("http://192.168.1.38:5000/v2.0/tokens", json, new HashMap<String, String>() {{
-			put("Content-Type", "application/json");
-		}});
-	
 	}
 
 }

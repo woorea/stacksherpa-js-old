@@ -74,6 +74,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 			}}
 		}).success(function(data, status, headers, config) {
 			OpenStack.access = data.access;
+			$.cookie("X-Auth-Token", OpenStack.access.token.id);
 			$location.path("/" + OpenStack.access.token.tenant.name);
 		}).error(function(data, status, headers, config) {
 			alert(status);

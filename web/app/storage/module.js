@@ -55,7 +55,7 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 });
 storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
+	$scope.endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
 	
 	$scope.onCreateDirectory = function() {
 		
@@ -76,9 +76,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	$scope.onUploadFile = function() {
 		
-		console.log(OpenStack.proxy);
-		
-		var endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
+		//var endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
 
 	      $.ajax({
 			crossDomain : true,
@@ -87,7 +85,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 			//url : endpoint + "/" + $routeParams.container + "/" + file.name,
 			headers : {
 				"X-Auth-Token" : OpenStack.access.token.id,
-				"X-URI" : endpoint + "/" + $routeParams.container + "/" + file.name
+				"X-URI" : $scope.endpoint + "/" + $routeParams.container + "/" + file.name
 			},
 	        data: file,
 			dataType : "json",
@@ -103,6 +101,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	      });
 	};
 	
+	/*
 	$scope.onDownload = function(object) {
 		
 		OpenStack.ajax({
@@ -114,12 +113,13 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 
 		});
 	}
+	*/
 	
 	$scope.onRefresh = function() {
 		
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/" + $routeParams.container + "?format=json"
+			url : $scope.endpoint + "/" + $routeParams.container + "?format=json"
 		}).success(function(data, status, headers, config) {
 			$scope.objects = data;
 		}).error(function(data, status, headers, config) {
