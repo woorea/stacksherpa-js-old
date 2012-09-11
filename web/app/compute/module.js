@@ -865,45 +865,36 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
-	$scope.onAllocate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/floatingips/allocate.html'});
-		
-	}
-	
-	$scope.onDeallocate = function() {
-		
-		alert('onDeallocate')
-		
-	}
-	
-	$scope.onAssociate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/floatingips/associate.html'});
-		
-	}
-	
-	$scope.onDissasociate = function() {
-		
-		alert('onDissasociate')
-		
+	$scope.onDisassociate = function(floatingIp) {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			data : {
+				removeFloatingIp : {
+					address : floatingIp.address
+				}
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh();
+		}).error(function(data, status, headers, config) {
+
+		});
 	}
 
-	$scope.onDelete = function() {
+	$scope.onDeallocate = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.floating_ips, function(fip) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/os-floating-ips/" + fip.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -922,6 +913,66 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 	$scope.onRefresh();
 
 });
+compute.controller("AllocateFloatingIpCtrl", function($scope, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : endpoint + "/os-floating-ip-pools"
+	}).success(function(data, status, headers, config) {
+		$scope.pools = data.pools;
+	}).error(function(data, status, headers, config) {
+
+	});
+	
+	$scope.onAllocate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-floating-ips",
+			data : {
+				pool : $scope.pool
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
+compute.controller("AssociateFloatingIpCtrl", function($scope, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : endpoint + "/servers/detail"
+	}).success(function(data, status, headers, config) {
+		$scope.servers = data.servers;
+	}).error(function(data, status, headers, config) {
+
+	});
+	
+	$scope.onAssociate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			data : {
+				addFloatingIp : {
+					address : $routeParams.address
+				}
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
 compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
