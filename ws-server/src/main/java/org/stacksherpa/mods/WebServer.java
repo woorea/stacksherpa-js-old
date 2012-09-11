@@ -16,9 +16,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.sockjs.SockJSServer;
 
 public class WebServer extends BusModBase implements Handler<HttpServerRequest> {
-	
-	
-	
+
 	private static final String API_CONTEXT_PATH = "/api";
 
 	private String webRootPrefix;
