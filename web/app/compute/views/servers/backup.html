@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ServerBackupCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Create Backup</h3>
@@ -9,38 +9,53 @@
 					<tr>
 						<td>
 							<label>Name</label>
-							<g:textField name="name" class="span8" />
+							<input type="text" ng-model="name" />
 							<span class="help-block"></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<label>Type</label>
-							<g:select name="type.id" from="[:]" class="span8" />
+							<select name="type" from="[:]"></select>
 							<span class="help-block"></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<label>Rotation</label>
-							<g:textField name="rotation" class="span8" />
+							<input type="text" ng-model="rotation" />
 							<span class="help-block"></span>
 						</td>
 					</tr>
 				</table>
 				<hr />
 				<h2>Metadata</h2>
-				<table style="width: 100%; table-layout: fixed">
-					<tr>
-						<th style="text-align: left">Key</th>
-						<th style="text-align: left">Value</th>
-					</tr>
-					<g:each in="${0..5}">
-					<tr>
-						<td><g:textField name="metadata.${it}.key" class="span12" /></td>
-						<td><g:textField name="metadata.${it}.value" class="span12" /></td>
-					</tr>
-					</g:each>
+				<table class="table table-stripped">
+					<thead>
+						<tr>
+							<th>Key</th>
+							<th>Value</th>
+							<th><br /></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input data-ng-model="key" /></td>
+							<td><input data-ng-model="value" /></td>
+							<td style="text-align: center">
+								<button class="btn" data-ng-click="onAddMetadata()"><span class="icon-plus"></span></a>
+							</td>
+						</tr>
+					<tbody>
+					<tbody>
+						<tr data-ng-repeat="(key, value) in backup.metadata">
+							<td>{{key}}</td>
+							<td>{{value}}</td>
+							<td style="text-align: center">
+								<button class="btn" data-ng-click="onRemoveMetadata(key)"><span class="icon-minus"></span></a>
+							</td>
+						</tr>
+					<tbody>
 				</table>
 			</fieldset>
 	</div>

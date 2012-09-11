@@ -101,24 +101,6 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
-	$scope.onReboot = function() {
-		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				reboot : {
-					type : $scope.type
-				}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
-		
-	}
-	
 	$scope.onPause = function() {
 		
 		OpenStack.ajax({
@@ -288,20 +270,25 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 	}
+	
+	
 
 	$scope.onRefresh();
 
 });
-
-compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
 	
-	$scope.onRefresh = function() {
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.onReboot = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
 			url : endpoint + "/servers/" + $routeParams.id + "/action",
 			data : {
-				"os-console" : {}
+				reboot : {
+					type : $scope.type
+				}
 			}
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('modal.hide');
@@ -315,25 +302,56 @@ compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams,
 
 compute.controller("ServerShowVncConsoleCtrl", function($scope, $routeParams, OpenStack) {
 	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	OpenStack.ajax({
+		method : "POST",
+		url : endpoint + "/servers/" + $routeParams.id + "/action",
+		data : {
+			"os-getVNCConsole" : {
+				type : "novnc"
+			}
+		}
+	}).success(function(data, status, headers, config) {
+		$scope.console = data.console;
+	}).error(function(data, status, headers, config) {
+
+	});
+	
+});
+
+compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
 	$scope.onRefresh = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
 			url : endpoint + "/servers/" + $routeParams.id + "/action",
 			data : {
-				"os-vnc-console" : {}
+				"os-getConsoleOutput" : {
+					length : 100
+				}
 			}
 		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
+			$scope.output = data.output;
+			//$scope.$root.$broadcast('modal.hide');
 		}).error(function(data, status, headers, config) {
 
 		});
 		
 	}
 	
+	
+	
+	$scope.onRefresh();
+	
 });
 
 compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.onCreateImage = function() {
 		
@@ -355,14 +373,19 @@ compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenS
 
 compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack) {
 	
-	$scope.onResizeServer = function() {
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.resize = {
+		flavorRef : "",
+		diskConfig : ""
+	}
+	
+	$scope.onResize = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
 			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"resize" : {}
-			}
+			data : { "resize" : $scope.resize }
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('modal.hide');
 		}).error(function(data, status, headers, config) {
@@ -375,13 +398,103 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 
 compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack) {
 	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.server = {
+		metadata : {},
+		personality : [],
+		securityGroups : [],
+		min : 1,
+		max : 1,
+		diskConfig : 'AUTO'
+	}
+	
+	var $steps = $('.step')
+	
+	var $footer = $('.modal-footer')
+	var $previous = $footer.find('.btn-previous')
+	var $next = $footer.find('.btn-next')
+	var $finish = $footer.find('.btn-finish')
+	
+	var ui = function() {
+		$previous.prop("disabled", $scope.step == 0)
+		$next.hide();
+		$finish.hide();
+		if($scope.step == $steps.length - 1) {
+			$next.hide();
+			$finish.show();
+		} else {
+			$next.show();
+			$finish.hide();
+		}
+	}
+	
+	$scope.show = function(step) {
+		if(step >= 0 && step < $steps.length) {
+			$scope.step = step;
+			$steps.hide().filter(":eq("+step+")").show();
+			ui();
+		}
+	}
+	
+	$scope.onCancel = function() {
+		$scope.$root.$broadcast('modal.hide');
+	}
+	
+	$scope.onPrevious = function() {
+		$scope.show($scope.step - 1)
+	}
+	
+	$scope.onNext = function() {
+		$scope.show($scope.step + 1)
+	}
+	
+	$scope.onFinish = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers",
+			data : {server : $scope.server}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('servers.refresh');
+			$scope.onCancel();
+		}).error(function(data, status, headers, config) {
+			alert(status);
+		})
+	}
+	
+	$scope.totalSteps = $steps.length;
+	
+	$scope.show(0);
+	
 	$scope.onRebuildServer = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
 			url : endpoint + "/servers/" + $routeParams.id + "/action",
+			data : { "rebuild" : $scope.server }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+			
+		});
+		
+	}
+	
+});
+
+compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.onChangePassword = function() {
+		
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $routeParams.id + "/action",
 			data : {
-				"rebuild" : {}
+				"changePassword" : {
+					adminPass : $scope.adminPass
+				}
 			}
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('modal.hide');
@@ -393,15 +506,26 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 	
 });
 
-compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack) {
 	
-	$scope.onChangePasswordServer = function() {
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.backup = {
+		name : "",
+		backup_type : "",
+		rotation : "",
+		metadata : {
+			"k" : "v"
+		}
+	}
+	
+	$scope.onCreateBackup = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
 			url : endpoint + "/servers/" + $routeParams.id + "/action",
 			data : {
-				"changePassword" : {}
+				"createBackup" : $scope.backup
 			}
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('modal.hide');
@@ -409,6 +533,15 @@ compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, Op
 
 		});
 		
+	}
+	
+	$scope.onAddMetadata = function() {
+		$scope.backup.metadata[$scope.key] = $scope.value;
+		$scope.key = $scope.value = ''
+	}
+	
+	$scope.onRemoveMetadata = function(key) {
+		delete $scope.backup.metadata[key]
 	}
 	
 });

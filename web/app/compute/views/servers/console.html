@@ -1,10 +1,10 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ServerShowConsoleOutputCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Console Output</h3>
 	</div>
 	<div class="modal-body">
-			<pre>${item.output}</pre>
+			<pre>{{output}}</pre>
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>

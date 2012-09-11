@@ -1,4 +1,4 @@
-<div data-ng-controller="ServerLaunchCtrl">
+<div data-ng-controller="ServerRebuildCtrl">
 	<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCancel()">×</button>
@@ -18,9 +18,6 @@
 				<div ng-include src="'app/compute/views/servers/launch-personality.html'"></div>
 			</div>
 			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-security.html'"></div>
-			</div>
-			<div class="step">
 				<div ng-include src="'app/compute/views/servers/launch-summary.html'"></div>
 			</div>
 		</div>
@@ -34,7 +31,7 @@
 					<td style="text-align: right">
 						<button class="btn btn-previous" data-ng-click="onPrevious()">Previous</button>
 						<button class="btn btn-next" data-ng-click="onNext()">Next</button>
-						<button class="btn btn-finish" data-ng-click="onFinish()">Finish</button>
+						<button class="btn btn-finish" data-ng-click="onRebuild()">Finish</button>
 					</td>
 				</tr>
 			</table>

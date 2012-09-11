@@ -9,15 +9,14 @@
 				<tr>
 					<td>
 						<label>Flavor</label>
-						<select name="flavorRef" from="${flavors}" class="span8" optionKey="id" optionValue="name"></select>
+						<select ng-model="resize.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}"></select>
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label class="checkbox">
-							<input type="checkbox" ng-model="autoDiskConfig" /> Auto Disk Config
-						</label>
+						<label>Disk Config</label>
+						<select ng-model="resize.diskConfig" ng-options="opt for opt in ['MANUAL','AUTO']" />
 					</td>
 				</tr>
 			</table>
@@ -25,6 +24,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
-		<button type="submit" class="btn btn-primary">Resize</button>
+		<button type="submit" class="btn btn-primary" data-ng-click="onResize()">Resize</button>
 	</div>
 </div>
