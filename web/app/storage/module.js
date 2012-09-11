@@ -142,3 +142,14 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 		// It will create the REST API request to upload this image to Swift.
 	
 });
+
+/*
+TODO: Temp URLs
+
+var method = 'GET'
+var expires = (new Date).getTime() / 1000.0;
+var path = '/v1/AUTH_account/container/object'
+var hash = CryptoJS.HmacSHA1(method"\\n"+expires+"\\n"+path, 'mykey');
+//.hexdigest()
+
+*/

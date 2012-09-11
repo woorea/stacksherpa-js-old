@@ -1,6 +1,9 @@
 package org.stacksherpa.mods;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.stacksherpa.proxy.RestProxy;
@@ -16,7 +19,9 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.sockjs.SockJSServer;
 
 public class WebServer extends BusModBase implements Handler<HttpServerRequest> {
-
+	
+	
+	
 	private static final String API_CONTEXT_PATH = "/api";
 
 	private String webRootPrefix;
@@ -219,8 +224,8 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 		
 		System.out.println(proxyResponse);
 		
-		req.response.statusCode = (Integer) proxyResponse.get("status");
 		
+		req.response.statusCode = (Integer) proxyResponse.get("status");
 		
 		
 		Map<String,String> proxyResponseHeaders = (Map<String, String>) proxyResponse.get("headers");
@@ -230,13 +235,30 @@ public class WebServer extends BusModBase implements Handler<HttpServerRequest> 
 		}
 		
 		
-		Object entity = proxyResponse.get("entity");
-		if(entity != null) {
-			System.out.println(">>" + entity);
-			req.response.end((String) entity);
-		} else {
-			req.response.end();
+		InputStream entity = (InputStream) proxyResponse.get("entity");
+		
+		
+		
+		if(entity != null) {  
+			
+			try {
+				req.response.setChunked(true);
+				byte[] bytes = new byte[1024];
+				int read = 0;
+				
+				while((read = entity.read(bytes)) > 0) {
+					Buffer chunk = new Buffer();
+					chunk.setBytes(0, Arrays.copyOfRange(bytes, 0, read));
+					req.response.write(chunk);
+				}
+				entity.close();
+			} catch (IOException e) {
+				req.response.write(e.getMessage());
+			}
 		}
+		
+		req.response.end();
+		
 	}
 
 }

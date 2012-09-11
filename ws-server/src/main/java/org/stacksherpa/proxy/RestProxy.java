@@ -15,7 +15,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 public class RestProxy {
 	
@@ -38,8 +37,9 @@ public class RestProxy {
 		HttpEntity httpEntity = httpResponse.getEntity();
 		
 		if(httpEntity != null) {
-			response.put("entity", EntityUtils.toString(httpEntity));
-			EntityUtils.consume(httpEntity);
+			//response.put("entity", EntityUtils.toString(httpEntity));
+			//EntityUtils.consume(httpEntity);
+			response.put("entity", httpEntity.getContent());
 		}
 		
 		
