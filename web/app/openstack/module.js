@@ -3,6 +3,7 @@ openstack.constant("proxy", "http://192.168.1.36:8080/api")
 openstack.factory("OpenStack", function($http, proxy) {
 	
 	return {
+		proxy : proxy,
 		/*
 		OpenStack.ajax({
 			type : "POST",

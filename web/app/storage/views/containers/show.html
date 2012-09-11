@@ -13,8 +13,9 @@
 								<button ng-click="onCreateDirectory()" class="btn"><i class="icon-plus"></i> Create Directory</button>
 								
 								
-								<input type="file" name="file" class="input-medium" />
-								<button class="btn"><i class="icon-plus"></i> Upload File</button>
+									<input id="fileselect" type="file" class="input-medium" />
+									<button class="btn" ng-click="onUploadFile()"><i class="icon-plus"></i> Upload File</button>
+								
 								
 								<button ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
 							</td>
@@ -50,7 +51,7 @@
 				</tr>
 				<tr ng-show="item.content_type.indexOf('application/directory') == - 1">
 					<td><input type="checkbox" /></td>
-					<td><i class="icon-file"></i> <a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers/{{$routeParams.container}}">{{item.name}}</a></td>
+					<td><i class="icon-file"></i> <a ng-click="onDownload(item)">{{item.name}}</a></td>
 					<td>{{item.bytes}}</td>
 					<td>{{item.last_modified}}</td>
 					<td class="btn-toolbar" style="text-align: center">

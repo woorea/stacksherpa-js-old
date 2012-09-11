@@ -23,6 +23,20 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 		
 	}
 	
+	$scope.onDelete = function(container) {
+		
+		
+		OpenStack.ajax({
+			method : "DELETE",
+			url : endpoint + "/" + container.name
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh();
+		}).error(function(data, status, headers, config) {
+			console.log(data);
+		});
+		
+	}
+	
 	$scope.onRefresh = function() {
 		
 		OpenStack.ajax({
@@ -55,10 +69,51 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 		}).success(function(data, status, headers, config) {
 			$scope.onRefresh();
 		}).error(function(data, status, headers, config) {
-
+			console.log(data);
 		});
 		
 	};
+	
+	$scope.onUploadFile = function() {
+		
+		console.log(OpenStack.proxy);
+		
+		var endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
+
+	      $.ajax({
+			crossDomain : true,
+			type: "PUT",
+			url : OpenStack.proxy,
+			//url : endpoint + "/" + $routeParams.container + "/" + file.name,
+			headers : {
+				"X-Auth-Token" : OpenStack.access.token.id,
+				"X-URI" : endpoint + "/" + $routeParams.container + "/" + file.name
+			},
+	        data: file,
+			dataType : "json",
+	        processData: false,
+	        contentType: false,
+	        success: function(data) {
+	          console.log(data);
+				$scope.onRefresh();
+	        },
+	        error: function(data) {
+	          console.log(data);
+	        }
+	      });
+	};
+	
+	$scope.onDownload = function(object) {
+		
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/" + $routeParams.container + "/" + object.name
+		}).success(function(data, status, headers, config) {
+			$scope.objects = data;
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
 	
 	$scope.onRefresh = function() {
 		
@@ -74,5 +129,16 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	$scope.onRefresh();
 	
+	var file;
+
+	// Set an event listener on the Choose File field.
+	$('#fileselect').bind("change", function(e) {
+	      var files = e.target.files || e.dataTransfer.files;
+	      // Our file var now holds the selected file
+	      file = files[0];
+	});
+
+	    // This function is called when the user clicks on Upload to Swift. 
+		// It will create the REST API request to upload this image to Swift.
 	
 });
