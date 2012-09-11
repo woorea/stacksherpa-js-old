@@ -47,7 +47,7 @@
 					<td><input type="checkbox" /></td>
 					<td><i class="icon-folder-close"></i> <a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers/{{$routeParams.container}}">{{item.name}}</a></td>
 					<td colspan="2"></td>
-					<td style="text-align: center"><a href="onDelete(object)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
+					<td style="text-align: center"><a ng-click="onDelete(item)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a></td>
 				</tr>
 				<tr ng-show="item.content_type.indexOf('application/directory') == -1">
 					<td><input type="checkbox" /></td>
@@ -61,11 +61,11 @@
 							</button>
 							<ul class="dropdown-menu">
 								<g:if test="${item.contentType != 'application/directory'}">
-									<li><a ng-click="onShow(object)">Show</a></li>
-									<li><a ng-click="onDownload(object)">Download</a></li>
+									<li><a ng-click="onShow(item)">Show</a></li>
+									<li><a href="/swift/download?url={{endpoint}}/{{$routeParams.container}}/{{item.name}}&filename={{item.name}}">Download</a></li>
 								</g:if>
 								<li class="divider"></li>
-								<li><a ng-click="onDelete(object)" class="confirm-delete"><i class="icon-trash"></i> Delete</a></li>
+								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-trash"></i> Delete</a></li>
 							</ul>
 						</div>
 					</td>

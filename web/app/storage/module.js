@@ -32,7 +32,7 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 		}).success(function(data, status, headers, config) {
 			$scope.onRefresh();
 		}).error(function(data, status, headers, config) {
-			console.log(data);
+			alert(status);
 		});
 		
 	}
@@ -57,11 +57,23 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	$scope.endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
 	
+	$scope.onDelete = function(object) {
+		
+		OpenStack.ajax({
+			method : "DELETE",
+			url : $scope.endpoint + "/" + $routeParams.container + "/" + object.name,
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh();
+		}).error(function(data, status, headers, config) {
+			console.log(data);
+		});
+	};
+	
 	$scope.onCreateDirectory = function() {
 		
 		OpenStack.ajax({
 			method : "PUT",
-			url : endpoint + "/" + $routeParams.container + "/" + $scope.name,
+			url : $scope.endpoint + "/" + $routeParams.container + "/" + $scope.name,
 			data : "",
 			headers : {
 				"Content-Type" : "application/directory"
@@ -75,14 +87,11 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	};
 	
 	$scope.onUploadFile = function() {
-		
-		//var endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
-
+			//TODO: create directive
 	      $.ajax({
 			crossDomain : true,
 			type: "PUT",
 			url : OpenStack.proxy,
-			//url : endpoint + "/" + $routeParams.container + "/" + file.name,
 			headers : {
 				"X-Auth-Token" : OpenStack.access.token.id,
 				"X-URI" : $scope.endpoint + "/" + $routeParams.container + "/" + file.name
@@ -92,7 +101,6 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	        processData: false,
 	        contentType: false,
 	        success: function(data) {
-	          console.log(data);
 				$scope.onRefresh();
 	        },
 	        error: function(data) {
@@ -100,20 +108,6 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	        }
 	      });
 	};
-	
-	/*
-	$scope.onDownload = function(object) {
-		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/" + $routeParams.container + "/" + object.name
-		}).success(function(data, status, headers, config) {
-			$scope.objects = data;
-		}).error(function(data, status, headers, config) {
-
-		});
-	}
-	*/
 	
 	$scope.onRefresh = function() {
 		
@@ -129,6 +123,8 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	$scope.onRefresh();
 	
+	//TODO: create directive for code below
+	
 	var file;
 
 	// Set an event listener on the Choose File field.
@@ -137,9 +133,6 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	      // Our file var now holds the selected file
 	      file = files[0];
 	});
-
-	    // This function is called when the user clicks on Upload to Swift. 
-		// It will create the REST API request to upload this image to Swift.
 	
 });
 
