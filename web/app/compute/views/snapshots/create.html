@@ -9,28 +9,30 @@
 				<tr>
 					<td>
 						<label>Volume</label>
-						<select name="volumeId" from="${volumes}" optionKey="id" optionValue="name" class="span8" noSelection="${['null':'Select One Volume (optional) ...']}" value="${item.volumeId}"></select>
+						<select ng-model="volumeId" ng-options="volume.id as volume.name for volume in volumes">
+							<option value="">Select One Volume (optional) ...</option>
+						</select>
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Name</label>
-						<input type="text" name="name" class="span8" />
+						<input type="text" data-ng-model="snapshot.display_name" />
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Description</label>
-						<input type="text" name="description" class="span8" />
+						<input type="text" data-ng-model="snapshot.display_description" />
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label class="checkbox">
-							<input type="checkbox" name="force" /> Force
+							<input type="checkbox" data-ng-model="snapshot.force" /> Force
 						</label>
 					</td>
 				</tr>
@@ -39,5 +41,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onCreate()">Create Snapshot</button>
 	</div>
 </div>

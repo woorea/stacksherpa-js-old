@@ -7,7 +7,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<button class="btn btn-launch" data-ng-click="onCreate()"><span class="icon-play"></span> Create</button>
+							<button class="btn btn-launch" data-bootstrap-modal="app/compute/views/images/create.html"><span class="icon-play"></span> Create</button>
 						</td>
 						<td style="text-align: right">
 							<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
@@ -45,9 +45,9 @@
 									</button>
 									<ul class="dropdown-menu">
 										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/images/{{image.id}}">Show</a></li>
-										<li><a data-ng-click="onLaunch()">Launch</a></li>
+										<li><a data-bootstrap-modal="app/compute/views/servers/launch.html">Launch</a></li>
 										<li class="divider"></li>
-										<li><a href="${g.createLink(action : 'delete', params : [tenantId : params.tenantId, imageId : item.id])}" class="confirm-delete">Delete ...</a></li>
+										<li><a href="onDelete(image)" class="confirm-delete">Delete ...</a></li>
 									</ul>
 								</div>
 							</td>

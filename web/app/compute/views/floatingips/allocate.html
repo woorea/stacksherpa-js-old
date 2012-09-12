@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="FloatingIpAllocateCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Allocate Floating IP</h3>
@@ -9,15 +9,15 @@
 				<tr>
 					<td>
 						<label>Pool</label>
-						<select name="pool" from="${servers}" class="span8" optionKey="id" optionValue="name"></select>
-						<span class="help-block">Example block-level help text here.</span>
+						<select ng-model="pool" ng-options="pool.name as pool.name for pool in pools"></select>
+						<span class="help-block"></span>
 					</td>
 				</tr>
 			</table>
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button type="submit" class="btn btn-primary">Allocate</button>
+		<button type="submit" class="btn btn-primary" ng-click="onAllocate()">Allocate</button>
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
 	</div>
 </div>

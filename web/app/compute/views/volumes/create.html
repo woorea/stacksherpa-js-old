@@ -9,14 +9,16 @@
 				<tr>
 					<td>
 						<label>Snapshot</label>
-						<select name="snapshotId" from="${snapshots}" class="span8" optionKey="id" optionValue="name" noSelection="${['null':'Select One Snapshot (optional) ...']}" value="${item.snapshotId}"></select>
+						<select data-ng-model="volume.snapshotId" ng-options="snapshot.id as snapshot.name for snapshot in snapshots">
+							<option value="">Select One Snapshot (optional) ...</option>
+						</select>
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Size</label>
-						<input type="text" name="size" />
+						<input type="text" data-ng-model="volume.size" />
 						<span class="help-block">Size in GB.</span>
 					</td>
 				</tr>
@@ -24,7 +26,7 @@
 				<tr>
 					<td>
 						<label>Availability Zone</label>
-						<g:textField name="zone" class="span8" />
+						<g:textField data-ng-model="volume.zone" class="span8" />
 						<span class="help-block"></span>
 					</td>
 				</tr>
@@ -32,14 +34,14 @@
 				<tr>
 					<td>
 						<label>Name</label>
-						<input type="text" name="name" />
+						<input type="text" data-ng-model="volume.display_name" />
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Description</label>
-						<textarea name="description" class="span8"></textarea>
+						<textarea data-ng-model="volume.display_descriotion"></textarea>
 						<span class="help-block"></span>
 					</td>
 				</tr>
@@ -48,6 +50,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onCreate()">Create Volume</button>
 	</div>
 </div>
 

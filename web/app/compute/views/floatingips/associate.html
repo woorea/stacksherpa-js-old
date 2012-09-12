@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="FloatingIpAssociateCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Associate Floating IP</h3>
@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<label>Server</label>
-						<select name="serverId" from="${servers}" class="span8" optionKey="id" optionValue="name"></select>
+						<select ng-model="serverId" ng-options="server.id as server.name for server in servers"></select>
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
@@ -17,7 +17,7 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button type="submit" class="btn btn-primary">Associate</button>
+		<button type="submit" class="btn btn-primary" data-ng-click="onAssociate()">Associate</button>
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
 	</div>
 </div>

@@ -9,7 +9,12 @@
 				<tr>
 					<td>
 						<label>Name</label>
-						<input type="text" name="name" class="span8" placeholder="Type something…" />
+						<input type="text" data-ng-model="keypair.name" placeholder="Type something…" />
+						<span class="help-block">Example block-level help text here.</span>
+					</td>
+					<td>
+						<label>Name</label>
+						<textarea data-ng-model="keypair.public_key" placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
@@ -18,6 +23,7 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onCreate()">Create Key Pair</button>
 	</div>
 </div>
 

@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ImageCreateCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Create Image</h3>
@@ -9,38 +9,38 @@
 				<tr>
 					<td colspan="2">
 						<label>Name</label>
-						<input type="text" name="name"  placeholder="Type something…" />
+						<input type="text" ng-model="name"  placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Disk Format</label>
-						<select name="diskFormat" from="['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']"></select>
+						<select ng-model="diskFormat" from="['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']"></select>
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 					<td>
 						<label>Container Format</label>
-						<select name="containerFormat" from="['aki', 'ari', 'ami', 'bare', 'ovf']"></select>
+						<select ng-model="containerFormat" from="['aki', 'ari', 'ami', 'bare', 'ovf']"></select>
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Min. Disk</label>
-						<input type="text" name="minDisk"  placeholder="Type something…" />
+						<input type="text" ng-model="minDisk" placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 					<td>
 						<label>Min. RAM</label>
-						<input type="text" name="minRam"  placeholder="Type something…" />
+						<input type="text" ng-model="minRam" placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
 						<label>Image File</label>
-						<input type="file" name="file" />
+						<input type="file" ng-model="file" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>

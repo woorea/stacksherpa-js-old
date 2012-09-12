@@ -41,13 +41,13 @@
 							</button>
 							<ul class="dropdown-menu">
 							<g:if test="{{item.instanceId}}">
-								<li><a data-ng-click="onDisassociate()">Disassociate from server</a></li>
+								<li><a data-ng-click="onDisassociate(item)" ng-show="item.instanceId">Disassociate from server</a></li>
 							</g:if>
 							<g:else>
-								<li><a data-ng-click="onAssociate()">Associate to server</a></li>
+								<li><a data-bootstrap-modal="app/compute/views/floatingips/associate.html" ng-hide="item.instanceId">Associate to server</a></li>
 							</g:else>
 								<li class="divider"></li>
-								<li><a data-ng-click="onDeallocate()" class="confirm-delete">Deallocate ...</a></li>
+								<li><a data-ng-click="onDeallocate(item)" class="confirm-delete">Deallocate ...</a></li>
 							</ul>
 						</div>
 					</td>
