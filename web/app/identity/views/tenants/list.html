@@ -11,7 +11,7 @@
 			<table class="actions">
 				<tr>
 					<td>
-						<button data-ng-click="onCreate()" class="btn"><i class="icon-plus"></i> Create</button>
+						<button data-bootstrap-modal="app/identity/views/tenants/create.html" class="btn"><i class="icon-plus"></i> Create</button>
 						<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
 					</td>
 					<td class="right">
@@ -34,10 +34,10 @@
 				<tr ng-repeat="tenant in tenants">
 					<td><input type="checkbox" ng-model="tenant.checked" /></td>
 					<td><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}">{{tenant.name}}</a></td>
-					<td>{{item.description}}</td>
-					<td>{{item.enabled}}</td>
+					<td>{{tenant.description}}</td>
+					<td>{{tenant.enabled}}</td>
 					<td class="right">
-						<button ng-click="onDelete()" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
+						<button data-ng-click="onDelete(tenant)" class="btn confirm-delete"><i class="icon-trash"></i> Delete</a>
 					</td>
 				</tr>
 			</tbody>

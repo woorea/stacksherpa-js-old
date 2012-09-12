@@ -19,6 +19,7 @@
 			<thead>
 				<tr>
 					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th>Tenant</th>
 					<th>Name</th>
 					<th>Description</th>
 					<th><br /></th>
@@ -27,6 +28,7 @@
 			<tbody>
 				<tr ng-repeat="item in security_groups">
 					<td><input type="checkbox" ng-model="item.checked" /></td>
+					<td>{{item.tenant_id}}</td>
 					<td>{{item.name}}</td>
 					<td>{{item.description}}</td>
 					<td class="btn-toolbar">
@@ -35,7 +37,7 @@
 								Available Actions<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="#/security-groups/{{item.id}}">Edit rules</a></li>
+								<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/security-groups/{{item.id}}">Edit rules</a></li>
 								<li class="divider"></li>
 								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>

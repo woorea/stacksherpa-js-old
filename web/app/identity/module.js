@@ -15,27 +15,30 @@ identity.config(function($routeProvider) {
 identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
-	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/identity/views/tenants/create.html'});
-		
-	}
 
-	$scope.onDelete = function() {
-		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
-			}
-		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
+	$scope.onDelete = function(item) {
+		if(typeof item != 'undefined') {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/tenants/" + item.id
+			}).success(function(data, status, headers, config) {
+				$scope.onRefresh();
+			}).error(function(data, status, headers, config) {
+
+			});
+		} else {
+			angular.forEach($scope.tenants, function(item) {
+				if(item.checked) {
+					OpenStack.ajax({
+						method : "DELETE",
+						url : endpoint + "/tenants/" + item.id
+					}).success(function(data, status, headers, config) {
+						
+					}).error(function(data, status, headers, config) {
+
+					});
+				}
+			});
 		}
 	}
 
@@ -70,33 +73,66 @@ identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 		});
 	}
 	
+	$scope.$on('tenants.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
+	
 	$scope.onRefresh();
 
 });
-identity.controller("UserListCtrl",function($scope, $routeParams, OpenStack) {
+identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
 	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/identity/views/users/create.html'});
-		
+	$scope.tenant = {
+		name : "",
+		description : "",
+		enabled : true
 	}
 
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/tenants/",
+			data : { tenant : $scope.tenant }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('tenants.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
+
+identity.controller("UserListCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
+
 	$scope.onDelete = function() {
-		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
-			}
-		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
+		if(typeof item != 'undefined') {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/users/" + item.id
+			}).success(function(data, status, headers, config) {
+				$scope.onRefresh();
+			}).error(function(data, status, headers, config) {
+
+			});
+		} else {
+			angular.forEach($scope.tenants, function(item) {
+				if(item.checked) {
+					OpenStack.ajax({
+						method : "DELETE",
+						url : endpoint + "/users/" + item.id
+					}).success(function(data, status, headers, config) {
+						
+					}).error(function(data, status, headers, config) {
+
+					});
+				}
+			});
 		}
 	}
 
@@ -110,6 +146,10 @@ identity.controller("UserListCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 	}
+	
+	$scope.$on('users.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 	
@@ -128,30 +168,65 @@ identity.controller("UserShowCtrl",function($scope, $routeParams, OpenStack) {
 	});
 	
 });
-identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
+identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
 	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/identity/views/roles/create.html'});
+	$scope.user = {
 		
 	}
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : endpoint + "/tenants"
+	}).success(function(data, status, headers, config) {
+		$scope.tenants = data.tenants;
+	}).error(function(data, status, headers, config) {
+
+	});
+
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/users",
+			data : { user : $scope.user }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('users.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
+identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
 
 	$scope.onDelete = function() {
-		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
-			}
-		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
+		if(typeof item != 'undefined') {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/OS-KSADM/roles/" + item.id
+			}).success(function(data, status, headers, config) {
+				$scope.onRefresh();
+			}).error(function(data, status, headers, config) {
+
+			});
+		} else {
+			angular.forEach($scope.tenants, function(item) {
+				if(item.checked) {
+					OpenStack.ajax({
+						method : "DELETE",
+						url : endpoint + "/OS-KSADM/roles/" + item.id
+					}).success(function(data, status, headers, config) {
+						
+					}).error(function(data, status, headers, config) {
+
+					});
+				}
+			});
 		}
 	}
 
@@ -165,6 +240,10 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 	}
+	
+	$scope.$on('roles.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 
@@ -183,30 +262,57 @@ identity.controller("RoleShowCtrl",function($scope, $routeParams, OpenStack) {
 	});
 	
 });
-identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) {
+identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
 	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/identity/views/services/create.html'});
+	$scope.role = {
 		
 	}
 
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/OS-KSADM/roles",
+			data : { role : $scope.role }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('users.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
+identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
+
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
-			}
-		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
+		if(typeof item != 'undefined') {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/OS-KSADM/services/" + item.id
+			}).success(function(data, status, headers, config) {
+				$scope.onRefresh();
+			}).error(function(data, status, headers, config) {
+
+			});
+		} else {
+			angular.forEach($scope.tenants, function(item) {
+				if(item.checked) {
+					OpenStack.ajax({
+						method : "DELETE",
+						url : endpoint + "/OS-KSADM/services/" + item.id
+					}).success(function(data, status, headers, config) {
+						
+					}).error(function(data, status, headers, config) {
+
+					});
+				}
+			});
 		}
 	}
 
@@ -220,6 +326,10 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 
 		});
 	}
+	
+	$scope.$on('services.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 	
@@ -238,30 +348,57 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 	});
 	
 });
-identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack) {
+
+identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
 	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/identity/views/endpoints/create.html'});
+	$scope.service = {
 		
 	}
 
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/OS-KSADM/services",
+			data : { "OS-KSADM:service" : $scope.service }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('services.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
+});
+
+identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
+
 	$scope.onDelete = function() {
-		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
-			}
-		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
+		if(typeof item != 'undefined') {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/endpoints/" + item.id
+			}).success(function(data, status, headers, config) {
+				$scope.onRefresh();
+			}).error(function(data, status, headers, config) {
+
+			});
+		} else {
+			angular.forEach($scope.tenants, function(item) {
+				if(item.checked) {
+					OpenStack.ajax({
+						method : "DELETE",
+						url : endpoint + "/endpoints/" + item.id
+					}).success(function(data, status, headers, config) {
+						
+					}).error(function(data, status, headers, config) {
+
+					});
+				}
+			});
 		}
 	}
 
@@ -275,6 +412,10 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 
 		});
 	}
+	
+	$scope.$on('endpoints.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 	
@@ -292,4 +433,26 @@ identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack)
 	
 	});
 	
+});
+identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL");
+	
+	$scope.endpoint = {
+		
+	}
+
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/endpoints",
+			data : { "endpoint" : $scope.endpoint }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('endpoints.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+
 });
