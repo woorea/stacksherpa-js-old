@@ -76,7 +76,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 
 				});
 			});
-			$scope.servers = data.servers;
+			$scope.servers = OpenStack.compute.servers = data.servers;
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -85,9 +85,13 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	$scope.$on('servers.refresh', function(event, args) {
 		$scope.onRefresh();
-	})
+	});
 	
-	$scope.onRefresh();
+	if(typeof OpenStack.compute.servers != 'undefined') {
+		$scope.servers = OpenStack.compute.servers
+	} else {
+		$scope.onRefresh();
+	}
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -615,14 +619,17 @@ compute.controller("LaunchServerSelectImageCtrl",function($scope, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
 	
-	$scope.images = []
+	
+	
+	
 
-	$scope.onRender = function() {
+	$scope.onRefresh = function() {
+		//TODO: encapsulate cache functionality
 		OpenStack.ajax({
 			method : "GET",
 			url : endpoint + "/images/detail"
 		}).success(function(data, status, headers, config) {
-			$scope.images = data.images;
+			$scope.images = OpenStack.compute.images = data.images;
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -633,7 +640,11 @@ compute.controller("LaunchServerSelectImageCtrl",function($scope, OpenStack) {
 		$scope.onNext()
 	}
 	
-	$scope.onRender();
+	if(typeof OpenStack.compute.servers != 'undefined') {
+		$scope.images = OpenStack.compute.images;
+	} else {
+		$scope.onRefresh();
+	}
 	
 });
 compute.controller("LaunchServerConfigurationCtrl",function($scope, OpenStack) {
@@ -757,7 +768,8 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 			method : "GET",
 			url : endpoint + "/images/detail"
 		}).success(function(data, status, headers, config) {
-			$scope.images = data.images;
+			//TODO: encapsulate cache functionality
+			$scope.images = OpenStack.compute.images = data.images;
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -767,9 +779,11 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		$scope.onRefresh();
 	});
 	
-	
-	
-	$scope.onRefresh();
+	if(typeof OpenStack.compute.images != 'undefined') {
+		$scope.images = OpenStack.compute.images
+	} else {
+		$scope.onRefresh();
+	}
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -998,8 +1012,6 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 });
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, OpenStack) {
-	
-	console.log($scope);
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	

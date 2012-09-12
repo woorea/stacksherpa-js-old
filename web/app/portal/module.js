@@ -28,13 +28,13 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 			auth : {
 				apiAccessKeyCredentials : {
 					accessKey : "",
-					secretKey : "+K"
+					secretKey : ""
 				}
 			}
 		}
 	}
 	
-	$scope.selectedProvider = "hpcloud";
+	$scope.selectedProvider = "openstack";
 	
 	$scope.onLogin = function() {
 		var provider = $scope.providers[$scope.selectedProvider];
