@@ -7,11 +7,11 @@
 		<link rel="stylesheet" href="css/stacksherpa.css" />
 	</head>
 	<body data-ng-controller="StackSherpaCtrl">
-		
+		<!--
 		<div ng-include src="'app/portal/views/top.html'"></div>
-		
+		-->
 		<div class="container" ng-view></div>
-		<div id="modal"><ng-include src="modal" /></div>
+		<div id="modal"></div>
 		<script src="js/head.min.js"></script>
 		<script>
 			String.prototype.startsWith = function(prefix) {
@@ -32,34 +32,29 @@
 					angular
 						.module("stacksherpa",[])
 						.controller("StackSherpaCtrl", function($scope, $routeParams) {
-							
 							$scope.modal = '';
+							
+							$scope.test = "Luis"
 							
 							//$scope.$location = $location;
 							//$scope.$route = $route;
 							$scope.$routeParams = $routeParams;
 							
-							
+							/*
 							$scope.$on('modal.show', function(event, args) {
 							
 								$scope.modal = args.view
 								$scope.$apply();
 							})
-
-							$scope.$on('modal.hide', function(event, args) {
-								$scope.modal = ''
-								$scope.$root.$apply();
-							})
-							
-
-							$scope.onCloseModal = function() {
-								$scope.modal = ''
-							}
+							*/
 							
 							$scope.onLogout = function() {
 								$location.path("/")
 							}
 							
+						})
+						.controller("TestCtrl", function($scope) {
+							console.log($scope.test);
 						})
 						.directive('withSelectionCheckboxes', function() {
 							return function(scope, element, attrs) {
@@ -89,11 +84,34 @@
 								};
 							}
 						})
-						.directive('bootstrapModal', function() {
+						.directive('bootstrapModal', function($http, $templateCache, $compile) {
 							return function(scope, element, attrs) {
+								
+								$modal = $('#modal');
+								
+								var modalScope;
+								
 								element.click(function() {
-									scope.$root.$broadcast('modal.show',{view : attrs.bootstrapModal});
+									
+									if (modalScope) modalScope.$destroy();
+									modalScope = scope.$new();
+									
+									var partial = attrs.bootstrapModal;
+									
+									//TODO: use $templateCache
+									//$http.get(partial, {cache: $templateCache}).success(function(response) {
+									$http.get(partial).success(function(response) {
+										$modal.html(response);
+										$compile($modal.contents())(modalScope);
+									});
+									//scope.$root.$broadcast('modal.show',{view : partial});
 								});
+								scope.onCloseModal = function() {
+									$modal.html('');
+								}
+								scope.$on('modal.hide', function(event, args) {
+									$modal.html('');
+								})
 							}
 						});
 						

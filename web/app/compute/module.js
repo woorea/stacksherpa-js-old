@@ -983,6 +983,8 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 });
 compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, OpenStack) {
 	
+	
+	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	OpenStack.ajax({
@@ -1012,6 +1014,8 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 });
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, OpenStack) {
+	
+	console.log($scope);
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
