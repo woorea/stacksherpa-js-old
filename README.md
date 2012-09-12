@@ -19,6 +19,6 @@ $vertx run App.grooy
 
 The StackSherpa UI can be accessed by typing http://localhost:8080 in your browser
 
-The REST PROXY is listening on the same host, but 9090
+The REST PROXY is listening on the same host and port (http://localhost:8080/api)
 
 Enjoy!
