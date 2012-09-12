@@ -31,8 +31,8 @@
 				<tr ng-repeat="item in floating_ips">
 					<td><input type="checkbox" ng-model="item.checked" /></td>
 					<td>{{item.ip}}</td>
-					<td>{{item.fixedIp}}</td>
-					<td>{{item.instanceId}}</td>
+					<td>{{item.fixed_ip}}</td>
+					<td>{{item.instance_id}}</td>
 					<td>{{item.pool}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group" style="float:right; margin-right: 35px">
@@ -41,10 +41,10 @@
 							</button>
 							<ul class="dropdown-menu">
 							<g:if test="{{item.instanceId}}">
-								<li><a data-ng-click="onDisassociate(item)" ng-show="item.instanceId">Disassociate from server</a></li>
+								<li><a data-ng-click="onDisassociate(item)" ng-show="item.instance_id">Disassociate from server</a></li>
 							</g:if>
 							<g:else>
-								<li><a data-bootstrap-modal="app/compute/views/floatingips/associate.html" ng-hide="item.instanceId">Associate to server</a></li>
+								<li><a data-bootstrap-modal="app/compute/views/floatingips/associate.html" ng-hide="item.instance_id">Associate to server</a></li>
 							</g:else>
 								<li class="divider"></li>
 								<li><a data-ng-click="onDeallocate(item)" class="confirm-delete">Deallocate ...</a></li>

@@ -190,10 +190,6 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 	
-	$scope.onCreateImage = function() {
-		alert('create image');
-	}
-	
 	$scope.onResizeConfirm = function() {
 		
 		OpenStack.ajax({
@@ -342,28 +338,6 @@ compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams,
 	
 });
 
-compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	$scope.onCreateImage = function() {
-		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"createImage" : {}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
-		
-	}
-	
-});
-
 compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
@@ -391,14 +365,18 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 
 compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack) {
 	
+	var server_id = $scope.server.id
+	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.server = {
-		metadata : {},
+		imageRef : "",
+		name : $scope.server.name,
+		adminPass : "",
+		//accessIPv4 : "",
+		//accessIPv6 : "",
+		metadata : $scope.server.metadata,
 		personality : [],
-		securityGroups : [],
-		min : 1,
-		max : 1,
 		diskConfig : 'AUTO'
 	}
 	
@@ -442,28 +420,15 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 		$scope.show($scope.step + 1)
 	}
 	
-	$scope.onFinish = function() {
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers",
-			data : {server : $scope.server}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('servers.refresh');
-			$scope.onCancel();
-		}).error(function(data, status, headers, config) {
-			alert(status);
-		})
-	}
-	
 	$scope.totalSteps = $steps.length;
 	
 	$scope.show(0);
 	
-	$scope.onRebuildServer = function() {
+	$scope.onRebuild = function() {
 		
 		OpenStack.ajax({
 			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
+			url : endpoint + "/servers/" + server_id + "/action",
 			data : { "rebuild" : $scope.server }
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('modal.hide');
@@ -495,6 +460,42 @@ compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, Op
 
 		});
 		
+	}
+	
+});
+
+compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.image = {
+		name : $scope.server.name + " (Image)",
+		metadata : {}
+	}
+	
+	$scope.onCreateImage = function() {
+		
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			data : {
+				"createImage" : $scope.image
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+		
+	}
+	
+	$scope.onAddMetadata = function() {
+		$scope.backup.metadata[$scope.key] = $scope.value;
+		$scope.key = $scope.value = ''
+	}
+	
+	$scope.onRemoveMetadata = function(key) {
+		delete $scope.backup.metadata[key]
 	}
 	
 });
@@ -657,8 +658,6 @@ compute.controller("LaunchServerConfigurationCtrl",function($scope, OpenStack) {
 });
 compute.controller("LaunchServerMetadataCtrl",function($scope) {
 	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
-	
 	$scope.onAddMetadata = function() {
 		$scope.server.metadata[$scope.key] = $scope.value;
 		$scope.key = $scope.value = ''
@@ -670,8 +669,6 @@ compute.controller("LaunchServerMetadataCtrl",function($scope) {
 	
 });
 compute.controller("LaunchServerPersonalityCtrl",function($scope) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
 	
 	$scope.onAddPersonality = function() {
 		$scope.server.personality.push({"path" : $scope.path, "contents" : $scope.contents});
@@ -734,7 +731,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 				method : "DELETE",
 				url : endpoint + "/images/" + image.id
 			}).success(function(data, status, headers, config) {
-				//$scope.floating_ips = data.floating_ips;
+				$scope.onRefresh();
 			}).error(function(data, status, headers, config) {
 
 			});
@@ -770,20 +767,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		$scope.onRefresh();
 	});
 	
-	$scope.logo = function(name) {
-		name = name.toLowerCase();
-		if(name.startsWith('debian')) {
-			return '/images/icons/debian.png';
-		} else if (name.startsWith('ubuntu')){
-			return '/images/icons/ubuntu.png';
-		} else if (name.startsWith('fedora')){
-			return '/images/icons/fedora.png';
-		} else if (name.startsWith('windows')){
-			return '/images/icons/windows.png';
-		} else {
-			return '/images/icons/linux.png';
-		}
-	}
+	
 	
 	$scope.onRefresh();
 	
@@ -1031,10 +1015,10 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 	$scope.onAssociate = function() {
 		OpenStack.ajax({
 			method : "POST",
-			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			url : endpoint + "/servers/" + $scope.serverId + "/action",
 			data : {
 				addFloatingIp : {
-					address : $routeParams.address
+					address : $scope.floating_ips[0].ip
 				}
 			}
 		}).success(function(data, status, headers, config) {
