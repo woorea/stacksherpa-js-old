@@ -26,19 +26,18 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.volumes, function(server) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/servers/" + server.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -71,24 +70,6 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 		});
 		
 	}
-	/*
-	$scope.checkAll = function() {
-		angular.forEach($scope.servers, function(server) {
-			server.checked = $scope.checkedAll;
-		});
-	}
-	
-	$scope.allChecked = function() {
-		var isCheckedAll = true;
-		angular.forEach($scope.servers, function(server) {
-		    if (!server.checked) {
-				isCheckedAll = false;
-				return;
-			}
-		});
-		return isCheckedAll;
-	};
-	*/
 	
 	$scope.$on('servers.refresh', function(event, args) {
 		$scope.onRefresh();
@@ -748,19 +729,18 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.images, function(image) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/servers/" + image.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -773,6 +753,10 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 	}
+	
+	$scope.$on('images.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.logo = function(name) {
 		name = name.toLowerCase();
@@ -809,28 +793,21 @@ compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/flavors/create.html'});
-		
-	}
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.flavors, function(flavor) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/flavors/" + flavor.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -843,6 +820,10 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 	}
+	
+	$scope.$on('flavors.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 
@@ -860,6 +841,8 @@ compute.controller("FlavorShowCtrl",function($scope, $routeParams, OpenStack) {
 	
 	});
 	
+});
+compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) {
 });
 compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack) {
 	
@@ -909,6 +892,10 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 		});
 		
 	}
+	
+	$scope.$on('floating-ips.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
 	
 	$scope.onRefresh();
 
@@ -977,44 +964,37 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/volumes/create.html'});
-		
-	}
-
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.volumes, function(volume) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/os-volumes/" + volume.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
-	}
-	
-	$scope.onAttach = function() {
-		
-		alert('attach')
-		//$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/volumes/attach.html'});
-		
 	}
 	
 	$scope.onDetach = function() {
 		
-		alert('detach')
+		angular.forEach($scope.volumes, function(volume) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/servers/" + volume.serverId + "/os-volume_attachments/" + volume.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
+			}
+		});
 		
-	}
-	
-	$scope.onCreateSnapshot = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/snapshots/create.html'});
 	}
 
 	$scope.onRefresh = function() {
@@ -1030,42 +1010,79 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 	
+	$scope.$on('volumes.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
+	
 	$scope.onRefresh();
 	
 });
 compute.controller("VolumeShowCtrl",function($scope, $routeParams, OpenStack) {
+	
+});
+compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) {
+	
+	$scope.volume = {
+		"display_name": "vol-001",
+		"display_description": "Another volume.",
+		"size": 30,
+		"volume_type": "289da7f8-6440-407c-9fb4-7db01ec49164",
+		"metadata": {"contents": "junk"},
+		"availability_zone": "us-east1"
+	}
+	
+	$scope.onCreate = function() {
+		$scope.$root.$broadcast('modal.hide');
+	}
+	
+});
+compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) {
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : endpoint + "/servers/detail"
+	}).success(function(data, status, headers, config) {
+		$scope.servers = data.servers;
+	}).error(function(data, status, headers, config) {
+
+	});
+	
+	$scope.onAttach = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			data : {
+				addFloatingIp : {
+					address : $routeParams.address
+				}
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+	
 });
 compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/snapshots/create.html'});
-		
-	}
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.volumes, function(volume) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/os-snapshots/" + volume.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
-	}
-	
-	$scope.onCreateVolume = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/volumes/create.html'});
-		
 	}
 
 	$scope.onRefresh = function() {
@@ -1081,6 +1098,10 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 		
 	}
 	
+	$scope.$on('snapshots.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
+	
 	$scope.onRefresh();
 
 	
@@ -1088,31 +1109,39 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("SnapshotShowCtrl",function($scope, $routeParams, OpenStack) {
 });
+compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack) {
+	
+	$scope.snapshot = {
+		"display_name": "snap-001",
+		"display_description": "Daily backup",
+		"volume_id": "521752a6-acf6-4b2d-bc7a-119f9148cd8c",
+		"force": true
+	}
+	
+	$scope.onCreate = function() {
+		$scope.$root.$broadcast('modal.hide');
+	}
+	
+});
 compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/keypairs/create.html'});
-		
-	}
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.keypairs, function(keypair) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/os-keypairs/" + keypair.name
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
 		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -1128,42 +1157,47 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 	
+	$scope.$on('keypairs.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
+	
 	$scope.onRefresh();
 
+});
+compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
+	$scope.keypair = {
+		name: "testkeypair",
+		public_key: "ssh-rsa  AAAB3NzaC1yc2EAAAADAQABAAAAgQDS75K9dCGNb8wUIqSRT8UZU1riwaMBXViZ6m7hvRi9adVJrNzUQVJEYotqGXpe4rwC7iCfwmVxWj/wu/h4OOoBqdkQcQMcuggMpNvnymhwUfj6vg+zEOpFcZg1mY3dvMoDnnUAClLB8/ELY1FtKTyTJyKJN7yyR4WkMN5H4BR/Lw== nova@az1-nv-schedule-0000"
+	}
+	
+	$scope.onUpload = function() {
+		
+	}
+	
+	$scope.onCreate = function() {
+		
+	}
 	
 });
 compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	$scope.onCreate = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/securitygroups/create.html'});
-		
-	}
-	
-	$scope.onEdit = function() {
-		
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/securitygroups/edit.html'});
-		
-	}
 
 	$scope.onDelete = function() {
 		
-		$("tbody input[type=checkbox]").each(function(index) {
-			if($(this).is(":checked")) {
-				servers[index].toDelete = true
+		angular.forEach($scope.security_groups, function(sg) {
+			if(fip.checked) {
+				OpenStack.ajax({
+					method : "DELETE",
+					url : endpoint + "/security-groups/" + sg.id
+				}).success(function(data, status, headers, config) {
+					//$scope.floating_ips = data.floating_ips;
+				}).error(function(data, status, headers, config) {
+
+				});
 			}
 		});
-		
-		$scope.servers = servers = servers.filter(function(server) {
-			return !server.toDelete;
-		});
-		
-		if(!servers.length) {
-			$("thead input[type=checkbox]").prop("checked", false)
-		}
 	}
 
 	$scope.onRefresh = function() {
@@ -1179,9 +1213,33 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 		
 	}
 	
+	$scope.$on('security-groups.refresh', function(event, args) {
+		$scope.onRefresh();
+	});
+	
 	$scope.onRefresh();
 
 });
 compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenStack) {
+	
+});
+compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, OpenStack) {
+	
+	$scope.security_group = {
+		name : "name",
+		description : "description"
+	}
+	
+	$scope.onCreate = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-security-groups",
+			data : { security_group : $scope.security_group }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
 	
 });

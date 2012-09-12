@@ -5,11 +5,11 @@
 			<table class="actions">
 				<tr>
 					<td>
-						<button class="btn" data-ng-click="onCreate()"><i class="icon-plus"></i> Create</button>
+						<button class="btn" bootstrap-modal="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create</button>
 						<button class="btn" data-ng-click="onDelete()"><i class="icon-minus"></i> Delete</button>
-						<button class="btn" data-ng-click="onAttach()"><i class="icon-plus"></i> Attach</a>
+						<button class="btn" bootstrap-modal="app/compute/views/volumes/attach.html"><i class="icon-plus"></i> Attach</a>
 						<button class="btn" data-ng-click="onDetach()"><i class="icon-minus"></i> Detach</a>
-						<button class="btn" data-ng-click="onCreateSnapshot()"><i class="icon-plus"></i> Create Snapshot</a>
+						<button class="btn" bootstrap-modal="app/compute/views/snapshots/create.html"><i class="icon-plus"></i> Create Snapshot</a>
 					</td>
 					<td class="right">
 						<a data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
