@@ -36,14 +36,14 @@
 					<td>{{item.displayDescription}}</td>
 					<td>{{item.volumeId}}</td>
 					<td>{{item.status}}</td>
-					<td>{{item.created}}</td>
+					<td>{{item.createdAt}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group" style="float:right; margin-right: 35px">
 							<button data-toggle="dropdown" class="btn dropdown-toggle">
 								Available Actions<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a ng-click="onCreateVolume(item)">Create Volume</a></li>
+								<li><a data-bootstrap-modal="app/compute/views/volumes/create.html">Create Volume</a></li>
 								<li class="divider"></li>
 								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>

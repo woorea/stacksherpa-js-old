@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<label>Volume</label>
-						<select ng-model="volumeId" ng-options="volume.id as volume.name for volume in volumes">
+						<select data-ng-model="snapshot.volume_id" ng-options="volume.id as volume.displayName for volume in volumes">
 							<option value="">Select One Volume (optional) ...</option>
 						</select>
 						<span class="help-block"></span>

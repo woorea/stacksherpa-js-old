@@ -9,8 +9,15 @@
 				<tr>
 					<td>
 						<label>Server</label>
-						<select ng-model="serverId" ng-options="server.id as server.name for server in servers"></select>
+						<select ng-model="server_id" ng-options="server.id as server.name for server in servers"></select>
 						<span class="help-block">Example block-level help text here.</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Device</label>
+						<input type="text" ng-model="device"></select>
+						<span class="help-block">Example : /dev/sdf</span>
 					</td>
 				</tr>
 			</table>

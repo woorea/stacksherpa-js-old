@@ -3,10 +3,9 @@
 	<div class="span10">
 		<h1>Edit Security Group Rules</h1>
 		<hr />
-		<h2>${securityGroup.name}</h2>
-		<p>${securityGroup.description}</p>
+		<h2>{{security_group.name}}</h2>
+		<p>{{security_group.description}}</p>
 		<hr />
-		<form action="${createLink(action : 'addRule', params : [tenantId : params.tenantId, regionName : params.regionName, securityGroupId : params.securityGroupId])}" method="POST">
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -19,30 +18,25 @@
 				</tr>
 				<tr>
 					<td><br /></td>
-					<td><g:select name="ipProtocol" from="['TCP','UDP','ICMP']" class="span10" /></td>
-					<td><g:textField name="fromPort" class="span10" /></td>
-					<td><g:textField name="toPort" class="span10" /></td>
-					<td><g:textField name="cidr" class="span10" placeholder="0.0.0.0/24"/></td>
-					<td><button class="btn"><i class="icon-ok"></i> Add</button></td>
+					<td><select ng-model="rule.ip_protocol" ng-options="protocol as protocol for protocol in ['TCP','UDP','ICMP']"></select></td>
+					<td><input type="text" ng-model="rule.from_port" /></td>
+					<td><input type="text" ng-model="rule.to_port" /></td>
+					<td><input type="text" ng-model="rule.cidr" placeholder="0.0.0.0/24"/></td>
+					<td><button class="btn" ng-click="onAddRule()"><i class="icon-ok"></i> Add</button></td>
 				</tr>
 			</thead>
 			<tbody>
-				<g:each in="${securityGroup?.rules}" var="rule" status="status">
-					<g:if test="${rule.ipProtocol}">
-					<tr>
+					<tr data-ng-repeat="rule in security_group.rules">
 						<td><input type="checkbox" /></td>
-						<td>${rule.ipProtocol}</td>
-						<td>${rule.fromPort}</td>
-						<td>${rule.toPort}</td>
-						<td>${rule.ipRange.cidr}</td>
+						<td>{{rule.ip_protocol}}</td>
+						<td>{{rule.from_port}}</td>
+						<td>{{rule.to_port}}</td>
+						<td>{{rule.ip_range.cidr}}</td>
 						<td>
-							<a href="${createLink(action : 'removeRule', params : [tenantId : params.tenantId, securityGroupId : params.securityGroupId, securityGroupRuleId : rule.id])}" class="btn"><i class="icon-remove"></i> Delete</a>
+							<a class="btn" ng-click="onRemoveRule(rule)"><i class="icon-remove"></i> Delete</a>
 						</td>
 					</tr>
-					</g:if>
-				</g:each>
 			</tbody>
 		</table>
-		</form>
 	</div>
 </div>

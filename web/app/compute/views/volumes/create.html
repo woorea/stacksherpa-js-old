@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<label>Snapshot</label>
-						<select data-ng-model="volume.snapshotId" ng-options="snapshot.id as snapshot.name for snapshot in snapshots">
+						<select data-ng-model="volume.snapshot_id" ng-options="snapshot.id as snapshot.displayName for snapshot in snapshots">
 							<option value="">Select One Snapshot (optional) ...</option>
 						</select>
 						<span class="help-block"></span>

@@ -14,7 +14,7 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/snapshots/:id", {controller : "SnapshotShowCtrl", templateUrl : "app/compute/views/snapshots/show.html"})
 		.when("/:tenant/compute/:region/key-pairs", {controller : "KeyPairListCtrl", templateUrl : "app/compute/views/keypairs/list.html"})
 		.when("/:tenant/compute/:region/security-groups", {controller : "SecurityGroupListCtrl", templateUrl : "app/compute/views/securitygroups/list.html"})
-		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/show.html"})
+		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html"})
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 
@@ -902,10 +902,10 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 		if(floatingIp) {
 			OpenStack.ajax({
 				method : "POST",
-				url : endpoint + "/servers/" + floatingIp.instanceId + "/action",
+				url : endpoint + "/servers/" + floatingIp.instance_id + "/action",
 				data : {
 					removeFloatingIp : {
-						address : floatingIp.address
+						address : floatingIp.ip
 					}
 				}
 			}).success(function(data, status, headers, config) {
@@ -1074,20 +1074,24 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 	
-	$scope.onDetach = function() {
+	$scope.onDetach = function(volume) {
 		
+		OpenStack.ajax({
+			method : "DELETE",
+			url : endpoint + "/servers/" + volume.attachments[0].serverId + "/os-volume_attachments/" + volume.id
+		}).success(function(data, status, headers, config) {
+			//$scope.floating_ips = data.floating_ips;
+		}).error(function(data, status, headers, config) {
+
+		});
+		
+		/*
 		angular.forEach($scope.volumes, function(volume) {
 			if(fip.checked) {
-				OpenStack.ajax({
-					method : "DELETE",
-					url : endpoint + "/servers/" + volume.serverId + "/os-volume_attachments/" + volume.id
-				}).success(function(data, status, headers, config) {
-					//$scope.floating_ips = data.floating_ips;
-				}).error(function(data, status, headers, config) {
-
-				});
+				
 			}
 		});
+		*/
 		
 	}
 
@@ -1116,23 +1120,44 @@ compute.controller("VolumeShowCtrl",function($scope, $routeParams, OpenStack) {
 });
 compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	var snapshot_id;
+	
+	if(typeof $scope.snapshots != 'undefined') {
+		snapshot_id = $scope.snapshots[0].id
+	}
+	
 	$scope.volume = {
+		snapshot_id : snapshot_id,
 		"display_name": "vol-001",
 		"display_description": "Another volume.",
-		"size": 30,
-		"volume_type": "289da7f8-6440-407c-9fb4-7db01ec49164",
-		"metadata": {"contents": "junk"},
-		"availability_zone": "us-east1"
+		"size": 1
+		//"volume_type": "289da7f8-6440-407c-9fb4-7db01ec49164",
+		//"metadata": {"contents": "junk"},
+		//"availability_zone": "us-east1"
 	}
 	
 	$scope.onCreate = function() {
-		$scope.$root.$broadcast('modal.hide');
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-volumes",
+			data : { volume : $scope.volume }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
 	}
 	
 });
 compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) {
+	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
+	$scope.servers = OpenStack.compute.servers
+	
+	/*
 	OpenStack.ajax({
 		method : "GET",
 		url : endpoint + "/servers/detail"
@@ -1141,14 +1166,16 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 	}).error(function(data, status, headers, config) {
 
 	});
+	*/
 	
 	$scope.onAttach = function() {
 		OpenStack.ajax({
 			method : "POST",
-			url : endpoint + "/servers/" + $scope.server.id + "/action",
+			url : endpoint + "/servers/" + $scope.server_id + "/os-volume_attachments",
 			data : {
-				addFloatingIp : {
-					address : $routeParams.address
+				volumeAttachment : {
+					volumeId : $scope.volumes[0].id,
+					device : $scope.device
 				}
 			}
 		}).success(function(data, status, headers, config) {
@@ -1217,15 +1244,30 @@ compute.controller("SnapshotShowCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	var volume_id = ""
+	if(typeof $scope.volumes != 'undefined') {
+		volume_id = $scope.volumes[0].id
+	}
+	
 	$scope.snapshot = {
-		"display_name": "snap-001",
+		"volume_id": volume_id,
+		"display_name": "snap-002",
 		"display_description": "Daily backup",
-		"volume_id": "521752a6-acf6-4b2d-bc7a-119f9148cd8c",
 		"force": true
 	}
 	
 	$scope.onCreate = function() {
-		$scope.$root.$broadcast('modal.hide');
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-snapshots",
+			data : { snapshot : $scope.snapshot }
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
 	}
 	
 });
@@ -1285,16 +1327,40 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 });
 compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	$scope.keypair = {
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	$scope.import_keypair = {
 		name: "testkeypair",
-		public_key: "ssh-rsa  AAAB3NzaC1yc2EAAAADAQABAAAAgQDS75K9dCGNb8wUIqSRT8UZU1riwaMBXViZ6m7hvRi9adVJrNzUQVJEYotqGXpe4rwC7iCfwmVxWj/wu/h4OOoBqdkQcQMcuggMpNvnymhwUfj6vg+zEOpFcZg1mY3dvMoDnnUAClLB8/ELY1FtKTyTJyKJN7yyR4WkMN5H4BR/Lw== nova@az1-nv-schedule-0000"
+		"public key": "ssh-rsa  AAAB3NzaC1yc2EAAAADAQABAAAAgQDS75K9dCGNb8wUIqSRT8UZU1riwaMBXViZ6m7hvRi9adVJrNzUQVJEYotqGXpe4rwC7iCfwmVxWj/wu/h4OOoBqdkQcQMcuggMpNvnymhwUfj6vg+zEOpFcZg1mY3dvMoDnnUAClLB8/ELY1FtKTyTJyKJN7yyR4WkMN5H4BR/Lw== nova@az1-nv-schedule-0000"
 	}
 	
-	$scope.onUpload = function() {
-		
+	$scope.create_keypair = {
+		name: "testkeypair"
+	}
+	
+	$scope.onImport = function() {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-keypairs",
+			data : {keypair : $scope.import_keypair}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
 	}
 	
 	$scope.onCreate = function() {
+		
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-keypairs",
+			data : {keypair : $scope.create_keypair}
+		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('modal.hide');
+		}).error(function(data, status, headers, config) {
+
+		});
 		
 	}
 	
@@ -1353,8 +1419,59 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 });
 compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenStack) {
 	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	
+	var resetAddRule = function() {
+		$scope.rule = {
+			"ip_protocol": "",
+	        "from_port": "",
+	        "to_port": "",
+	        "cidr": "0.0.0.0/0",
+	        "group_id": "",
+	        "parent_group_id": $scope.security_group.id
+		}
+	}
+	
+	$scope.onAddRule = function(rule) {
+		OpenStack.ajax({
+			method : "POST",
+			url : endpoint + "/os-security-group-rules",
+			data : { security_group_rule : $scope.rule }
+		}).success(function(data, status, headers, config) {
+			$scope.security_group.rules.push(data.security_group_rule);
+			resetAddRule();
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+	
+	$scope.onRemoveRule = function(rule) {
+		OpenStack.ajax({
+			method : "DELETE",
+			url : endpoint + "/os-security-group-rules/" + rule.id
+		}).success(function(data, status, headers, config) {
+			$scope.security_group.rules = $scope.security_group.rules.filter(function(sgr) {
+				return sgr.id != rule.id;
+			});
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : endpoint + "/os-security-groups/" + $routeParams.id
+	}).success(function(data, status, headers, config) {
+		$scope.security_group = data.security_group;
+		resetAddRule();
+	}).error(function(data, status, headers, config) {
+
+	});
+	
 });
 compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.security_group = {
 		name : "name",
@@ -1367,6 +1484,7 @@ compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, Open
 			url : endpoint + "/os-security-groups",
 			data : { security_group : $scope.security_group }
 		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('security-groups.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(function(data, status, headers, config) {
 

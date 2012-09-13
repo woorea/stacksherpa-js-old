@@ -5,11 +5,11 @@
 			<table class="actions">
 				<tr>
 					<td>
-						<button class="btn" bootstrap-modal="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create</button>
+						<button class="btn" data-bootstrap-modal="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create</button>
 						<button class="btn" data-ng-click="onDelete()"><i class="icon-minus"></i> Delete</button>
-						<button class="btn" bootstrap-modal="app/compute/views/volumes/attach.html"><i class="icon-plus"></i> Attach</a>
+						<button class="btn" data-bootstrap-modal="app/compute/views/volumes/attach.html"><i class="icon-plus"></i> Attach</a>
 						<button class="btn" data-ng-click="onDetach()"><i class="icon-minus"></i> Detach</a>
-						<button class="btn" bootstrap-modal="app/compute/views/snapshots/create.html"><i class="icon-plus"></i> Create Snapshot</a>
+						<button class="btn" data-bootstrap-modal="app/compute/views/snapshots/create.html"><i class="icon-plus"></i> Create Snapshot</a>
 					</td>
 					<td class="right">
 						<a data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</a>
@@ -46,8 +46,9 @@
 									<!--
 									<li><a href="">Attach to server</a></li>
 									-->
-									<li ng-show="item.stauts != 'creating'"><a data-ng-click="onEdit(item)">Manage attachments</a></li>
-									<li ng-show="item.stauts != 'creating'"><a data-ng-click="onCreateSnapshot(item)">Create Snapshot</a></li>
+									<li ng-show="item.stauts != 'creating'"><a data-bootstrap-modal="app/compute/views/volumes/attach.html">Manage attachments</a></li>
+									<li ng-show="item.stauts == 'in-use'"><a ng-click="onDetach(item)">Detach</a></li>
+									<li ng-show="item.stauts == 'available'"><a data-bootstrap-modal="app/compute/views/snapshots/create.html">Create Snapshot</a></li>
 									<li class="divider"></li>
 								<li><a data-ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>

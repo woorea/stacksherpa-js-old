@@ -9,14 +9,14 @@
 				<tr>
 					<td>
 						<label>Name</label>
-						<input type="text" ng-model="name" class="span8" />
+						<input type="text" ng-model="security_group.name" class="span8" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Description</label>
-						<input type="text" ng-model="description" class="span8" />
+						<input type="text" ng-model="security_group.description" class="span8" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
@@ -24,8 +24,8 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCreate()">Create Security Group</button>
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onCreate()">Create Security Group</button>
 	</div>
 </div>
 
