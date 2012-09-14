@@ -20,18 +20,21 @@ openstack.factory("OpenStack", function($http, proxy) {
 			return $http(opts)
 		},
 		endpoint : function(serviceType, regionName, interface) {
-			var service = this.access.serviceCatalog.filter(function(service) {
-				return service.type == serviceType;
-			})[0];
-			if(regionName) {
-				var endpoint = service.endpoints.filter(function(endpoint) {
-					return endpoint.region == regionName;
+			if(angular.isArray(this.access.serviceCatalog)) {
+				var service = this.access.serviceCatalog.filter(function(service) {
+					return service.type == serviceType;
 				})[0];
-				return endpoint[interface];
+				if(regionName) {
+					var endpoint = service.endpoints.filter(function(endpoint) {
+						return endpoint.region == regionName;
+					})[0];
+					return endpoint[interface];
+				} else {
+					return service.endpoints[0][interface];
+				}
 			} else {
-				return service.endpoints[0][interface];
+				return null;
 			}
-			
 		},
 		compute : {},
 		storage : {}

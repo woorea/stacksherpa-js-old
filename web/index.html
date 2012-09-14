@@ -24,6 +24,7 @@
 				"js/jstorage.min.js",
 				"bootstrap/js/bootstrap.min.js",
 				"app/openstack/module.js",
+				"app/common/common-file-upload.js",
 				"app/portal/module.js",
 				"app/compute/module.js",
 				"app/identity/module.js",
@@ -130,7 +131,7 @@
 							}
 						});
 						
-					angular.bootstrap(document, ["stacksherpa","openstack","portal","compute","identity","storage"]);
+					angular.bootstrap(document, ["stacksherpa","openstack","common.file-upload","portal","compute","identity","storage"]);
 				}
 			);
 		</script>

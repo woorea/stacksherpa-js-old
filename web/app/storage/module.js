@@ -86,6 +86,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 		
 	};
 	
+	
 	$scope.onUploadFile = function() {
 			//TODO: create directive
 	      $.ajax({
@@ -122,17 +123,6 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	}
 	
 	$scope.onRefresh();
-	
-	//TODO: create directive for code below
-	
-	var file;
-
-	// Set an event listener on the Choose File field.
-	$('#fileselect').bind("change", function(e) {
-	      var files = e.target.files || e.dataTransfer.files;
-	      // Our file var now holds the selected file
-	      file = files[0];
-	});
 	
 });
 

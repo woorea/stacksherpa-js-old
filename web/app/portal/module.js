@@ -13,9 +13,10 @@ portal.config(function($routeProvider) {
 		.otherwise({redirectTo : "/login"})
 });
 portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
+	
 	$scope.providers = {
-		openstack : {
-			indentityURL : "http://192.168.1.37:5000/v2.0/",
+		passwordCredentials : {
+			indentityURL : "http://192.168.1.37:5000/v2.0",
 			auth : {
 				passwordCredentials : {
 					username : "admin",
@@ -23,8 +24,8 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 				}
 			}
 		},
-		hpcloud : {
-			indentityURL : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/",
+		apiAccessKeyCredentials : {
+			indentityURL : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0",
 			auth : {
 				apiAccessKeyCredentials : {
 					accessKey : "",
@@ -34,7 +35,11 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 		}
 	}
 	
-	$scope.selectedProvider = "openstack";
+	$scope.auth_methods = function() {
+		return Object.keys($scope.providers);
+	}
+	
+	$scope.selectedProvider = "passwordCredentials";
 	
 	$scope.onLogin = function() {
 		var provider = $scope.providers[$scope.selectedProvider];

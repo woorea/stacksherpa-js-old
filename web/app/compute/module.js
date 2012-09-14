@@ -94,7 +94,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 });
-compute.controller("ServerShowCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
@@ -733,7 +733,7 @@ compute.controller("LaunchServerSummaryCtrl",function($scope, OpenStack) {
 });
 compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	var endpoint = OpenStack.endpoint("image",$routeParams.region, "publicURL");// + "/v1";
 
 	$scope.onDelete = function(image) {
 		
@@ -788,7 +788,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	var endpoint = OpenStack.endpoint("image",$routeParams.region, "publicURL");// + "/v1";
 
 	OpenStack.ajax({
 		method : "GET",
@@ -803,14 +803,36 @@ compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 
 compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");// + "/v1";
 	
 	$scope.image = {
-		
+		"X-Auth-Token" : OpenStack.access.token.id,
+		"X-URI" : endpoint + "/images",
+		"x-image-meta-name" : "",
+		"x-image-meta-disk_format" : "raw",
+		"x-image-meta-container_format" : "bare",
+		"x-image-meta-min-ram" : 0,
+		"x-image-meta-min-disk" : 0
 	}
 	
-	$scope.onCreate = function() {
-		$scope.$root.$broadcast('modal.hide');
+	$scope.onUpload = function() {
+		
+		$.ajax({
+			crossDomain : true,
+			type: "POST",
+			url : OpenStack.proxy,
+			headers : $scope.image,
+	        data: $scope.file,
+			dataType : "json",
+	        processData: false,
+	        contentType: "application/octet-stream",
+	        success: function(data) {
+				console.log(data);
+	        },
+	        error: function(data) {
+	          console.log(data);
+	        }
+	      });
 	}
 	
 });

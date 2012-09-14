@@ -1,7 +1,7 @@
 <div id="login" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<h3>Login on
-			<select ng-init="provider='hpcloud'" ng-model="selectedProvider" ng-options="name for name in ['openstack', 'hpcloud']" class="pull-right">
+			<select ng-init="provider='hpcloud'" ng-model="selectedProvider" ng-options="name for name in auth_methods()" class="pull-right">
 			</select>
 		</h3>
 	</div>
@@ -11,7 +11,7 @@
 				<input type='text' ng-model="providers[selectedProvider].indentityURL" style="width: 98%" />
 			</p>
 			<ng-switch on="selectedProvider">
-			<div ng-switch-when="openstack">			
+			<div ng-switch-when="passwordCredentials">
 			<p>
 				<label for='username'>Username:</label>
 				<input type="text" data-ng-model="providers[selectedProvider].auth.passwordCredentials.username" />
@@ -22,7 +22,7 @@
 				<input type="password" data-ng-model="providers[selectedProvider].auth.passwordCredentials.password" />
 			</p>
 			</div>
-			<div ng-switch-when="hpcloud">
+			<div ng-switch-when="apiAccessKeyCredentials">
 			<p>
 				<label for='access-key'>Access Key:</label>
 				<input type='text' ng-model="providers[selectedProvider].auth.apiAccessKeyCredentials.accessKey" />

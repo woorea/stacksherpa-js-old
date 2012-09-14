@@ -9,38 +9,38 @@
 				<tr>
 					<td colspan="2">
 						<label>Name</label>
-						<input type="text" data-ng-model="image.name"  placeholder="Type something…" />
+						<input type="text" data-ng-model="image['x-image-meta-name']"  placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Disk Format</label>
-						<select data-ng-model="image.diskFormat" ng-options="diskFormat as diskFormat for diskFormat in ['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']"></select>
+						<select data-ng-model="image['x-image-meta-disk_format']" ng-options="diskFormat for diskFormat in ['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']"></select>
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 					<td>
 						<label>Container Format</label>
-						<select data-ng-model="image.containerFormat" ng-options="containerFormat as containerFormat for containerFormat in ['aki', 'ari', 'ami', 'bare', 'ovf']"></select>
+						<select data-ng-model="image['x-image-meta-container_format']" ng-options="containerFormat for containerFormat in ['aki', 'ari', 'ami', 'bare', 'ovf']"></select>
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Min. Disk</label>
-						<input type="text" data-ng-model="image.minDisk" placeholder="Type something…" />
+						<input type="text" data-ng-model="image['x-image-meta-min-disk']" placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 					<td>
 						<label>Min. RAM</label>
-						<input type="text" data-ng-model="image.minRam" placeholder="Type something…" />
+						<input type="text" data-ng-model="image['x-image-meta-min-ram']" placeholder="Type something…" />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">
 						<label>Image File</label>
-						<input type="file" data-ng-model="image.file" />
+						<input type="file" file-upload />
 						<span class="help-block">Example block-level help text here.</span>
 					</td>
 				</tr>
@@ -49,5 +49,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onUpload()">Upload Image</button>
 	</div>
 </div>

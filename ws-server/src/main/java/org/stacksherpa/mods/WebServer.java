@@ -3,8 +3,10 @@ package org.stacksherpa.mods;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.stacksherpa.proxy.RestProxy;
@@ -39,8 +41,22 @@ public class WebServer extends BusModBase {
 			public void handle(final HttpServerRequest req) {
 				//TODO: populate response headers from proxy
 		    	req.response.headers().put("Access-Control-Allow-Origin", "*");
-				req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token,x-requested-with");
-				req.response.headers().put("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
+		    	/*
+		    	List<String> accessControlAllowHeaders = new ArrayList<String>();
+		    	for(Map.Entry<String, String> header : req.headers().entrySet()) {
+		    		if(header.getKey().toLowerCase().startsWith("x")) {
+		    			accessControlAllowHeaders.add(e);
+		    		}
+		    	}
+		    	*/
+		    	if(req.headers().get("Access-Control-Request-Headers") != null) {
+		    		req.response.headers().put("Access-Control-Allow-Headers", req.headers().get("Access-Control-Request-Headers"));
+		    	}
+		    	if(req.headers().get("Access-Control-Request-Method") != null) {
+		    		req.response.headers().put("Access-Control-Allow-Methods", req.headers().get("Access-Control-Request-Method"));
+		    	}
+				//req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token,x-requested-with");
+				//req.response.headers().put("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
 				
 		    	final Map<String, Object> response;
 		    	try {
@@ -60,7 +76,6 @@ public class WebServer extends BusModBase {
 		    					@Override
 		    					public void handle(Buffer event) {
 		    						try {
-		    							System.out.println(event.toString("UTF-8"));
 		    							handleResponse(req, RestProxy.post(uri, event.getBytes(), req.headers()));
 		    						} catch (Exception e) {
 		    							e.printStackTrace();
@@ -232,9 +247,6 @@ public class WebServer extends BusModBase {
 	
 	public void handleResponse(HttpServerRequest req, Map<String, Object> proxyResponse, boolean asAttachment) {
 		
-		System.out.println(proxyResponse);
-		
-		
 		req.response.statusCode = (Integer) proxyResponse.get("status");
 		
 		if(asAttachment) {
@@ -249,11 +261,6 @@ public class WebServer extends BusModBase {
 				req.response.headers().put(headerName, proxyResponseHeaders.get(headerName));
 			}
 		}
-		
-		for(Map.Entry<String, String> proxyResponseHeader : proxyResponseHeaders.entrySet()) {
-			System.out.println(">>" + proxyResponseHeader.getKey() + ":" + proxyResponseHeader.getValue());
-		}
-		
 		
 		InputStream entity = (InputStream) proxyResponse.get("entity");
 		

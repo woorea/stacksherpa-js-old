@@ -33,20 +33,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<g:each in="${items.list}" var="item" status="status">
-				<tr>
+				<tr data-ng-repeat="item in endpoints">
 					<td><input type="checkbox" ng-model="tenant.checked" /></td>
-					<td>${item.id}</td>
-					<td>${item.name}</td>
-					<td>${item.publicURL}</td>
-					<td>${item.adminURL}</td>
-					<td>${item.internalURL}</td>
+					<td>{{item.id}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.publicURL}}</td>
+					<td>{{item.adminURL}}</td>
+					<td>{{item.internalURL}}</td>
 					<td style="text-align:right">
-						<a href="${g.createLink(action : 'delete', params : [endpointId : item.id])}" class="btn confirm-delete">
-							<i class="icon-remove"></i> Delete</a>
+						<button data-ng-click="onDelete(item)" class="btn confirm-delete"><i class="icon-trash"></i> Delete</button>
 					</td>
 				</tr>
-				</g:each>
 			</tbody>
 		</table>
 	</div>
