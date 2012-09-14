@@ -77,6 +77,19 @@ openstack.factory("Flavors", function(OpenStack) {
 			}).error(function(data, status, headers, config) {
 
 			});
+		},
+		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/flavors/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
 		}
 	}
 	
@@ -116,6 +129,19 @@ openstack.factory("Images", function(OpenStack) {
 				}
 			}).error(function(data, status, headers, config) {
 				alert('show image error');
+			});
+		},
+		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/images/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
 			});
 		}
 	}
@@ -195,6 +221,235 @@ openstack.factory("Servers", function(OpenStack) {
 				data : action
 			}).success(function(data, status, headers, config) {
 				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		attach : function(region, id, action, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/servers/" + id + "/os-volume_attachments",
+				data : action
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		detach : function(region, id, action, callback) {
+
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/servers/" + id + "/os-volume_attachments",
+				data : action
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		}
+	}
+	
+});
+openstack.factory("FloatingIps", function(OpenStack) {
+	
+	return {
+		listPools : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-floating-ip-pools"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.floating_ip_pools = data.floating_ip_pools;
+				} else { //isCallback
+					modelOrCallback(data.floating_ip_pools)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		list : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-floating-ips"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.floating_ips = data.floating_ips;
+				} else { //isCallback
+					modelOrCallback(data.floating_ips)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		allocate : function(region, server, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-floating-ips",
+				data : {server : server}
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		deallocate : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-floating-ips/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
+		}
+	}
+	
+});
+openstack.factory("Volumes", function(OpenStack) {
+	
+	return {
+		list : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-volumes/detail"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.volumes = data.volumes;
+				} else { //isCallback
+					modelOrCallback(data.volumes)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		create : function(region, volume, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-volumes",
+				data : {volume : volume}
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		show : function(region, id, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-volumes/" + id
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.volume = data.volume;
+				} else { //isCallback
+					modelOrCallback(data.volume)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-volumes/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
+		}
+	}
+	
+});
+openstack.factory("Snapshots", function(OpenStack) {
+	
+	return {
+		list : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-snapshots/detail"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.servers = data.servers;
+				} else { //isCallback
+					modelOrCallback(data.servers)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		create : function(region, snapshot, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-snapshots",
+				data : {snapshot : snapshot}
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		show : function(region, id, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-snapshots/" + id
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.snapshots = data.snapshots;
+				} else { //isCallback
+					modelOrCallback(data.snapshots)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-snapshots/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
 			}).error(function(data, status, headers, config) {
 
 			});
@@ -287,6 +542,27 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/os-security-groups/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		addRule : function(region, id, rule, callback) {
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-security-group-rules",
+				data : { security_group_rule : rule }
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		removeRule : function(region, id, callback) {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-security-group-rules/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
 			}).error(function(data, status, headers, config) {
