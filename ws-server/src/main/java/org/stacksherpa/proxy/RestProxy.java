@@ -4,16 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.ws.Response;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -117,6 +115,11 @@ public class RestProxy {
 	
 	public static Map<String, Object> head(String uri, Map<String, String> headers) throws Exception {
 		HttpHead httpMethod = new HttpHead(uri);
+		return execute(httpMethod, headers);
+	}
+	
+	public static Map<String, Object> options(String uri, Map<String, String> headers) throws Exception {
+		HttpOptions httpMethod = new HttpOptions(uri);
 		return execute(httpMethod, headers);
 	}
 

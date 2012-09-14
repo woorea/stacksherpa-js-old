@@ -1,3 +1,5 @@
-<ul>
-	<li><a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers">Containers</a></li>
-</ul>
+<div class="well" ng-controller="ContainerListCtrl">
+	<ul class="nav nav-pills nav-stacked" ng-repeat="container in containers">
+		<li><a href="#/{{$routeParams.tenant}}/storage/{{$routeParams.region}}/containers/{{container.name}}"><i class="icon-briefcase"></i> {{container.name}}</a></li>
+	</ul>
+</div>

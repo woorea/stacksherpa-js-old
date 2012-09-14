@@ -3,10 +3,8 @@ package org.stacksherpa.mods;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.stacksherpa.proxy.RestProxy;
@@ -39,34 +37,25 @@ public class WebServer extends BusModBase {
 
 			@Override
 			public void handle(final HttpServerRequest req) {
-				//TODO: populate response headers from proxy
+				
+				
 		    	req.response.headers().put("Access-Control-Allow-Origin", "*");
-		    	/*
-		    	List<String> accessControlAllowHeaders = new ArrayList<String>();
-		    	for(Map.Entry<String, String> header : req.headers().entrySet()) {
-		    		if(header.getKey().toLowerCase().startsWith("x")) {
-		    			accessControlAllowHeaders.add(e);
-		    		}
-		    	}
-		    	*/
-		    	if(req.headers().get("Access-Control-Request-Headers") != null) {
-		    		req.response.headers().put("Access-Control-Allow-Headers", req.headers().get("Access-Control-Request-Headers"));
-		    	}
-		    	if(req.headers().get("Access-Control-Request-Method") != null) {
-		    		req.response.headers().put("Access-Control-Allow-Methods", req.headers().get("Access-Control-Request-Method"));
-		    	}
-				//req.response.headers().put("Access-Control-Allow-Headers", "content-type,x-uri,x-auth-token,x-requested-with");
-				//req.response.headers().put("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,HEAD,OPTIONS");
 				
 		    	final Map<String, Object> response;
+		    	
 		    	try {
 		    		
 		    		final String uri = req.headers().remove("X-URI");
-
-		    		System.out.println(uri);
-					
 		    		
-		    		if(uri != null) {
+		    		if("OPTIONS".equals(req.method)) {
+		    			if(req.headers().get("Access-Control-Request-Headers") != null) {
+	    		    		req.response.headers().put("Access-Control-Allow-Headers", req.headers().get("Access-Control-Request-Headers"));
+	    		    	}
+	    		    	if(req.headers().get("Access-Control-Request-Method") != null) {
+	    		    		req.response.headers().put("Access-Control-Allow-Methods", req.headers().get("Access-Control-Request-Method"));
+	    		    	}
+		    		}
+	    			if(uri != null) {
 		    			if("GET".equals(req.method)) {
 							handleResponse(req, RestProxy.get(uri, req.headers()));
 							
@@ -102,11 +91,12 @@ public class WebServer extends BusModBase {
 		            	} else if ("HEAD".equals(req.method)) {
 		            		handleResponse(req, RestProxy.head(uri, req.headers()));
 		            	} else if ("OPTIONS".equals(req.method)) {
-		            		//handleResponse(req, RestProxy.options(uri, req.headers()));
+		            		handleResponse(req, RestProxy.options(uri, req.headers()));
 		            	}
 		    		} else {
 		    			req.response.end("No X-URI HTTP Header found in this request");
 		    		}
+
 		    	} catch (Exception e) {
 		    		e.printStackTrace();
 		    	}
