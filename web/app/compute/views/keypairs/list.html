@@ -26,15 +26,15 @@
 			<tbody>
 				<tr ng-repeat="item in keypairs">
 					<td><input type="checkbox" ng-model="item.checked" /></td>
-					<td>{{item.keypair.name}}</td>
-					<td>{{item.keypair.fingerprint}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.fingerprint}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group" style="float:right; margin-right: 35px">
 							<button data-toggle="dropdown" class="btn dropdown-toggle">
 								Available Actions<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a ng-click="onDelete(item.keypair)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>
 						</div>
 					</td>

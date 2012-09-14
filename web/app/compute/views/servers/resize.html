@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ServerResizeCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Resize Server</h3>
@@ -9,7 +9,7 @@
 				<tr>
 					<td>
 						<label>Flavor</label>
-						<select ng-model="resize.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}"></select>
+						<select ng-model="resize.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors"></select>
 						<span class="help-block"></span>
 					</td>
 				</tr>

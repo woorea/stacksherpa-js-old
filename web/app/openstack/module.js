@@ -176,7 +176,7 @@ openstack.factory("Servers", function(OpenStack) {
 				url : endpoint + "/servers",
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
-				callback();
+				callback(data.server);
 			}).error(function(data, status, headers, config) {
 
 			});
@@ -217,7 +217,7 @@ openstack.factory("Servers", function(OpenStack) {
 			
 			OpenStack.ajax({
 				method : "POST",
-				url : endpoint + "/servers/" + $routeParams.id + "/action",
+				url : endpoint + "/servers/" + id + "/action",
 				data : action
 			}).success(function(data, status, headers, config) {
 				callback();
@@ -468,6 +468,9 @@ openstack.factory("KeyPairs", function(OpenStack) {
 				method : "GET",
 				url : endpoint + "/os-keypairs"
 			}).success(function(data, status, headers, config) {
+				data.keypairs = $.map(data.keypairs, function(el,idx) {
+					return el.keypair;
+				});
 				if(angular.isObject(modelOrCallback)) {
 					modelOrCallback.keypairs = data.keypairs;
 				} else { //isCallback
@@ -492,6 +495,9 @@ openstack.factory("KeyPairs", function(OpenStack) {
 			});
 		},
 		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/os-keypairs/" + id
@@ -556,6 +562,9 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 			});
 		},
 		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/os-security-groups/" + id
@@ -566,6 +575,9 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 			});
 		},
 		addRule : function(region, id, rule, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
 			OpenStack.ajax({
 				method : "POST",
 				url : endpoint + "/os-security-group-rules",
@@ -577,6 +589,9 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 			});
 		},
 		removeRule : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/os-security-group-rules/" + id

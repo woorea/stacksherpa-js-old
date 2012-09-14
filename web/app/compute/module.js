@@ -43,7 +43,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Imag
 
 		Servers.list($routeParams.region, function(servers) {
 			angular.forEach(servers, function(server) {
-				Images.show($routeParams.region, server.image.id, server);
+				Images.show("compute", $routeParams.region, server.image.id, server);
 				Flavors.show($routeParams.region, server.flavor.id, server);
 			});
 			$scope.servers = servers;
@@ -128,7 +128,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Se
 
 	$scope.onRefresh = function() {
 		Servers.show($routeParams.region, $routeParams.id, function(server) {
-			Images.show($routeParams.region, server.image.id, server);
+			Images.show("compute", $routeParams.region, server.image.id, server);
 			Flavors.show($routeParams.region, server.flavor.id, server);
 			$scope.server = server;
 		});
@@ -181,10 +181,10 @@ compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams,
 	
 });
 
-compute.controller("ServerResizeCtrl", function($scope, $routeParams, Servers) {
+compute.controller("ServerResizeCtrl", function($scope, $routeParams, Servers, Flavors) {
 	
 	$scope.resize = {
-		flavorRef : "",
+		flavorRef : $scope.server.flavor.id,
 		diskConfig : ""
 	}
 	
@@ -195,6 +195,8 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, Servers) {
 		});
 		
 	}
+	
+	Flavors.list($routeParams.region, $scope)
 	
 });
 
@@ -343,12 +345,12 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, Servers) {
 	
 });
 
-compute.controller("ServerLaunchCtrl", function($scope, Servers) {
+compute.controller("ServerLaunchCtrl", function($scope, $routeParams, Servers) {
 	
 	$scope.server = {
 		metadata : {},
 		personality : [],
-		securityGroups : [],
+		securityGroups : [{name : 'default'}],
 		min : 1,
 		max : 1,
 		diskConfig : 'AUTO'
@@ -395,7 +397,7 @@ compute.controller("ServerLaunchCtrl", function($scope, Servers) {
 	}
 	
 	$scope.onFinish = function() {
-		Servers.create($routeParams.region, $routeParams.id, $scope.server, function(data) {
+		Servers.create($routeParams.region, $scope.server, function(data) {
 			$scope.$root.$broadcast('servers.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
@@ -500,6 +502,8 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, Images) {
 	$scope.$on('images.refresh', function(event, args) {
 		$scope.onRefresh();
 	});
+	
+	$scope.onRefresh();
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, Images) {
@@ -877,7 +881,7 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, KeyPairs) {
 	$scope.onRefresh = function() {
 		
 		KeyPairs.list($routeParams.region, function(keypairs) {
-			$scope.keyPairs = keypairs;
+			$scope.keypairs = keypairs;
 		});
 		
 	}
@@ -1008,11 +1012,11 @@ compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, Secu
 		description : "description"
 	}
 	
-	SecurityGroups.create($routeParams.region, { security_group : $scope.security_group }, function(data) {
-		$scope.security_group.rules = $scope.security_group.rules.filter(function(sgr) {
+	$scope.onCreate = function() {
+		SecurityGroups.create($routeParams.region, $scope.security_group, function(sgr) {
 			$scope.$root.$broadcast('security-groups.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		});
-	})
-	
+		})
+	}
+
 });
