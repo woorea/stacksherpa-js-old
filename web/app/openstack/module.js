@@ -48,8 +48,6 @@ openstack.factory("Flavors", function(OpenStack) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
-			
-			
 			OpenStack.ajax({
 				method : "GET",
 				url : endpoint + "/flavors/detail"
@@ -100,7 +98,7 @@ openstack.factory("Images", function(OpenStack) {
 					modelOrCallback(data.images)
 				}
 			}).error(function(data, status, headers, config) {
-
+				alert('list images error');
 			});
 		},
 		show : function(service, region, id, modelOrCallback) {
@@ -117,7 +115,7 @@ openstack.factory("Images", function(OpenStack) {
 					modelOrCallback(data.image)
 				}
 			}).error(function(data, status, headers, config) {
-
+				alert('show image error');
 			});
 		}
 	}
@@ -143,7 +141,24 @@ openstack.factory("Servers", function(OpenStack) {
 
 			});
 		},
+		create : function(region, server, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/servers",
+				data : {server : server}
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
 		show : function(region, id, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
 			OpenStack.ajax({
 				method : "GET",
 				url : endpoint + "/servers/" + id
@@ -153,6 +168,127 @@ openstack.factory("Servers", function(OpenStack) {
 				} else { //isCallback
 					modelOrCallback(data.server)
 				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		delete : function(region, id, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/servers/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		action : function(region, id, action, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/servers/" + $routeParams.id + "/action",
+				data : action
+			}).success(function(data, status, headers, config) {
+				callback();
+			}).error(function(data, status, headers, config) {
+
+			});
+		}
+	}
+	
+});
+openstack.factory("KeyPairs", function(OpenStack) {
+	
+	return {
+		list : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-keypairs"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.keypairs = data.keypairs;
+				} else { //isCallback
+					modelOrCallback(data.keypairs)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		create : function(region, server, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-keypairs",
+				data : {server : server}
+			}).success(function(data, status, headers, config) {
+				callback(data);
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		delete : function(region, id, callback) {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-keypairs/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
+			}).error(function(data, status, headers, config) {
+
+			});
+		}
+	}
+	
+});
+openstack.factory("SecurityGroups", function(OpenStack) {
+	
+	return {
+		list : function(region, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-security-groups"
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.security_groups = data.security_groups;
+				} else { //isCallback
+					modelOrCallback(data.security_groups)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		create : function(region, security_group, callback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/os-security-groups",
+				data : {security_group : security_group}
+			}).success(function(data, status, headers, config) {
+				callback(data);
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
+		delete : function(region, id, callback) {
+			OpenStack.ajax({
+				method : "DELETE",
+				url : endpoint + "/os-security-groups/" + id
+			}).success(function(data, status, headers, config) {
+				callback()
 			}).error(function(data, status, headers, config) {
 
 			});

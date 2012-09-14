@@ -16,9 +16,7 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups", {controller : "SecurityGroupListCtrl", templateUrl : "app/compute/views/securitygroups/list.html"})
 		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html"})
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack, Servers, Images, Flavors) {
-
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Images, Flavors) {
 	
 	$scope.onLaunch = function() {
 		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/launch.html'});
@@ -27,24 +25,13 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack, Se
 	$scope.onDelete = function(server) {
 		
 		if(typeof server != 'undefined') {
-			OpenStack.ajax({
-				method : "DELETE",
-				url : endpoint + "/servers/" + server.id
-			}).success(function(data, status, headers, config) {
+			Servers.delete($regionParams.region, server.id, function() {
 				$scope.onRefresh();
-			}).error(function(data, status, headers, config) {
-
 			});
 		} else {
 			angular.forEach($scope.volumes, function(server) {
-				if(fip.checked) {
-					OpenStack.ajax({
-						method : "DELETE",
-						url : endpoint + "/servers/" + server.id
-					}).success(function(data, status, headers, config) {
-						//$scope.floating_ips = data.floating_ips;
-					}).error(function(data, status, headers, config) {
-
+				if(server.checked) {
+					Servers.delete($regionParams.region, server.id, function() {
 					});
 				}
 			});
@@ -71,257 +58,132 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack, Se
 	$scope.onRefresh();
 
 });
-compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
+compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack, Servers, Images, Flavors) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onPause = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				pause : {}
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { pause : {} }, function(data) {
 			$scope.server.status = 'PAUSED';
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 	$scope.onUnpause = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				unpause : {}
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { unpause : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 	$scope.onSuspend = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				suspend : {}
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { suspend : {} }, function(data) {
 			$scope.server.status = 'SUSPENDED';
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 	$scope.onResume = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				resume : {}
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { resume : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 	$scope.onLock = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				lock : {}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.server.status = 'LOCKED';
-		}).error(function(data, status, headers, config) {
-
+		Servers.action($routeParams.region, $routeParams.id, { lock : {} }, function(data) {
+			$scope.server.status = 'ACTIVE';
 		});
 		
 	}
 	
 	$scope.onUnlock = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				unlock : {}
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { unlock : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 	$scope.onResizeConfirm = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"confirmResize" : {}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} }, function(data) { });
 		
 	}
 	
 	$scope.onResizeRevert = function() {
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"revertResize" : {}
-			}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		
+		Servers.action($routeParams.region, $routeParams.id, { revertResize : {} }, function(data) { });
+		
 	}
 	
 	$scope.onDelete = function() {
 		
-		OpenStack.ajax({
-			method : "DELETE",
-			url : endpoint + "/servers/" + $routeParams.id
-		}).success(function(data, status, headers, config) {
-			$location.path("#/"+$routeParams.tenant+"/compute/"+$routeParams.region+"/servers");
-		}).error(function(data, status, headers, config) {
-
-		});
+		Servers.delete($routeParams.region, $routeParams.id, function(data) { });
 		
 	}
 
 	$scope.onRefresh = function() {
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/servers/" + $routeParams.id
-		}).success(function(data, status, headers, config) {
-			$scope.server = data.server;
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/images/" + $scope.server.image.id
-			}).success(function(data, status, headers, config) {
-				$scope.server.image = data.image;
-			}).error(function(data, status, headers, config) {
-
-			});
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/flavors/" + $scope.server.flavor.id
-			}).success(function(data, status, headers, config) {
-				$scope.server.flavor = data.flavor;
-			}).error(function(data, status, headers, config) {
-
-			});
-		}).error(function(data, status, headers, config) {
-
+		Servers.show($routeParams.region, $routeParams.id, function(server) {
+			Images.show($routeParams.region, server.image.id, server);
+			Flavors.show($routeParams.region, server.flavor.id, server);
+			$scope.server = server;
 		});
 	}
-	
-	
 
 	$scope.onRefresh();
 
 });
-compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+compute.controller("ServerRebootCtrl", function($scope, $routeParams, Servers) {
 	
 	$scope.onReboot = function() {
-		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				reboot : {
-					type : $scope.type
-				}
+		Servers.action($routeParams.region, $routeParams.id, {
+			reboot : {
+				type : $scope.type
 			}
-		}).success(function(data, status, headers, config) {
+		}, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
-		
 	}
 	
 });
 
-compute.controller("ServerShowVncConsoleCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerShowVncConsoleCtrl", function($scope, $routeParams, Servers) {
 	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
-	
-	OpenStack.ajax({
-		method : "POST",
-		url : endpoint + "/servers/" + $routeParams.id + "/action",
-		data : {
-			"os-getVNCConsole" : {
-				type : "novnc"
-			}
+	Servers.action($routeParams.region, $routeParams.id, {
+		"os-getVNCConsole" : {
+			type : "novnc"
 		}
-	}).success(function(data, status, headers, config) {
-		$scope.console = data.console;
-	}).error(function(data, status, headers, config) {
-
+	}, function(data) {
+		$scope.$root.$broadcast('modal.hide');
 	});
 	
 });
 
-compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+compute.controller("ServerShowConsoleOutputCtrl", function($scope, $routeParams, Servers) {
 	
 	$scope.onRefresh = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"os-getConsoleOutput" : {
-					length : 100
-				}
+		Servers.action($routeParams.region, $routeParams.id, {
+			"os-getConsoleOutput" : {
+				length : 100
 			}
-		}).success(function(data, status, headers, config) {
+		}, function(data) {
 			$scope.output = data.output;
-			//$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
-	
-	
 	
 	$scope.onRefresh();
 	
 });
 
-compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+compute.controller("ServerResizeCtrl", function($scope, $routeParams, Servers) {
 	
 	$scope.resize = {
 		flavorRef : "",
@@ -330,25 +192,17 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 	
 	$scope.onResize = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : { "resize" : $scope.resize }
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { "resize" : $scope.resize }, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 });
 
-compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerRebuildCtrl", function($scope, $routeParams, Servers) {
 	
 	var server_id = $scope.server.id
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.server = {
 		imageRef : "",
@@ -407,45 +261,31 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 	
 	$scope.onRebuild = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + server_id + "/action",
-			data : { "rebuild" : $scope.server }
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { "rebuild" : $scope.server }, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-			
 		});
 		
 	}
 	
 });
 
-compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
+compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, Servers) {
 	
 	$scope.onChangePassword = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"changePassword" : {
-					adminPass : $scope.adminPass
-				}
+		Servers.action($routeParams.region, $routeParams.id, {
+			"changePassword" : {
+				adminPass : $scope.adminPass
 			}
-		}).success(function(data, status, headers, config) {
+		}, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
 	
 });
 
-compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, Servers) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
@@ -456,16 +296,8 @@ compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenS
 	
 	$scope.onCreateImage = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $scope.server.id + "/action",
-			data : {
-				"createImage" : $scope.image
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { "createImage" : $scope.image }, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
@@ -496,16 +328,8 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack)
 	
 	$scope.onCreateBackup = function() {
 		
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers/" + $routeParams.id + "/action",
-			data : {
-				"createBackup" : $scope.backup
-			}
-		}).success(function(data, status, headers, config) {
+		Servers.action($routeParams.region, $routeParams.id, { "createBackup" : $scope.backup }, function(data) {
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
 		});
 		
 	}
@@ -521,9 +345,7 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack)
 	
 });
 
-compute.controller("ServerLaunchCtrl", function($scope, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
+compute.controller("ServerLaunchCtrl", function($scope, Servers) {
 	
 	$scope.server = {
 		metadata : {},
@@ -575,16 +397,10 @@ compute.controller("ServerLaunchCtrl", function($scope, OpenStack) {
 	}
 	
 	$scope.onFinish = function() {
-		OpenStack.ajax({
-			method : "POST",
-			url : endpoint + "/servers",
-			data : {server : $scope.server}
-		}).success(function(data, status, headers, config) {
+		Servers.create($routeParams.region, $routeParams.id, $scope.server, function(data) {
 			$scope.$root.$broadcast('servers.refresh');
-			$scope.onCancel();
-		}).error(function(data, status, headers, config) {
-			alert(status);
-		})
+			$scope.$root.$broadcast('modal.hide');
+		});
 	}
 	
 	$scope.totalSteps = $steps.length;
@@ -592,56 +408,21 @@ compute.controller("ServerLaunchCtrl", function($scope, OpenStack) {
 	$scope.show(0);
 	
 });
-compute.controller("LaunchServerSelectImageCtrl",function($scope, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
-	
-	
-	
-	
+compute.controller("LaunchServerSelectImageCtrl",function($scope, $routeParams, Images) {
 
-	$scope.onRefresh = function() {
-		//TODO: encapsulate cache functionality
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/images/detail"
-		}).success(function(data, status, headers, config) {
-			$scope.images = OpenStack.compute.images = data.images;
-		}).error(function(data, status, headers, config) {
-
-		});
-	}
+	Images.list("compute", $routeParams.region, $scope);
 	
 	$scope.onSelectImage = function(image) {
 		$scope.server.imageRef = image.id;
 		$scope.onNext()
 	}
 	
-	if(typeof OpenStack.compute.servers != 'undefined') {
-		$scope.images = OpenStack.compute.images;
-	} else {
-		$scope.onRefresh();
-	}
-	
 });
-compute.controller("LaunchServerConfigurationCtrl",function($scope, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
+compute.controller("LaunchServerConfigurationCtrl",function($scope, $routeParams, Flavors) {
 
 	$scope.flavors = []
 	
-	$scope.onRender = function() {
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/flavors/detail"
-		}).success(function(data, status, headers, config) {
-			$scope.flavors = data.flavors;
-		}).error(function(data, status, headers, config) {
-
-		});
-	}
-	
-	$scope.onRender();
+	Flavors.list($routeParams.region, $scope);
 	
 });
 compute.controller("LaunchServerMetadataCtrl",function($scope) {
@@ -670,42 +451,22 @@ compute.controller("LaunchServerPersonalityCtrl",function($scope) {
 	}
 	
 });
-compute.controller("LaunchServerSecurityCtrl",function($scope, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
+compute.controller("LaunchServerSecurityCtrl",function($scope, $routeParams, KeyPairs, SecurityGroups) {
 	
 	$scope.keyPairs = []
 	$scope.securityGroups = []
-	
-	$scope.onRender = function() {
 		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/os-keypairs"
-		}).success(function(data, status, headers, config) {
-			$scope.keyPairs = data.keypairs;
-		}).error(function(data, status, headers, config) {
-
+	KeyPairs.list($routeParams.region, function(keypairs) {
+		$scope.keyPairs = keypairs;
+	});
+	SecurityGroups.list($routeParams.region, function(security_groups) {
+		$scope.securityGroups = $.map(security_groups, function(securityGroup) {
+			return {"name" : securityGroup.name}
 		});
+	});
 		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/os-security-groups"
-		}).success(function(data, status, headers, config) {
-			$scope.securityGroups = $.map(data["security_groups"], function(securityGroup) {
-				return {"name" : securityGroup.name}
-			});
-		}).error(function(data, status, headers, config) {
-
-		});
-	}
-	
-	$scope.onRender();
-	
 });
-compute.controller("LaunchServerSummaryCtrl",function($scope, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
+compute.controller("LaunchServerSummaryCtrl",function($scope) {
 	
 });
 compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, Images) {
@@ -1072,14 +833,6 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 
 		});
 		
-		/*
-		angular.forEach($scope.volumes, function(volume) {
-			if(fip.checked) {
-				
-			}
-		});
-		*/
-		
 	}
 
 	$scope.onRefresh = function() {
@@ -1258,49 +1011,34 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack
 	}
 	
 });
-compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack, KeyPairs) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onDelete = function(keypair) {
 		
 		if(typeof keypair != 'undefined') {
-			OpenStack.ajax({
-				method : "DELETE",
-				url : endpoint + "/os-keypairs/" + keypair.name
-			}).success(function(data, status, headers, config) {
-				//$scope.floating_ips = data.floating_ips;
-			}).error(function(data, status, headers, config) {
-
+			
+			KeyPairs.delete($routeParams.region, keypair.name, function(data) {
+				$scope.onRefresh();
 			});
+			
 		} else {
 			angular.forEach($scope.keypairs, function(keypair) {
-				if(fip.checked) {
-					OpenStack.ajax({
-						method : "DELETE",
-						url : endpoint + "/os-keypairs/" + keypair.name
-					}).success(function(data, status, headers, config) {
-						//$scope.floating_ips = data.floating_ips;
-					}).error(function(data, status, headers, config) {
-
+				if(keypair.checked) {
+					KeyPairs.delete($routeParams.region, keypair.name, function(data) {
+						$scope.onRefresh();
 					});
 				}
 			});
 		}
-		
-		
-		
+
 	}
 
 	$scope.onRefresh = function() {
 		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/os-keypairs"
-		}).success(function(data, status, headers, config) {
-			$scope.keypairs = data.keypairs;
-		}).error(function(data, status, headers, config) {
-
+		KeyPairs.list($routeParams.region, function(keypairs) {
+			$scope.keyPairs = keypairs;
 		});
 		
 	}
@@ -1352,31 +1090,23 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 	}
 	
 });
-compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenStack, SecurityGroups) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onDelete = function(sg) {
 		
 		if(typeof sg != 'undefined') {
-			OpenStack.ajax({
-				method : "DELETE",
-				url : endpoint + "/security-groups/" + sg.id
-			}).success(function(data, status, headers, config) {
-				//$scope.floating_ips = data.floating_ips;
-			}).error(function(data, status, headers, config) {
-
+			
+			SecurityGroups.delete($routeParams.region, sg.id, function(data) {
+				$scope.onRefresh();
 			});
+			
 		} else {
 			angular.forEach($scope.security_groups, function(sg) {
 				if(sg.checked) {
-					OpenStack.ajax({
-						method : "DELETE",
-						url : endpoint + "/security-groups/" + sg.id
-					}).success(function(data, status, headers, config) {
-						//$scope.floating_ips = data.floating_ips;
-					}).error(function(data, status, headers, config) {
-
+					SecurityGroups.delete($routeParams.region, sg.id, function(data) {
+						$scope.onRefresh();
 					});
 				}
 			});
@@ -1386,13 +1116,8 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 
 	$scope.onRefresh = function() {
 		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/os-security-groups"
-		}).success(function(data, status, headers, config) {
-			$scope.security_groups = data.security_groups;
-		}).error(function(data, status, headers, config) {
-
+		SecurityGroups.list($routeParams.region, function(security_groups) {
+			$scope.security_groups = security_groups;
 		});
 		
 	}
