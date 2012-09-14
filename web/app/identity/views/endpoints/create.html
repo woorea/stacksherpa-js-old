@@ -1,46 +1,51 @@
-<div class="row">
-	<div class="span12">
-		<ng-include src="'app/identity/views/common/nav.html'">
+<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="EndpointCreateCtrl">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<h3 id="myModalLabel">Create Endpoint</h3>
 	</div>
-</div>
-<div class="row">
-	<fieldset>
-		<table style="width: 100%">
-			<tr>
-				<td>
-					<label>Service</label>
-					<select data-ng-model="endpoint.serviceId" ng-options="service for service in ['compute']"></select>
-					<span class="help-block"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Region</label>
-					<input type="text" data-ng-model="endpoint.region" />
-					<span class="help-block"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Public URL</label>
-					<textarea data-ng-model="endpoint.publicURL"></textarea>
-					<span class="help-block"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Internal URL</label>
-					<textarea data-ng-model="endpoint.internalURL"></textarea>
-					<span class="help-block"></span>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label>Admin URL</label>
-					<textarea data-ng-model="endpoint.adminURL"></textarea>
-					<span class="help-block"></span>
-				</td>
-			</tr>
-		</table>
-	</fieldset>
+	<div class="modal-body">
+		<fieldset>
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<label>Service</label>
+						<input type="text" data-ng-model="endpoint.service_id" />
+						<span class="help-block"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Region</label>
+						<input type="text" data-ng-model="endpoint.region" />
+						<span class="help-block"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Public URL</label>
+						<textarea data-ng-model="endpoint.publicurl"></textarea>
+						<span class="help-block">http://[host]:8774/v2/$(tenant_id)s</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Internal URL</label>
+						<textarea data-ng-model="endpoint.internalurl"></textarea>
+						<span class="help-block">http://[host]:8774/v2/$(tenant_id)s</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>Admin URL</label>
+						<textarea data-ng-model="endpoint.adminurl"></textarea>
+						<span class="help-block">http://[host]:8774/v2/$(tenant_id)s</span>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<button class="btn" data-ng-click="onCreate()">Create Endpoint</button>
+	</div>
 </div>

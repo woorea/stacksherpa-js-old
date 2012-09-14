@@ -340,12 +340,27 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 
 	OpenStack.ajax({
 		method : "GET",
-		url : endpoint + "/OS-KSADM/services" + $routeParams.id
+		url : endpoint + "/OS-KSADM/services/" + $routeParams.id
 	}).success(function(data, status, headers, config) {
-		$scope.services = data["OS-KSADM:services"];
+		$scope.service = data["OS-KSADM:service"];
 	}).error(function(data, status, headers, config) {
 	
 	});
+	
+	$scope.onRefreshEndpoints = function() {
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/endpoints"
+		}).success(function(data, status, headers, config) {
+			$scope.endpoints = data.endpoints.filter(function(endpoint) {
+				return (endpoint.service_id.localeCompare($routeParams.id) == 0);
+			});
+		}).error(function(data, status, headers, config) {
+
+		});
+	}
+	
+	$scope.onRefreshEndpoints();
 	
 });
 
@@ -376,7 +391,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
 
-	$scope.onDelete = function() {
+	$scope.onDelete = function(item) {
 		if(typeof item != 'undefined') {
 			OpenStack.ajax({
 				method : "DELETE",
@@ -387,7 +402,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 
 			});
 		} else {
-			angular.forEach($scope.tenants, function(item) {
+			angular.forEach($scope.endpoints, function(item) {
 				if(item.checked) {
 					OpenStack.ajax({
 						method : "DELETE",
@@ -402,6 +417,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 		}
 	}
 
+	/*
 	$scope.onRefresh = function() {
 		OpenStack.ajax({
 			method : "GET",
@@ -418,6 +434,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 	});
 	
 	$scope.onRefresh();
+	*/
 	
 });
 identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -439,9 +456,17 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
 	
 	$scope.endpoint = {
-		
+		service_id : $scope.service.id,
+		publicurl : "",
+		internalurl : "",
+		adminurl : ""
 	}
-
+	
+	$scope.$watch('endpoint.publicurl', function(new_value, old_value) {
+		$scope.endpoint.internalurl = new_value;
+		$scope.endpoint.adminurl = new_value;
+	});
+	
 	$scope.onCreate = function() {
 		OpenStack.ajax({
 			method : "POST",

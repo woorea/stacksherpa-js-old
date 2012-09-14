@@ -1,0 +1,19 @@
+<div class="row">
+	<div class="span12">
+		<ng-include src="'app/identity/views/common/nav.html'">
+	</div>
+</div>
+<div class="row">
+	<div class="span12">
+		<h1>{{service.name}} ({{service.id}})</h1>
+		<hr />
+		<p>{{service.description}}</p>
+		<hr />
+		<h2>
+			Endpoints
+			<a data-bootstrap-modal="app/identity/views/endpoints/create.html">[add]</a>
+			<a ng-click="onRefreshEndpoints()">[refresh]</a>
+		</h2>
+		<ng-include src="'app/identity/views/endpoints/list.html'" />
+	</div>
+</div>
