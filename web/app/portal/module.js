@@ -1,4 +1,4 @@
-var portal = angular.module("portal",[]);
+var portal = angular.module("portal",["openstack","common.file-upload","compute","identity","storage"]);
 portal.config(function($routeProvider) {
 	$routeProvider
 		.when("/login", {controller : "LoginCtrl", templateUrl : "app/portal/views/login.html"})
@@ -11,6 +11,100 @@ portal.config(function($routeProvider) {
 		.when("/admin/users", {controller : "UserListCtrl", templateUrl : "app/portal/views/admin/users/list.html"})
 		.when("/:tenant", {controller : "TenantCtrl", templateUrl : "app/portal/views/tenant.html"})
 		.otherwise({redirectTo : "/login"})
+});
+portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
+	$scope.modal = '';
+	
+	
+	//$scope.$location = $location;
+	//$scope.$route = $route;
+	$scope.$routeParams = $routeParams;
+	
+	/*
+	$scope.$on('modal.show', function(event, args) {
+	
+		$scope.modal = args.view
+		$scope.$apply();
+	})
+	*/
+	
+	$scope.onLogout = function() {
+		$location.path("/")
+	}
+	
+	$scope.logo = function(name) {
+		name = name.toLowerCase();
+		if(name.startsWith('debian')) {
+			return '/images/icons/debian.png';
+		} else if (name.startsWith('ubuntu')){
+			return '/images/icons/ubuntu.png';
+		} else if (name.startsWith('fedora')){
+			return '/images/icons/fedora.png';
+		} else if (name.startsWith('windows')){
+			return '/images/icons/windows.png';
+		} else {
+			return '/images/icons/linux.png';
+		}
+	}
+	
+})
+portal.directive('withSelectionCheckboxes', function() {
+	return function(scope, element, attrs) {
+
+		scope.checkAll = function() {
+			var items = scope[attrs.withSelectionCheckboxes];
+			console.log(items);
+			angular.forEach(items, function(item) {
+				item.checked = scope.checkedAll;
+			});
+		}
+
+		scope.allChecked = function() {
+			var items = scope[attrs.withSelectionCheckboxes];
+			if(items && items.length) {
+				var isCheckedAll = true;
+				angular.forEach(items, function(item) {
+				    if (!item.checked) {
+						isCheckedAll = false;
+						return;
+					}
+				});
+				return isCheckedAll;
+			} else {
+				return false;
+			}
+		};
+	}
+})
+portal.directive('bootstrapModal', function($http, $templateCache, $compile) {
+	return function(scope, element, attrs) {
+		
+		$modal = $('#modal');
+		
+		var modalScope;
+		
+		element.click(function() {
+			
+			if (modalScope) modalScope.$destroy();
+			modalScope = scope.$new();
+			
+			var partial = attrs.bootstrapModal;
+			
+			//TODO: use $templateCache
+			//$http.get(partial, {cache: $templateCache}).success(function(response) {
+			$http.get(partial).success(function(response) {
+				$modal.html(response);
+				$compile($modal.contents())(modalScope);
+			});
+			//scope.$root.$broadcast('modal.show',{view : partial});
+		});
+		scope.onCloseModal = function() {
+			$modal.html('');
+		}
+		scope.$on('modal.hide', function(event, args) {
+			$modal.html('');
+		})
+	}
 });
 portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	

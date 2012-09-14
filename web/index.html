@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-ng-app="portal">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
@@ -25,114 +25,10 @@
 				"bootstrap/js/bootstrap.min.js",
 				"app/openstack/module.js",
 				"app/common/common-file-upload.js",
-				"app/portal/module.js",
 				"app/compute/module.js",
 				"app/identity/module.js",
 				"app/storage/module.js",
-				function() {
-					angular
-						.module("stacksherpa",[])
-						.controller("StackSherpaCtrl", function($scope, $routeParams) {
-							$scope.modal = '';
-							
-							$scope.test = "Luis"
-							
-							//$scope.$location = $location;
-							//$scope.$route = $route;
-							$scope.$routeParams = $routeParams;
-							
-							/*
-							$scope.$on('modal.show', function(event, args) {
-							
-								$scope.modal = args.view
-								$scope.$apply();
-							})
-							*/
-							
-							$scope.onLogout = function() {
-								$location.path("/")
-							}
-							
-							$scope.logo = function(name) {
-								name = name.toLowerCase();
-								if(name.startsWith('debian')) {
-									return '/images/icons/debian.png';
-								} else if (name.startsWith('ubuntu')){
-									return '/images/icons/ubuntu.png';
-								} else if (name.startsWith('fedora')){
-									return '/images/icons/fedora.png';
-								} else if (name.startsWith('windows')){
-									return '/images/icons/windows.png';
-								} else {
-									return '/images/icons/linux.png';
-								}
-							}
-							
-						})
-						.controller("TestCtrl", function($scope) {
-							console.log($scope.test);
-						})
-						.directive('withSelectionCheckboxes', function() {
-							return function(scope, element, attrs) {
-
-								scope.checkAll = function() {
-									var items = scope[attrs.withSelectionCheckboxes];
-									console.log(items);
-									angular.forEach(items, function(item) {
-										item.checked = scope.checkedAll;
-									});
-								}
-
-								scope.allChecked = function() {
-									var items = scope[attrs.withSelectionCheckboxes];
-									if(items && items.length) {
-										var isCheckedAll = true;
-										angular.forEach(items, function(item) {
-										    if (!item.checked) {
-												isCheckedAll = false;
-												return;
-											}
-										});
-										return isCheckedAll;
-									} else {
-										return false;
-									}
-								};
-							}
-						})
-						.directive('bootstrapModal', function($http, $templateCache, $compile) {
-							return function(scope, element, attrs) {
-								
-								$modal = $('#modal');
-								
-								var modalScope;
-								
-								element.click(function() {
-									
-									if (modalScope) modalScope.$destroy();
-									modalScope = scope.$new();
-									
-									var partial = attrs.bootstrapModal;
-									
-									//TODO: use $templateCache
-									//$http.get(partial, {cache: $templateCache}).success(function(response) {
-									$http.get(partial).success(function(response) {
-										$modal.html(response);
-										$compile($modal.contents())(modalScope);
-									});
-									//scope.$root.$broadcast('modal.show',{view : partial});
-								});
-								scope.onCloseModal = function() {
-									$modal.html('');
-								}
-								scope.$on('modal.hide', function(event, args) {
-									$modal.html('');
-								})
-							}
-						});
-						
-					angular.bootstrap(document, ["stacksherpa","openstack","common.file-upload","portal","compute","identity","storage"]);
-				}
+				"app/portal/module.js"
 			);
 		</script>
 	<body>
