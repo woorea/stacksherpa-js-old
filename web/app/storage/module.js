@@ -53,7 +53,7 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 	$scope.onRefresh();
 
 });
-storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, OpenStack) {
+storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $location, OpenStack) {
 	
 	$scope.endpoint = OpenStack.endpoint("object-store",$routeParams.region, "publicURL");
 	
@@ -71,10 +71,23 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	$scope.onCreateDirectory = function() {
 		
+		var xuri = $scope.endpoint + "/" + $routeParams.container + "/"
+		
+		var qs = $location.search()
+		
+		if(qs.prefix) {
+			
+			xuri += qs.prefix + $scope.name;
+			
+		} else {
+			xuri += $scope.name;
+		}
+		
 		OpenStack.ajax({
 			method : "PUT",
-			url : $scope.endpoint + "/" + $routeParams.container + "/" + $scope.name,
+			url : xuri,
 			data : "",
+			processData: false,
 			headers : {
 				"Content-Type" : "application/directory"
 			}
@@ -88,35 +101,63 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, Ope
 	
 	
 	$scope.onUploadFile = function() {
-			//TODO: create directive
-	      $.ajax({
-			crossDomain : true,
-			type: "PUT",
-			url : OpenStack.proxy,
+		
+		var xuri = $scope.endpoint + "/" + $routeParams.container + "/"
+		
+		var qs = $location.search()
+		
+		if(qs.prefix) {
+			
+			xuri += qs.prefix + $scope.file.name;
+			
+		} else {
+			xuri += $scope.file.name;
+		}
+		
+		OpenStack.ajax({
+			method : "PUT",
+			url : xuri,
+			data : $scope.file,
+			processData: false,
 			headers : {
-				"X-Auth-Token" : OpenStack.access.token.id,
-				"X-URI" : $scope.endpoint + "/" + $routeParams.container + "/" + file.name
-			},
-	        data: file,
-			dataType : "json",
-	        processData: false,
-	        contentType: false,
-	        success: function(data) {
-				$scope.onRefresh();
-	        },
-	        error: function(data) {
-	          console.log(data);
-	        }
-	      });
+				"Content-Type" : $scope.file.type
+			}
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh();
+		}).error(function(data, status, headers, config) {
+			console.log(data);
+		});
 	};
 	
 	$scope.onRefresh = function() {
 		
+		var url = $scope.endpoint + "/" + $routeParams.container + "?format=json&delimiter=/";
+		
+		var qs = $location.search()
+		
+		if(qs.prefix) {
+			url += "&prefix=" + qs.prefix;
+			
+			$scope.parent = qs.prefix.replace(/(.*\/)*(.*\/)+$/,"$1")
+			
+		}
+		
 		OpenStack.ajax({
 			method : "GET",
-			url : $scope.endpoint + "/" + $routeParams.container + "?format=json"
+			url : url
 		}).success(function(data, status, headers, config) {
-			$scope.objects = data;
+			$scope.objects = data.filter(function(o) {
+				if(typeof o.hash != 'undefined') {
+					if(qs.prefix) {
+						o.display_name = o.name.replace(qs.prefix,"")
+					} else {
+						o.display_name = o.name
+					}
+					return true;
+				} else {
+					return false;
+				}
+			});
 		}).error(function(data, status, headers, config) {
 
 		});
