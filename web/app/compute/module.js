@@ -648,7 +648,7 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, Servers, 
 
 	$scope.onRefresh = function() {
 		
-		FloatingIps.list($routeParams.region, floatingIp.id, $scope);
+		FloatingIps.list($routeParams.region, $scope);
 		
 	}
 	
@@ -676,8 +676,6 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Floa
 });
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Servers) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	Servers.list($routeParams.region, $scope)
 	
@@ -774,11 +772,9 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 	}
 	
 });
-compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack, Servers) {
+compute.controller("VolumeAttachCtrl",function($scope, $routeParams, Servers) {
 	
-	var endpoint = OpenStack.endpoint("compute",, "publicURL");
-	
-	 Servers.list($routeParams.region, $scope.servers)
+	Servers.list($routeParams.region, $scope.servers)
 	
 	$scope.onAttach = function() {
 		
@@ -849,9 +845,11 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, Snapshots
 		"force": true
 	}
 	
-	Snapshots.create($routeParams.region, { snapshot : $scope.snapshot }, function(data) {
-		$scope.$root.$broadcast('modal.hide');
-	});
+	$scope.onCreate = function() {
+		Snapshots.create($routeParams.region, { snapshot : $scope.snapshot }, function(data) {
+			$scope.$root.$broadcast('modal.hide');
+		});
+	}
 	
 });
 compute.controller("KeyPairListCtrl",function($scope, $routeParams, KeyPairs) {
@@ -932,8 +930,6 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 	
 });
 compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, SecurityGroups) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onDelete = function(sg) {
 		
@@ -1002,17 +998,10 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, Securi
 		});
 	}
 	
-	SecurityGroups.show($routeParams.region, $routeParams.id, function(data) {
-		$scope.security_group.rules = $scope.security_group.rules.filter(function(sgr) {
-			scope.security_group = security_group;
-			resetAddRule();
-		});
-	})
+	SecurityGroups.show($routeParams.region, $routeParams.id, $scope);
 	
 });
 compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, SecurityGroups) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.security_group = {
 		name : "name",

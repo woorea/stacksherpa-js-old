@@ -538,6 +538,23 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 
 			});
 		},
+		show : function(region, id, modelOrCallback) {
+			
+			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "GET",
+				url : endpoint + "/os-security-groups/" + id
+			}).success(function(data, status, headers, config) {
+				if(angular.isObject(modelOrCallback)) {
+					modelOrCallback.security_group = data.security_group;
+				} else { //isCallback
+					modelOrCallback(data.security_group)
+				}
+			}).error(function(data, status, headers, config) {
+
+			});
+		},
 		delete : function(region, id, callback) {
 			OpenStack.ajax({
 				method : "DELETE",
