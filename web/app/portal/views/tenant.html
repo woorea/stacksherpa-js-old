@@ -19,7 +19,7 @@
 			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li ng-repeat="endpoint in services.compute.endpoints">
-					<a ng-href="#/{{$routeParams.tenant}}/compute/{{endpoint.region}}/servers">{{endpoint.region}}</a>
+					<a ng-href="#/{{$routeParams.tenant}}/compute/{{endpoint.region}}/flavors">{{endpoint.region}}</a>
 				</li>
 			</ul>
 		</div>

@@ -16,7 +16,7 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups", {controller : "SecurityGroupListCtrl", templateUrl : "app/compute/views/securitygroups/list.html"})
 		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html"})
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack, Servers, Images, Flavors) {
 
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
@@ -53,45 +53,22 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 	$scope.onRefresh = function() {
-		
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/servers/detail"
-		}).success(function(data, status, headers, config) {
-			angular.forEach(data.servers, function(server) {
-				OpenStack.ajax({
-					method : "GET",
-					url : endpoint + "/images/" + server.image.id
-				}).success(function(data, status, headers, config) {
-					server.image = data.image;
-				}).error(function(data, status, headers, config) {
 
-				});
-				OpenStack.ajax({
-					method : "GET",
-					url : endpoint + "/flavors/" + server.flavor.id
-				}).success(function(data, status, headers, config) {
-					server.flavor = data.flavor;
-				}).error(function(data, status, headers, config) {
-
-				});
+		Servers.list($routeParams.region, function(servers) {
+			angular.forEach(servers, function(server) {
+				Images.show($routeParams.region, server.image.id, server);
+				Flavors.show($routeParams.region, server.flavor.id, server);
 			});
-			$scope.servers = OpenStack.compute.servers = data.servers;
-		}).error(function(data, status, headers, config) {
-
+			$scope.servers = servers;
 		});
-		
+
 	}
 	
 	$scope.$on('servers.refresh', function(event, args) {
 		$scope.onRefresh();
 	});
 	
-	if(typeof OpenStack.compute.servers != 'undefined') {
-		$scope.servers = OpenStack.compute.servers
-	} else {
-		$scope.onRefresh();
-	}
+	$scope.onRefresh();
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
@@ -731,9 +708,9 @@ compute.controller("LaunchServerSummaryCtrl",function($scope, OpenStack) {
 	var endpoint = OpenStack.endpoint("compute",$scope.$routeParams.region, "publicURL");
 	
 });
-compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, Images) {
 	
-	var endpoint = OpenStack.endpoint("image",$routeParams.region, "publicURL");// + "/v1";
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");// + "/v1";
 
 	$scope.onDelete = function(image) {
 		
@@ -764,15 +741,9 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 	$scope.onRefresh = function() {
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/images/detail"
-		}).success(function(data, status, headers, config) {
-			//TODO: encapsulate cache functionality
-			$scope.images = OpenStack.compute.images = data.images;
-		}).error(function(data, status, headers, config) {
+		
+		Images.list("compute", $routeParams.region, $scope);
 
-		});
 	}
 	
 	$scope.$on('images.refresh', function(event, args) {
@@ -788,7 +759,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("image",$routeParams.region, "publicURL");// + "/v1";
+	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");// + "/v1";
 
 	OpenStack.ajax({
 		method : "GET",
@@ -837,7 +808,7 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 });
 
-compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack, Flavors) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
@@ -869,14 +840,8 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 	$scope.onRefresh = function() {
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/flavors/detail"
-		}).success(function(data, status, headers, config) {
-			$scope.flavors = data.flavors;
-		}).error(function(data, status, headers, config) {
-
-		});
+		
+		Flavors.list($routeParams.region, $scope);
 	}
 	
 	$scope.$on('flavors.refresh', function(event, args) {
