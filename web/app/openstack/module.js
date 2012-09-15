@@ -13,15 +13,18 @@ openstack.factory("OpenStack", function($http, proxy) {
 				opts.url = proxy;
 			}
 			
-			if(this.access) {
-				opts.headers['X-Auth-Token'] = this.access.token.id;
+			var access = this.getAccess()
+			
+			if(access) {
+				opts.headers['X-Auth-Token'] = access.token.id;
 			}
 			
 			return $http(opts)
 		},
 		endpoint : function(serviceType, regionName, interface) {
-			if(angular.isArray(this.access.serviceCatalog)) {
-				var service = this.access.serviceCatalog.filter(function(service) {
+			var access = this.getAccess();
+			if(access && angular.isArray(access.serviceCatalog)) {
+				var service = access.serviceCatalog.filter(function(service) {
 					return service.type == serviceType;
 				})[0];
 				if(regionName) {
@@ -35,6 +38,31 @@ openstack.factory("OpenStack", function($http, proxy) {
 			} else {
 				return null;
 			}
+		},
+		setAuthenticationURL : function(url) {
+			sessionStorage.setItem("os_auth_url", url);
+		},
+		getAuthenticationURL : function() {
+			return sessionStorage.getItem("os_auth_url");
+		},
+		setAccess : function(access) {
+			sessionStorage.setItem("access", angular.toJson(access));
+		},
+		getAccess : function() {
+			var access = sessionStorage.getItem("access");
+			return access != null ? angular.fromJson(access) : access;
+		},
+		setTenants : function(tenants) {
+			sessionStorage.setItem("tenants", angular.toJson(tenants));
+		},
+		getTenants : function() {
+			var tenants = sessionStorage.getItem("tenants");
+			return tenants != null ? angular.fromJson(tenants) : tenants;
+		},
+		logout : function() {
+			sessionStorage.removeItem("access");
+			sessionStorage.removeItem("tenants");
+			sessionStorage.removeItem("os_auth_url");
 		},
 		compute : {},
 		storage : {}

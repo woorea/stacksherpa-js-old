@@ -12,6 +12,28 @@ portal.config(function($routeProvider) {
 		.when("/:tenant", {controller : "TenantCtrl", templateUrl : "app/portal/views/tenant.html"})
 		.otherwise({redirectTo : "/login"})
 });
+portal.run(function($rootScope, $location, OpenStack) {
+
+	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+		
+		var accessJson = sessionStorage.getItem("access");
+		
+		if(accessJson == null) {
+			if(next.templateUrl != "app/portal/views/login.html") {
+				$location.path("/login");
+			}
+	 	} else {
+			OpenStack.setAccess(angular.fromJson(accessJson));
+			$rootScope.isLoggedIn = true;
+		}
+	});
+	
+	$rootScope.logout = function() {
+		OpenStack.logout();
+		$rootScope.isLoggedIn = false;
+	}
+	
+});
 portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 	$scope.modal = '';
 	
@@ -137,12 +159,15 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	
 	$scope.onLogin = function() {
 		var provider = $scope.providers[$scope.selectedProvider];
-		OpenStack.identityURL = provider.indentityURL;
 		OpenStack.ajax({
 			method : "POST",
-			url : OpenStack.identityURL + "/tokens",
+			url : provider.indentityURL + "/tokens",
 			data : {auth : provider.auth}
 		}).success(function(data, status, headers, config) {
+			OpenStack.setAuthenticationURL(provider.indentityURL);
+			OpenStack.setAccess(data.access);
+			$location.path("/unscoped");
+			/*
 			OpenStack.access = data.access;
 			OpenStack.ajax({
 				method : "GET",
@@ -152,33 +177,42 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 				$location.path("/unscoped");
 			}).error(function(data, status, headers, config) {
 			});
+			*/
 		}).error(function(data, status, headers, config) {
 			alert(status);
 		})
 	}
+	
 });
 portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
-
-	$scope.tenants = OpenStack.tenants
 
 	$scope.onTenantSelected = function(tenant) {
 		OpenStack.ajax({
 			method : "POST",
-			url : OpenStack.identityURL + "/tokens",
+			url : OpenStack.getAuthenticationURL() + "/tokens",
 			data : { auth : {
 				token : {
-					id : OpenStack.access.token.id
+					id : OpenStack.getAccess().token.id
 				},
 				tenantName : tenant.name
 			}}
 		}).success(function(data, status, headers, config) {
-			OpenStack.access = data.access;
-			$.cookie("X-Auth-Token", OpenStack.access.token.id);
-			$location.path("/" + OpenStack.access.token.tenant.name);
+			OpenStack.setAccess(data.access);
+			$.cookie("X-Auth-Token", data.access.token.id);
+			$location.path("/" + tenant.name);
 		}).error(function(data, status, headers, config) {
 			alert(status);
 		})
 	}
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : OpenStack.getAuthenticationURL() + "/tenants"
+	}).success(function(data, status, headers, config) {
+		OpenStack.setTenants(data.tenants);
+		$scope.tenants = data.tenants;
+	}).error(function(data, status, headers, config) {
+	});
 
 });
 portal.controller("TenantCtrl",function($scope, OpenStack) {
