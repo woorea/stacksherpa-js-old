@@ -9,24 +9,19 @@ portal.config(function($routeProvider) {
 		.when("/billing", {controller : "BillingCtrl", templateUrl : "app/portal/views/billing.html"})
 		.when("/billing/:id", {controller : "BillingCtrl", templateUrl : "app/portal/views/myinvoice.html"})
 		.when("/admin/users", {controller : "UserListCtrl", templateUrl : "app/portal/views/admin/users/list.html"})
-		.when("/:tenant", {controller : "TenantCtrl", templateUrl : "app/portal/views/tenant.html"})
-		.otherwise({redirectTo : "/login"})
+		.when("/:tenant/dashboard", {controller : "TenantCtrl", templateUrl : "app/portal/views/tenant.html"})
+		.when("/404", {templateUrl : "app/portal/views/404.html"})
+		.otherwise({controller : "OtherwiseCtrl", template : "<br />"})
 });
 portal.run(function($rootScope, $location, OpenStack) {
-
-	$rootScope.$on("$routeChangeStart", function(event, next, current) {
-		
-		var accessJson = sessionStorage.getItem("access");
-		
-		if(accessJson == null) {
-			if(next.templateUrl != "app/portal/views/login.html") {
-				$location.path("/login");
-			}
-	 	} else {
-			OpenStack.setAccess(angular.fromJson(accessJson));
-			$rootScope.isLoggedIn = true;
-		}
-	});
+	
+	var reloaded = OpenStack.reload();
+	
+	if(reloaded) {
+		$rootScope.isLoggedIn = true;
+	} else {
+		$location.path("/login");
+	}
 	
 	$rootScope.logout = function() {
 		OpenStack.logout();
@@ -164,20 +159,10 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 			url : provider.indentityURL + "/tokens",
 			data : {auth : provider.auth}
 		}).success(function(data, status, headers, config) {
+			$scope.$root.isLoggedIn = true;
 			OpenStack.setAuthenticationURL(provider.indentityURL);
 			OpenStack.setAccess(data.access);
 			$location.path("/unscoped");
-			/*
-			OpenStack.access = data.access;
-			OpenStack.ajax({
-				method : "GET",
-				url : OpenStack.identityURL + "/tenants"
-			}).success(function(data, status, headers, config) {
-				OpenStack.tenants = data.tenants;
-				$location.path("/unscoped");
-			}).error(function(data, status, headers, config) {
-			});
-			*/
 		}).error(function(data, status, headers, config) {
 			alert(status);
 		})
@@ -199,7 +184,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 		}).success(function(data, status, headers, config) {
 			OpenStack.setAccess(data.access);
 			$.cookie("X-Auth-Token", data.access.token.id);
-			$location.path("/" + tenant.name);
+			$location.path("/" + tenant.name + "/dashboard");
 		}).error(function(data, status, headers, config) {
 			alert(status);
 		})
@@ -219,7 +204,7 @@ portal.controller("TenantCtrl",function($scope, OpenStack) {
 	
 	OpenStack.services = {}
 	
-	angular.forEach(OpenStack.access.serviceCatalog, function(service) {
+	angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
 		OpenStack.services[service.type] = service;
 	});
 	
@@ -241,4 +226,12 @@ portal.controller("UsageCtrl",function($scope, OpenStack) {
 
 portal.controller("BillingCtrl",function($scope, OpenStack) {
 	
+});
+
+portal.controller("OtherwiseCtrl",function($scope, $location, OpenStack) {
+	if($scope.isLoggedIn) {
+		$location.path("/unscoped");
+	} else {
+		$location.path("/login");
+	}
 });

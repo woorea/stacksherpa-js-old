@@ -40,29 +40,32 @@ openstack.factory("OpenStack", function($http, proxy) {
 			}
 		},
 		setAuthenticationURL : function(url) {
-			sessionStorage.setItem("os_auth_url", url);
+			localStorage.setItem("os_auth_url", url);
 		},
 		getAuthenticationURL : function() {
-			return sessionStorage.getItem("os_auth_url");
+			return localStorage.getItem("os_auth_url");
 		},
 		setAccess : function(access) {
-			sessionStorage.setItem("access", angular.toJson(access));
+			localStorage.setItem("access", angular.toJson(access));
 		},
 		getAccess : function() {
-			var access = sessionStorage.getItem("access");
+			var access = localStorage.getItem("access");
 			return access != null ? angular.fromJson(access) : access;
 		},
 		setTenants : function(tenants) {
-			sessionStorage.setItem("tenants", angular.toJson(tenants));
+			localStorage.setItem("tenants", angular.toJson(tenants));
 		},
 		getTenants : function() {
-			var tenants = sessionStorage.getItem("tenants");
+			var tenants = localStorage.getItem("tenants");
 			return tenants != null ? angular.fromJson(tenants) : tenants;
 		},
+		reload : function() {
+			return this.getAccess() != null;
+		},
 		logout : function() {
-			sessionStorage.removeItem("access");
-			sessionStorage.removeItem("tenants");
-			sessionStorage.removeItem("os_auth_url");
+			localStorage.removeItem("access");
+			localStorage.removeItem("tenants");
+			localStorage.removeItem("os_auth_url");
 		},
 		compute : {},
 		storage : {}

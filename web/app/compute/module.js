@@ -517,7 +517,7 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");
 	
 	$scope.image = {
-		"X-Auth-Token" : OpenStack.access.token.id,
+		"X-Auth-Token" : OpenStack.getAccess().token.id,
 		"X-URI" : endpoint + "/images",
 		"x-image-meta-name" : "",
 		"x-image-meta-disk_format" : "raw",
@@ -795,8 +795,6 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, Servers) {
 	
 });
 compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack, Snapshots) {
-	
-	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 
 	$scope.onDelete = function(snapshot) {
 		
