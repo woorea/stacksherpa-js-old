@@ -37,18 +37,11 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 	//$scope.$route = $route;
 	$scope.$routeParams = $routeParams;
 	
-	/*
-	$scope.$on('modal.show', function(event, args) {
-	
-		$scope.modal = args.view
-		$scope.$apply();
-	})
-	*/
-	
 	$scope.onLogout = function() {
 		$location.path("/")
 	}
 	
+	//TODO : use angular filter for this
 	$scope.logo = function(name) {
 		name = name.toLowerCase();
 		if(name.startsWith('debian')) {
@@ -94,6 +87,7 @@ portal.directive('withSelectionCheckboxes', function() {
 	}
 })
 portal.directive('bootstrapModal', function($http, $templateCache, $compile) {
+	
 	return function(scope, element, attrs) {
 		
 		$modal = $('#modal');

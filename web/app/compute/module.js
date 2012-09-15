@@ -43,8 +43,8 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Imag
 
 		Servers.list($routeParams.region, function(servers) {
 			angular.forEach(servers, function(server) {
-				Images.show("compute", $routeParams.region, server.image.id, server);
-				Flavors.show($routeParams.region, server.flavor.id, server);
+				Images.show("compute", $routeParams.region, server.image.id, server, true);
+				Flavors.show($routeParams.region, server.flavor.id, server, true);
 			});
 			$scope.servers = servers;
 		});
@@ -55,7 +55,13 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Imag
 		$scope.onRefresh();
 	});
 	
-	$scope.onRefresh();
+	Servers.list($routeParams.region, function(servers) {
+		angular.forEach(servers, function(server) {
+			Images.show("compute", $routeParams.region, server.image.id, server, true);
+			Flavors.show($routeParams.region, server.flavor.id, server, true);
+		});
+		$scope.servers = servers;
+	}, true);
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Servers, Images, Flavors) {
@@ -503,7 +509,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, Images) {
 		$scope.onRefresh();
 	});
 	
-	$scope.onRefresh();
+	Images.list("compute", $routeParams.region, $scope, true);
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, Images) {
@@ -572,7 +578,6 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, Flavors) {
 	}
 
 	$scope.onRefresh = function() {
-		
 		Flavors.list($routeParams.region, $scope);
 	}
 	
@@ -580,7 +585,7 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, Flavors) {
 		$scope.onRefresh();
 	});
 	
-	$scope.onRefresh();
+	Flavors.list($routeParams.region, $scope, true);
 
 });
 compute.controller("FlavorShowCtrl",function($scope, $routeParams, Flavors) {
@@ -660,7 +665,7 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, Servers, 
 		$scope.onRefresh();
 	});
 	
-	$scope.onRefresh();
+	FloatingIps.list($routeParams.region, $scope, true);
 
 });
 compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, FloatingIps) {
