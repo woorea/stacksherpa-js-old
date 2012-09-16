@@ -7,6 +7,10 @@ openstack.factory("OpenStack", function($http, proxy, $cacheFactory) {
 		cache : $cacheFactory('openstack'),
 		ajax : function(opts) {
 			
+			if(angular.isUndefined(opts.url)) {
+				opts.url = this.endpoint(opts.service, opts.region, opts.facing) + opts.path
+			}
+			
 			if(angular.isDefined(opts.refresh) && opts.refresh) {
 				this.cache.remove(opts.url);
 			}
@@ -79,62 +83,62 @@ openstack.factory("OpenStack", function($http, proxy, $cacheFactory) {
 	}
 
 });
-openstack.factory("Flavors", function(OpenStack) {
+
+var default_error_handler = function(data, status, headers, config) { 
+	console.log(data);
+	console.log(status);
+	console.log(headers);
+	console.log(config);
+}
+
+var default_compute_options = {
+	service: "compute",
+	facing : "publicURL",
+	method : "GET"
+}
+
+openstack.run(function(OpenStack) {
 	
-	return {
-		list : function(region, modelOrCallback) {
+	var flavors_api = {
+		list : function(opts) {
 			
-			var options = {
-				method : "GET",
-				url : OpenStack.endpoint("compute", region, "publicURL") + "/flavors/detail"
-			}
+			var options = angular.extend({}, default_compute_options, {path : "/flavors/detail"}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.flavors = data.flavors;
-				} else { //isCallback
-					modelOrCallback(data.flavors)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+				opts.success(data.flavors);
+			}).error(default_error_handler);
+			
 		},
-		show : function(region, id, modelOrCallback) {
+		show : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/flavors/" + opts.id}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/flavors/" + id
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.flavor = data.flavor;
-				} else { //isCallback
-					modelOrCallback(data.flavor)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.flavor);
+			}).error(default_error_handler);
+			
 		},
-		delete : function(region, id, callback) {
+		create : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {method : "POST", path : "/flavors"}, opts);
 			
-			OpenStack.ajax({
-				method : "DELETE",
-				url : endpoint + "/flavors/" + id
-			}).success(function(data, status, headers, config) {
-				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.flavor);
+			}).error(default_error_handler);
+			
+		},
+		delete : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {method : "DELETE", path : "/flavors/" + opts.id}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success();
+			}).error(default_error_handler);
 		}
 	}
 	
-});
-openstack.factory("Images", function(OpenStack) {
-	
-	return {
+	var images_api = {
+		
 		list : function(service, region, modelOrCallback, refresh) {
 			
 			var options = {
@@ -185,10 +189,7 @@ openstack.factory("Images", function(OpenStack) {
 		}
 	}
 	
-});
-openstack.factory("Servers", function(OpenStack) {
-	
-	return {
+	var servers_api = {
 		list : function(region, modelOrCallback) {
 			
 			var options = {
@@ -294,10 +295,7 @@ openstack.factory("Servers", function(OpenStack) {
 		}
 	}
 	
-});
-openstack.factory("FloatingIps", function(OpenStack) {
-	
-	return {
+	var floating_ips_api = {
 		listPools : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
@@ -363,10 +361,7 @@ openstack.factory("FloatingIps", function(OpenStack) {
 		}
 	}
 	
-});
-openstack.factory("Volumes", function(OpenStack) {
-	
-	return {
+	var volumes_api = {
 		list : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
@@ -430,10 +425,7 @@ openstack.factory("Volumes", function(OpenStack) {
 		}
 	}
 	
-});
-openstack.factory("Snapshots", function(OpenStack) {
-	
-	return {
+	var snapshots_api = {
 		list : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
@@ -495,12 +487,9 @@ openstack.factory("Snapshots", function(OpenStack) {
 
 			});
 		}
-	}
+	};
 	
-});
-openstack.factory("KeyPairs", function(OpenStack) {
-	
-	return {
+	var keypairs_api = {
 		list : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
@@ -548,12 +537,9 @@ openstack.factory("KeyPairs", function(OpenStack) {
 
 			});
 		}
-	}
+	};
 	
-});
-openstack.factory("SecurityGroups", function(OpenStack) {
-	
-	return {
+	var security_groups_api = {
 		list : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
@@ -642,6 +628,17 @@ openstack.factory("SecurityGroups", function(OpenStack) {
 
 			});
 		}
-	}
+	};
+	
+	angular.extend(OpenStack, {
+		Flavors : flavors_api,
+		Images : images_api,
+		Servers : servers_api,
+		FloatingIps : floating_ips_api,
+		Volumes : volumes_api,
+		Snapshots : snapshots_api,
+		KeyPairs : keypairs_api,
+		SecurityGroups : security_groups_api
+	});
 	
 });
