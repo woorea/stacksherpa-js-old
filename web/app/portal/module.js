@@ -188,6 +188,10 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 		method : "GET",
 		url : OpenStack.getAuthenticationURL() + "/tenants"
 	}).success(function(data, status, headers, config) {
+		if(!angular.isArray(data.tenants)) {
+			//weird json from trystack
+			data.tenants = data.tenants.values;
+		}
 		OpenStack.setTenants(data.tenants);
 		$scope.tenants = data.tenants;
 	}).error(function(data, status, headers, config) {
