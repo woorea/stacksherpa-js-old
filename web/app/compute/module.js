@@ -17,10 +17,6 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html"})
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
-	
-	$scope.onLaunch = function() {
-		$scope.$root.$broadcast('modal.show',{view : 'app/compute/views/servers/launch.html'});
-	}
 
 	$scope.onDelete = function(server) {
 		
@@ -221,50 +217,6 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 		diskConfig : 'AUTO'
 	}
 	
-	var $steps = $('.step')
-	
-	var $footer = $('.modal-footer')
-	var $previous = $footer.find('.btn-previous')
-	var $next = $footer.find('.btn-next')
-	var $finish = $footer.find('.btn-finish')
-	
-	var ui = function() {
-		$previous.prop("disabled", $scope.step == 0)
-		$next.hide();
-		$finish.hide();
-		if($scope.step == $steps.length - 1) {
-			$next.hide();
-			$finish.show();
-		} else {
-			$next.show();
-			$finish.hide();
-		}
-	}
-	
-	$scope.show = function(step) {
-		if(step >= 0 && step < $steps.length) {
-			$scope.step = step;
-			$steps.hide().filter(":eq("+step+")").show();
-			ui();
-		}
-	}
-	
-	$scope.onCancel = function() {
-		$scope.$root.$broadcast('modal.hide');
-	}
-	
-	$scope.onPrevious = function() {
-		$scope.show($scope.step - 1)
-	}
-	
-	$scope.onNext = function() {
-		$scope.show($scope.step + 1)
-	}
-	
-	$scope.totalSteps = $steps.length;
-	
-	$scope.show(0);
-	
 	$scope.onRebuild = function() {
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "rebuild" : $scope.server }, function(data) {
@@ -362,56 +314,12 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 		diskConfig : 'AUTO'
 	}
 	
-	var $steps = $('.step')
-	
-	var $footer = $('.modal-footer')
-	var $previous = $footer.find('.btn-previous')
-	var $next = $footer.find('.btn-next')
-	var $finish = $footer.find('.btn-finish')
-	
-	var ui = function() {
-		$previous.prop("disabled", $scope.step == 0)
-		$next.hide();
-		$finish.hide();
-		if($scope.step == $steps.length - 1) {
-			$next.hide();
-			$finish.show();
-		} else {
-			$next.show();
-			$finish.hide();
-		}
-	}
-	
-	$scope.show = function(step) {
-		if(step >= 0 && step < $steps.length) {
-			$scope.step = step;
-			$steps.hide().filter(":eq("+step+")").show();
-			ui();
-		}
-	}
-	
-	$scope.onCancel = function() {
-		$scope.$root.$broadcast('modal.hide');
-	}
-	
-	$scope.onPrevious = function() {
-		$scope.show($scope.step - 1)
-	}
-	
-	$scope.onNext = function() {
-		$scope.show($scope.step + 1)
-	}
-	
-	$scope.onFinish = function() {
+	$scope.onLaunch = function() {
 		OpenStack.Servers.create($routeParams.region, $scope.server, function(data) {
 			$scope.$root.$broadcast('servers.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 	}
-	
-	$scope.totalSteps = $steps.length;
-	
-	$scope.show(0);
 	
 });
 compute.controller("LaunchServerSelectImageCtrl",function($scope, $routeParams, OpenStack) {
@@ -1046,4 +954,57 @@ compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, Open
 		})
 	}
 
+});
+compute.directive("wizard", function() {
+	
+	return function(scope, element, attrs) {
+		
+		var $steps = $('.step')
+
+		var $footer = $('.modal-footer')
+		var $previous = $footer.find('.btn-previous')
+		var $next = $footer.find('.btn-next')
+		var $finish = $footer.find('.btn-finish')
+
+		var ui = function() {
+			//$previous.prop("disabled", scope.step == 0)
+			$previous.hide();
+			$next.hide();
+			$finish.hide();
+			if(scope.step != 0) {
+				$previous.show();
+				if(scope.step == $steps.length - 1) {
+					$next.hide();
+					$finish.show();
+				} else {
+					$next.show();
+					$finish.hide();
+				}
+			}
+		}
+
+		scope.show = function(step) {
+			if(step >= 0 && step < $steps.length) {
+				scope.step = step;
+				$steps.hide().filter(":eq("+step+")").show();
+				ui();
+			}
+		}
+
+		scope.onCancel = function() {
+			scope.$root.$broadcast('modal.hide');
+		}
+
+		scope.onPrevious = function() {
+			scope.show(scope.step - 1)
+		}
+
+		scope.onNext = function() {
+			scope.show(scope.step + 1)
+		}
+
+		scope.totalSteps = $steps.length;
+
+		scope.show(0);
+	}
 });
