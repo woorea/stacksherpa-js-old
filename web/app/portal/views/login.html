@@ -9,6 +9,9 @@
 			<p>
 				<label for='identity-endpoint'>Authentication URL:</label>
 				<input type='text' ng-model="providers[selectedProvider].indentityURL" style="width: 98%" />
+				<strong>devstack</strong> : https://localhost:5000/v2.0<br />
+				<strong>trystack</strong> : https://nova-api.trystack.org:5443<br />
+				<strong>hpcloud</strong> : https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0
 			</p>
 			<ng-switch on="selectedProvider">
 			<div ng-switch-when="passwordCredentials">
@@ -33,11 +36,13 @@
 			</p>
 			</div>
 			</ng-switch>
+			<!--
 			<p id="remember_me_holder">
 				<label class="checkbox">Remember me
 					<input type='checkbox' />
 				</label>
 			</p>
+			-->
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onLogin()">Login</button>
