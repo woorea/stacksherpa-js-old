@@ -139,24 +139,15 @@ openstack.run(function(OpenStack) {
 	
 	var images_api = {
 		
-		list : function(service, region, modelOrCallback, refresh) {
+		list : function(opts) {
 			
-			var options = {
-				method : "GET",
-				url : OpenStack.endpoint("compute", region, "publicURL") + "/images/detail",
-				refresh : refresh
-			}
+			var options = angular.extend({}, default_compute_options, {path : "/images/detail"}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.images = data.images;
-				} else { //isCallback
-					modelOrCallback(data.images)
-				}
-			}).error(function(data, status, headers, config) {
-				alert('list images error');
-			});
+				opts.success(data.images);
+			}).error(default_error_handler);
 		},
+		
 		show : function(service, region, id, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint(service, region, "publicURL");
@@ -190,22 +181,15 @@ openstack.run(function(OpenStack) {
 	}
 	
 	var servers_api = {
-		list : function(region, modelOrCallback) {
+		
+		list : function(opts) {
 			
-			var options = {
-				method : "GET",
-				url : OpenStack.endpoint("compute", region, "publicURL") + "/servers/detail"
-			}
+			var options = angular.extend({}, default_compute_options, {path : "/servers/detail"}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.servers = data.servers;
-				} else { //isCallback
-					modelOrCallback(data.servers)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+				opts.success(data.servers);
+			}).error(default_error_handler);
+			
 		},
 		create : function(region, server, callback) {
 			
@@ -217,26 +201,15 @@ openstack.run(function(OpenStack) {
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
 				callback(data.server);
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
-		show : function(region, id, modelOrCallback) {
+		show : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/servers/" + opts.id}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/servers/" + id
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.servers = data.server;
-				} else { //isCallback
-					modelOrCallback(data.server)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.server);
+			}).error(default_error_handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -247,9 +220,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/servers/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		action : function(region, id, action, callback) {
 			
@@ -261,9 +232,7 @@ openstack.run(function(OpenStack) {
 				data : action
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		attach : function(region, id, action, callback) {
 			
@@ -275,9 +244,7 @@ openstack.run(function(OpenStack) {
 				data : action
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		detach : function(region, id, action, callback) {
 
@@ -289,48 +256,26 @@ openstack.run(function(OpenStack) {
 				data : action
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	}
 	
 	var floating_ips_api = {
-		listPools : function(region, modelOrCallback) {
+		listPools : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
-			
-			var options = {
-				method : "GET",
-				url : endpoint + "/os-floating-ip-pools"
-			}
+			var options = angular.extend({}, default_compute_options, {path : "/os-floating-ip-pools"}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.floating_ip_pools = data.floating_ip_pools;
-				} else { //isCallback
-					modelOrCallback(data.floating_ip_pools)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+				opts.success(data.floating_ip_pools);
+			}).error(default_error_handler);
 		},
-		list : function(region, modelOrCallback) {
+		list : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-floating-ips"}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-floating-ips"
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.floating_ips = data.floating_ips;
-				} else { //isCallback
-					modelOrCallback(data.floating_ips)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.floating_ips);
+			}).error(default_error_handler);
 		},
 		allocate : function(region, server, callback) {
 			
@@ -342,9 +287,7 @@ openstack.run(function(OpenStack) {
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		deallocate : function(region, id, callback) {
 			
@@ -355,29 +298,19 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-floating-ips/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	}
 	
 	var volumes_api = {
-		list : function(region, modelOrCallback) {
+		list : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-volumes/detail"}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-volumes/detail"
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.volumes = data.volumes;
-				} else { //isCallback
-					modelOrCallback(data.volumes)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.volumes);
+			}).error(default_error_handler);
+			
 		},
 		create : function(region, volume, callback) {
 			
@@ -389,9 +322,7 @@ openstack.run(function(OpenStack) {
 				data : {volume : volume}
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		show : function(region, id, modelOrCallback) {
 			
@@ -406,9 +337,7 @@ openstack.run(function(OpenStack) {
 				} else { //isCallback
 					modelOrCallback(data.volume)
 				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -419,29 +348,19 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-volumes/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	}
 	
 	var snapshots_api = {
-		list : function(region, modelOrCallback) {
+		list : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-snapshots/detail"}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-snapshots/detail"
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.servers = data.servers;
-				} else { //isCallback
-					modelOrCallback(data.servers)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.snapshots);
+			}).error(default_error_handler);
+			
 		},
 		create : function(region, snapshot, callback) {
 			
@@ -453,9 +372,7 @@ openstack.run(function(OpenStack) {
 				data : {snapshot : snapshot}
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		show : function(region, id, modelOrCallback) {
 			
@@ -470,9 +387,7 @@ openstack.run(function(OpenStack) {
 				} else { //isCallback
 					modelOrCallback(data.snapshots)
 				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -483,32 +398,20 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-snapshots/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	};
 	
 	var keypairs_api = {
-		list : function(region, modelOrCallback) {
+		list : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-keypairs"}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-keypairs"
-			}).success(function(data, status, headers, config) {
-				data.keypairs = $.map(data.keypairs, function(el,idx) {
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success($.map(data.keypairs, function(el,idx) {
 					return el.keypair;
-				});
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.keypairs = data.keypairs;
-				} else { //isCallback
-					modelOrCallback(data.keypairs)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+				}));
+			}).error(default_error_handler);
 		},
 		create : function(region, server, callback) {
 			
@@ -520,9 +423,7 @@ openstack.run(function(OpenStack) {
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
 				callback(data);
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -533,29 +434,19 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-keypairs/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	};
 	
 	var security_groups_api = {
-		list : function(region, modelOrCallback) {
+		
+		list : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-security-groups"}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-security-groups"
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.security_groups = data.security_groups;
-				} else { //isCallback
-					modelOrCallback(data.security_groups)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.security_groups)
+			}).error(default_error_handler);
 		},
 		create : function(region, security_group, callback) {
 			
@@ -567,26 +458,15 @@ openstack.run(function(OpenStack) {
 				data : {security_group : security_group}
 			}).success(function(data, status, headers, config) {
 				callback(data);
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
-		show : function(region, id, modelOrCallback) {
+		show : function(opts) {
 			
-			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
+			var options = angular.extend({}, default_compute_options, {path : "/os-security-groups/" + opts.id}, opts);
 			
-			OpenStack.ajax({
-				method : "GET",
-				url : endpoint + "/os-security-groups/" + id
-			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.security_group = data.security_group;
-				} else { //isCallback
-					modelOrCallback(data.security_group)
-				}
-			}).error(function(data, status, headers, config) {
-
-			});
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				opts.success(data.security_group);
+			}).error(default_error_handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -597,9 +477,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-security-groups/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		addRule : function(region, id, rule, callback) {
 			
@@ -611,9 +489,7 @@ openstack.run(function(OpenStack) {
 				data : { security_group_rule : rule }
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		},
 		removeRule : function(region, id, callback) {
 			
@@ -624,9 +500,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-security-group-rules/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(default_error_handler);
 		}
 	};
 	

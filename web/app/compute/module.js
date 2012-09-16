@@ -39,9 +39,9 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 
-	$scope.onRefresh = function() {
-
-		OpenStack.Servers.list($routeParams.region, function(servers) {
+	$scope.onRefresh = function(sync) {
+		
+		OpenStack.Servers.list({region : $routeParams.region, refresh : sync, success : function(servers) {
 			angular.forEach(servers, function(server) {
 				OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
 				OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
@@ -49,7 +49,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 				}});
 			});
 			$scope.servers = servers;
-		});
+		}});
 
 	}
 	
@@ -57,15 +57,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 		$scope.onRefresh();
 	});
 	
-	OpenStack.Servers.list($routeParams.region, function(servers) {
-		angular.forEach(servers, function(server) {
-			OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
-			OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
-				server.flavor = flavor;
-			}});
-		});
-		$scope.servers = servers;
-	});
+	$scope.onRefresh(false);
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
@@ -136,17 +128,17 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 	}
 
-	$scope.onRefresh = function() {
-		OpenStack.Servers.show($routeParams.region, $routeParams.id, function(server) {
+	$scope.onRefresh = function(sync) {
+		OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : sync, success : function(server) {
 			OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
 			OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
 				server.flavor = flavor;
 			}});
 			$scope.server = server;
-		});
+		}});
 	}
 
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
@@ -424,7 +416,9 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 });
 compute.controller("LaunchServerSelectImageCtrl",function($scope, $routeParams, OpenStack) {
 
-	OpenStack.Images.list("compute", $routeParams.region, $scope);
+	OpenStack.Images.list({service : "compute", region : $routeParams.region, success : function(images) {
+		$scope.images = images;
+	}});
 	
 	$scope.onSelectImage = function(image) {
 		$scope.server.imageRef = image.id;
@@ -470,14 +464,14 @@ compute.controller("LaunchServerSecurityCtrl",function($scope, $routeParams, Ope
 	$scope.keyPairs = []
 	$scope.securityGroups = []
 		
-	OpenStack.KeyPairs.list($routeParams.region, function(keypairs) {
+	OpenStack.KeyPairs.list({region : $routeParams.region, success : function(keypairs) {
 		$scope.keyPairs = keypairs;
-	});
-	OpenStack.SecurityGroups.list($routeParams.region, function(security_groups) {
+	}});
+	OpenStack.SecurityGroups.list({region : $routeParams.region, success : function(security_groups) {
 		$scope.securityGroups = $.map(security_groups, function(securityGroup) {
 			return {"name" : securityGroup.name}
 		});
-	});
+	}});
 		
 });
 compute.controller("LaunchServerSummaryCtrl",function($scope) {
@@ -508,7 +502,10 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 	$scope.onRefresh = function() {
-		OpenStack.Images.list("compute", $routeParams.region, $scope, true);
+		
+		OpenStack.Images.list({service : "compute", region : $routeParams.region, refresh : true, success : function(images) {
+			$scope.images = images;
+		}});
 
 	}
 	
@@ -516,7 +513,9 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		$scope.onRefresh();
 	});
 	
-	OpenStack.Images.list("compute", $routeParams.region, $scope);
+	OpenStack.Images.list({service : "compute", region : $routeParams.region, success : function(images) {
+		$scope.images = images;
+	}});
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -584,19 +583,17 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
 		}
 	}
 
-	$scope.onRefresh = function() {
-		OpenStack.Flavors.list({region : $routeParams.region, refresh : true, success : function(flavors) {
+	$scope.onRefresh = function(sync) {
+		OpenStack.Flavors.list({region : $routeParams.region, refresh : sync, success : function(flavors) {
 			$scope.flavors = flavors;
 		}});
 	}
 	
 	$scope.$on('flavors.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	OpenStack.Flavors.list({region : $routeParams.region, success : function(flavors) {
-		$scope.flavors = flavors;
-	}});
+	$scope.onRefresh(false);
 
 });
 compute.controller("FlavorShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -668,22 +665,26 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 		}
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.FloatingIps.list($routeParams.region, $scope);
+		OpenStack.FloatingIps.list({region : $routeParams.region, refresh : sync, success : function(floating_ips) {
+			$scope.floating_ips = floating_ips;
+		}});
 		
 	}
 	
 	$scope.$on('floating-ips.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	OpenStack.FloatingIps.list($routeParams.region, $scope);
+	$scope.onRefresh(false);
 
 });
 compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.FloatingIps.listPools($routeParams.region, $scope)
+	OpenStack.FloatingIps.listPools({region : $routeParams.region, success : function(floating_ip_pools) {
+		$scope.floating_ip_pools = floating_ip_pools;
+	}});
 	
 	$scope.onAllocate = function() {
 		
@@ -699,7 +700,9 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Servers.list($routeParams.region, $scope)
+	OpenStack.Servers.list({region : $routeParams.region, success : function(servers) {
+		$scope.servers = servers;
+	}});
 	
 	$scope.onAssociate = function() {
 		
@@ -749,17 +752,19 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.Volumes.list($routeParams.region, $scope);
+		OpenStack.Volumes.list({region : $routeParams.region, refresh : sync, success : function(volumes) {
+			$scope.volumes = volumes;
+		}});
 		
 	}
 	
 	$scope.$on('volumes.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 	
 });
 compute.controller("VolumeShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -796,7 +801,9 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Servers.list($routeParams.region, $scope.servers)
+	OpenStack.Servers.list({region : $routeParams.region, success : function(servers) {
+		$scope.servers = servers;
+	}});
 	
 	$scope.onAttach = function() {
 		
@@ -834,17 +841,19 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 		
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.Snapshots.list($routeParams.region, $scope);
+		OpenStack.Snapshots.list({region : $routeParams.region, refresh : sync, success : function(snapshots) {
+			$scope.snapshots = snapshots;
+		}});
 		
 	}
 	
 	$scope.$on('snapshots.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 	
 	
@@ -894,19 +903,19 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.KeyPairs.list($routeParams.region, function(keypairs) {
+		OpenStack.KeyPairs.list({region : $routeParams.region, refresh : sync, success : function(keypairs) {
 			$scope.keypairs = keypairs;
-		});
+		}});
 		
 	}
 	
 	$scope.$on('keypairs.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack) {
@@ -971,19 +980,19 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 		
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.SecurityGroups.list($routeParams.region, function(security_groups) {
+		OpenStack.SecurityGroups.list({region : $routeParams.region, refresh : sync, success : function(security_groups) {
 			$scope.security_groups = security_groups;
-		});
+		}});
 		
 	}
 	
 	$scope.$on('security-groups.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -1018,7 +1027,9 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 		});
 	}
 	
-	OpenStack.SecurityGroups.show($routeParams.region, $routeParams.id, $scope);
+	OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, success : function(security_group) {
+		$scope.security_group = security_group;
+	}});
 	
 });
 compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, OpenStack) {
