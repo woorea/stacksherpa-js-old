@@ -43,8 +43,8 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Imag
 
 		Servers.list($routeParams.region, function(servers) {
 			angular.forEach(servers, function(server) {
-				Images.show("compute", $routeParams.region, server.image.id, server, true);
-				Flavors.show($routeParams.region, server.flavor.id, server, true);
+				Images.show("compute", $routeParams.region, server.image.id, server);
+				Flavors.show($routeParams.region, server.flavor.id, server);
 			});
 			$scope.servers = servers;
 		});
@@ -57,11 +57,11 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, Servers, Imag
 	
 	Servers.list($routeParams.region, function(servers) {
 		angular.forEach(servers, function(server) {
-			Images.show("compute", $routeParams.region, server.image.id, server, true);
-			Flavors.show($routeParams.region, server.flavor.id, server, true);
+			Images.show("compute", $routeParams.region, server.image.id, server);
+			Flavors.show($routeParams.region, server.flavor.id, server);
 		});
 		$scope.servers = servers;
-	}, true);
+	});
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Servers, Images, Flavors) {
@@ -475,7 +475,7 @@ compute.controller("LaunchServerSecurityCtrl",function($scope, $routeParams, Key
 compute.controller("LaunchServerSummaryCtrl",function($scope) {
 	
 });
-compute.controller("ImageListCtrl",function($scope, $routeParams, Images) {
+compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, Images) {
 
 	$scope.onDelete = function(image) {
 		
@@ -500,8 +500,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, Images) {
 	}
 
 	$scope.onRefresh = function() {
-		
-		Images.list("compute", $routeParams.region, $scope);
+		Images.list("compute", $routeParams.region, $scope, true);
 
 	}
 	
@@ -509,7 +508,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, Images) {
 		$scope.onRefresh();
 	});
 	
-	Images.list("compute", $routeParams.region, $scope, true);
+	Images.list("compute", $routeParams.region, $scope);
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, Images) {
@@ -585,7 +584,7 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, Flavors) {
 		$scope.onRefresh();
 	});
 	
-	Flavors.list($routeParams.region, $scope, true);
+	Flavors.list($routeParams.region, $scope);
 
 });
 compute.controller("FlavorShowCtrl",function($scope, $routeParams, Flavors) {
@@ -665,7 +664,7 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, Servers, 
 		$scope.onRefresh();
 	});
 	
-	FloatingIps.list($routeParams.region, $scope, true);
+	FloatingIps.list($routeParams.region, $scope);
 
 });
 compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, FloatingIps) {

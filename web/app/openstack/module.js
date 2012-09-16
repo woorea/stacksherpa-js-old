@@ -1,27 +1,17 @@
 var openstack = angular.module("openstack",[]);
 openstack.constant("proxy", "http://localhost:7070")
-openstack.factory("OpenStackCache", function($cacheFactory) {
-	return $cacheFactory('openstack');
-});
-openstack.factory("OpenStack", function($http, proxy, OpenStackCache) {
+openstack.factory("OpenStack", function($http, proxy, $cacheFactory) {
 	
 	return {
 		proxy : proxy,
+		cache : $cacheFactory('openstack'),
 		ajax : function(opts) {
 			
-			delete opts.cache;
-			//Something is going wrong with cache enabled
-			/*
-			if(typeof opts.cache != undefined) {
-				opts.cache = OpenStackCache
-				console.log("CACHE");
-				console.log(opts.cache);
-			} else {
-				delete opts.cache
+			if(angular.isDefined(opts.refresh) && opts.refresh) {
+				this.cache.remove(opts.url);
 			}
-			*/
 			
-			console.log(opts);
+			opts.cache = this.cache;
 			
 			opts.headers = opts.headers || {};
 			
@@ -92,12 +82,11 @@ openstack.factory("OpenStack", function($http, proxy, OpenStackCache) {
 openstack.factory("Flavors", function(OpenStack) {
 	
 	return {
-		list : function(region, modelOrCallback, cache) {
+		list : function(region, modelOrCallback) {
 			
 			var options = {
 				method : "GET",
-				url : OpenStack.endpoint("compute", region, "publicURL") + "/flavors/detail",
-				cache : cache
+				url : OpenStack.endpoint("compute", region, "publicURL") + "/flavors/detail"
 			}
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
@@ -110,14 +99,13 @@ openstack.factory("Flavors", function(OpenStack) {
 
 			});
 		},
-		show : function(region, id, modelOrCallback, cache) {
+		show : function(region, id, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "GET",
-				url : endpoint + "/flavors/" + id,
-				cache : cache
+				url : endpoint + "/flavors/" + id
 			}).success(function(data, status, headers, config) {
 				if(angular.isObject(modelOrCallback)) {
 					modelOrCallback.flavor = data.flavor;
@@ -147,14 +135,13 @@ openstack.factory("Flavors", function(OpenStack) {
 openstack.factory("Images", function(OpenStack) {
 	
 	return {
-		list : function(service, region, modelOrCallback, cache) {
+		list : function(service, region, modelOrCallback, refresh) {
 			
 			var options = {
 				method : "GET",
 				url : OpenStack.endpoint("compute", region, "publicURL") + "/images/detail",
-				cache : cache
+				refresh : refresh
 			}
-			
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				if(angular.isObject(modelOrCallback)) {
@@ -166,14 +153,13 @@ openstack.factory("Images", function(OpenStack) {
 				alert('list images error');
 			});
 		},
-		show : function(service, region, id, modelOrCallback, cache) {
+		show : function(service, region, id, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint(service, region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "GET",
-				url : endpoint + "/images/" + id,
-				cache : cache
+				url : endpoint + "/images/" + id
 			}).success(function(data, status, headers, config) {
 				if(angular.isObject(modelOrCallback)) {
 					modelOrCallback.image = data.image;
@@ -203,12 +189,11 @@ openstack.factory("Images", function(OpenStack) {
 openstack.factory("Servers", function(OpenStack) {
 	
 	return {
-		list : function(region, modelOrCallback, cache) {
+		list : function(region, modelOrCallback) {
 			
 			var options = {
 				method : "GET",
-				url : OpenStack.endpoint("compute", region, "publicURL") + "/servers/detail",
-				cache : cache
+				url : OpenStack.endpoint("compute", region, "publicURL") + "/servers/detail"
 			}
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
@@ -235,14 +220,13 @@ openstack.factory("Servers", function(OpenStack) {
 
 			});
 		},
-		show : function(region, id, modelOrCallback, cache) {
+		show : function(region, id, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "GET",
-				url : endpoint + "/servers/" + id,
-				cache : cache
+				url : endpoint + "/servers/" + id
 			}).success(function(data, status, headers, config) {
 				if(angular.isObject(modelOrCallback)) {
 					modelOrCallback.servers = data.server;
@@ -314,14 +298,13 @@ openstack.factory("Servers", function(OpenStack) {
 openstack.factory("FloatingIps", function(OpenStack) {
 	
 	return {
-		listPools : function(region, modelOrCallback, cache) {
+		listPools : function(region, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			var options = {
 				method : "GET",
-				url : endpoint + "/os-floating-ip-pools",
-				cache : cache
+				url : endpoint + "/os-floating-ip-pools"
 			}
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {

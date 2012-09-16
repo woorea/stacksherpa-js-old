@@ -1,5 +1,6 @@
 var http = require('http');
-var url = require('url');
+var https = require('https');
+var urls = require('url');
 
 http.createServer(function(req, res) {
 	
@@ -17,17 +18,20 @@ http.createServer(function(req, res) {
 	var xuri = req.headers["x-uri"];
 	
 	if(xuri) {
-		var options = url.parse(xuri);
+		
+		var options = urls.parse(xuri);
 
 		options.method = req.method
 		options.headers = {
-			"x-auth-token" : req.headers["x-auth-token"],
 			"accept" : "application/json",
 			"content-type" : req.headers["content-type"] || "application/json"
 		}
 		
-		var preq = http.request(options, function(pres) {
-			
+		if(req.headers["x-auth-token"]) {
+			options.headers["x-auth-token"] = req.headers["x-auth-token"];
+		}
+		
+		var responseHandler = function(pres) {
 			res.setHeader("Content-Type", pres.headers["content-type"]);
 			
 			pres.on("data", function(chunk) {
@@ -36,7 +40,14 @@ http.createServer(function(req, res) {
 			pres.on("end", function() {
 				res.end();
 			});
-		});
+		}
+		
+		var preq
+		if(options.protocol == 'http:') {
+			preq = http.request(options, responseHandler);
+		} else if (options.protocol == 'https:') {
+			preq = https.request(options, responseHandler);
+		}
 
 		req.on("data", function(chunk) {
 			preq.write(chunk);
