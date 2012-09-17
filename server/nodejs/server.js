@@ -132,8 +132,4 @@ if(secure) {
 
 } else {
 	http.createServer(app).listen(9876);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1107e0298b9ef07242c2c88a71d1a76b6a10958c
