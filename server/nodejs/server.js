@@ -67,7 +67,53 @@ route.all('/api', function(req, res) {
 	
 });
 
+route.get('/swift/download', function(req, res) {
+	
+	var cookie = req.cookies['X-Auth-Token'];
+	
+	var options = urls.parse(req.url, true);
+	
+	var swiftObjectURL = options.query.url;
+	
+	var swiftObjectURLOptions = urls.parse(swiftObjectURL);
+	
+	swiftObjectURLOptions.headers = {
+		"x-auth-token" : cookie
+	};
+	
+	var responseHandler = function(pres) {
+		
+		res.setHeader("Content-disposition", "attachment; filename="+options.query.filename);
+		
+		res.setHeader("Content-Type", pres.headers["content-type"]);
+		
+		pres.on("data", function(chunk) {
+			res.write(chunk);
+		});
+		pres.on("end", function() {
+			res.end();
+		});
+	}
+	
+	var preq
+	if(swiftObjectURLOptions.protocol == 'http:') {
+		preq = http.request(swiftObjectURLOptions, responseHandler);
+	} else if (swiftObjectURLOptions.protocol == 'https:') {
+		preq = https.request(swiftObjectURLOptions, responseHandler);
+	}
+	
+	req.on("data", function(chunk) {
+		preq.write(chunk);
+	});
+
+	req.on("end", function(chunk) {
+		preq.end(chunk);
+	});
+	
+});
+
 var app = connect()
+	.use(connect.cookieParser())
 	.use(connect.static('../../client'))
 	.use(route)
 	.listen(9876);

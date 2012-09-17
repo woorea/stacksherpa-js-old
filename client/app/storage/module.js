@@ -16,7 +16,7 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 			url : endpoint + "/" + $scope.name
 		}).success(function(data, status, headers, config) {
 			$scope.name = '';
-			$scope.onRefresh();
+			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -37,11 +37,12 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 		
 	}
 	
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "?format=json"
+			url : endpoint + "?format=json",
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.containers = data;
 		}).error(function(data, status, headers, config) {
@@ -50,7 +51,7 @@ storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack)
 		
 	}
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $location, OpenStack) {
@@ -92,7 +93,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $lo
 				"Content-Type" : "application/directory"
 			}
 		}).success(function(data, status, headers, config) {
-			$scope.onRefresh();
+			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 			console.log(data);
 		});
@@ -123,13 +124,13 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $lo
 				"Content-Type" : $scope.file.type
 			}
 		}).success(function(data, status, headers, config) {
-			$scope.onRefresh();
+			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 			console.log(data);
 		});
 	};
 	
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
 		var url = $scope.endpoint + "/" + $routeParams.container + "?format=json&delimiter=/";
 		
@@ -144,7 +145,8 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $lo
 		
 		OpenStack.ajax({
 			method : "GET",
-			url : url
+			url : url,
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.objects = data.filter(function(o) {
 				if(typeof o.hash != 'undefined') {
@@ -163,7 +165,7 @@ storage.controller("ContainerShowCtrl",function($scope, $routeParams, $http, $lo
 		});
 	}
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 	
 });
 

@@ -28,6 +28,11 @@ portal.run(function($rootScope, $location, OpenStack) {
 		$rootScope.isLoggedIn = false;
 	}
 	
+	$rootScope.$on('$viewContentLoaded', function(event) {
+		console.log($location.path())
+		//$window._gaq.push(['_trackPageview', $location.path()]);
+	});
+	
 });
 portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 	$scope.modal = '';

@@ -437,21 +437,19 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		
-		OpenStack.Images.list({service : "compute", region : $routeParams.region, refresh : true, success : function(images) {
+		OpenStack.Images.list({service : "compute", region : $routeParams.region, refresh : sync, success : function(images) {
 			$scope.images = images;
 		}});
 
 	}
 	
 	$scope.$on('images.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	OpenStack.Images.list({service : "compute", region : $routeParams.region, success : function(images) {
-		$scope.images = images;
-	}});
+	$scope.onRefresh(false);
 	
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -486,7 +484,8 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	        processData: false,
 	        contentType: "application/octet-stream",
 	        success: function(data) {
-				console.log(data);
+				$scope.$root.$broadcast('images.refresh');
+				$scope.$root.$broadcast('modal.hide');
 	        },
 	        error: function(data) {
 	          console.log(data);
