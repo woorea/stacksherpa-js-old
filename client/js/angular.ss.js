@@ -3311,15 +3311,18 @@ function $CacheFactoryProvider() {
 
 
         remove: function(key) {
-          var lruEntry = lruHash[key];
+			var lruEntry = lruHash[key];
+			//woorea
+			if(lruEntry) {
+				if (lruEntry == freshEnd) freshEnd = lruEntry.p;
+				if (lruEntry == staleEnd) staleEnd = lruEntry.n;
+				link(lruEntry.n,lruEntry.p);
 
-          if (lruEntry == freshEnd) freshEnd = lruEntry.p;
-          if (lruEntry == staleEnd) staleEnd = lruEntry.n;
-          link(lruEntry.n,lruEntry.p);
-
-          delete lruHash[key];
-          delete data[key];
-          size--;
+				delete lruHash[key];
+				delete data[key];
+				size--;
+			}
+          
         },
 
 

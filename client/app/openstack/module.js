@@ -11,6 +11,7 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 			}
 			
 			if(angular.isDefined(opts.refresh) && opts.refresh) {
+				console.log(this.cache.remove);
 				this.cache.remove(opts.url);
 			}
 			

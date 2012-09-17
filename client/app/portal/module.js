@@ -188,7 +188,8 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 	
 	OpenStack.ajax({
 		method : "GET",
-		url : OpenStack.getAuthenticationURL() + "/tenants"
+		url : OpenStack.getAuthenticationURL() + "/tenants",
+		refresh : true
 	}).success(function(data, status, headers, config) {
 		if(!angular.isArray(data.tenants)) {
 			//weird json from trystack
@@ -207,6 +208,10 @@ portal.controller("TenantCtrl",function($scope, OpenStack) {
 	angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
 		OpenStack.services[service.type] = service;
 	});
+	
+	$scope.isKeystoneAdmin = OpenStack.getAccess().user.roles.filter(function(role) {
+		return role.name == 'KeystoneAdmin' || role.name == 'KeystoneServiceAdmin';
+	}).length > 0;
 	
 	$scope.services = OpenStack.services;
 	
