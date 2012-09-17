@@ -1,9 +1,11 @@
+var fs = require('fs');
 var urls = require('url');
 var http = require('http');
 var https = require('https');
 
 var router = require('router');
 var connect = require('connect');
+
 
 var route = router();
 
@@ -115,5 +117,19 @@ route.get('/swift/download', function(req, res) {
 var app = connect()
 	.use(connect.cookieParser())
 	.use(connect.static('../../client'))
-	.use(route)
-	.listen(9876);
+	.use(route);
+
+
+var secure = true
+
+if(secure) {
+	var credentials = {
+		key : fs.readFileSync('../../../private_key.pem').toString(),
+		cert : fs.readFileSync('../../certs/certificate.pem').toString()
+	};
+
+	https.createServer(credentials, app).listen(9876);
+
+} else {
+	http.createServer(app).listen(9876);
+}
