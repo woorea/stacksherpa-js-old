@@ -964,6 +964,7 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	
 	OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, success : function(security_group) {
 		$scope.security_group = security_group;
+		resetAddRule();
 	}});
 	
 });
