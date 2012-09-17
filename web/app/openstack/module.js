@@ -1,5 +1,5 @@
 var openstack = angular.module("openstack",[]);
-openstack.constant("proxy", "http://localhost:7070")
+openstack.constant("proxy", "http://localhost:7070/api")
 openstack.factory("OpenStack", function($http, proxy, $cacheFactory) {
 	
 	return {

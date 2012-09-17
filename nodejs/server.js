@@ -1,12 +1,17 @@
+var urls = require('url');
 var http = require('http');
 var https = require('https');
-var urls = require('url');
 
-http.createServer(function(req, res) {
+var router = require('router');
+var connect = require('connect');
+
+var route = router();
+
+route.all('/api', function(req, res) {
 	
 	res.setHeader("Access-Control-Allow-Origin", req.headers["origin"]);
-	
-	if(req.method == "OPTIONS") {
+
+	if(req.method == 'OPTIONS') {
 		if(req.headers["access-control-request-headers"]) {
 			res.setHeader("Access-Control-Allow-Headers", req.headers["access-control-request-headers"]);
 		}
@@ -60,4 +65,9 @@ http.createServer(function(req, res) {
 		res.end("");
 	}
 	
-}).listen(7070);
+});
+
+var app = connect()
+	.use(connect.static('../web'))
+	.use(route)
+	.listen(7070);
