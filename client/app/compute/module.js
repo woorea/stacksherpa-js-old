@@ -744,7 +744,7 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 	
 	$scope.onAttach = function() {
 		
-		OpenStack.Servers.attach($routeParams.region, {
+		OpenStack.Servers.attach($routeParams.region, $scope.server_id, {
 			volumeAttachment : {
 				volumeId : $scope.volumes[0].id,
 				device : $scope.device
