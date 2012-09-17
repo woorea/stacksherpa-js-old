@@ -729,6 +729,7 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 	$scope.onCreate = function() {
 		
 		OpenStack.Volumes.create($routeParams.region, $scope.volume, function(data) {
+			$scope.$root.$broadcast('volumes.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 		
@@ -749,6 +750,7 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 				device : $scope.device
 			}
 		}, function(data) {
+			$scope.$root.$broadcast('volumes.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 		
@@ -812,6 +814,7 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, Snapshots
 	
 	$scope.onCreate = function() {
 		OpenStack.Snapshots.create($routeParams.region, $scope.snapshot, function(data) {
+			$scope.$root.$broadcast('snapshots.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 	}
