@@ -2,7 +2,7 @@ var openstack = angular.module("openstack",[]);
 openstack.factory("OpenStack", function($http, $cacheFactory) {
 	
 	return {
-		proxy : stacksherpa.config.proxy || alert('Please configure the http-proxy url in stacksherpa.js'),
+		proxy : stacksherpa.config.proxy || window.location.protocol + "//" + window.location.host + "/api",
 		cache : $cacheFactory('openstack'),
 		ajax : function(opts) {
 			
