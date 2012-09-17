@@ -859,12 +859,12 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
 	$scope.import_keypair = {
-		name: "testkeypair",
-		"public key": "ssh-rsa  AAAB3NzaC1yc2EAAAADAQABAAAAgQDS75K9dCGNb8wUIqSRT8UZU1riwaMBXViZ6m7hvRi9adVJrNzUQVJEYotqGXpe4rwC7iCfwmVxWj/wu/h4OOoBqdkQcQMcuggMpNvnymhwUfj6vg+zEOpFcZg1mY3dvMoDnnUAClLB8/ELY1FtKTyTJyKJN7yyR4WkMN5H4BR/Lw== nova@az1-nv-schedule-0000"
+		name: "",
+		"public key": ""
 	}
 	
 	$scope.create_keypair = {
-		name: "testkeypair"
+		name: ""
 	}
 	
 	$scope.onImport = function() {
@@ -886,7 +886,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			url : endpoint + "/os-keypairs",
 			data : {keypair : $scope.create_keypair}
 		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('modal.hide');
+			$scope.create_keypair.public_key = data.keypair["public_key"];
 		}).error(function(data, status, headers, config) {
 
 		});

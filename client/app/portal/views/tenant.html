@@ -1,8 +1,8 @@
 <div class="row" ng-show="isKeystoneAdmin && services.identity">
 	<h2>Identity</h2>
 	<div class="span4">
-		<h3>Identity</h3>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+		<h4>Identity</h4>
+		<p>OpenStack Identity provides a central directory of users mapped to the OpenStack services they can access. It acts as a common authentication system across the cloud operating system and can integrate with existing backend directory services like LDAP. </p>
 		<div class="btn-group">
 			<a ng-href="#/{{$routeParams.tenant}}/identity/tenants" class="btn btn-primary">Manage Identity</a>
 		</div>
@@ -13,8 +13,8 @@
 	<hr />
 	
 	<div class="span4" ng-show="services.compute">
-		<h3>Compute ({{services.compute.name}})</h3>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+		<h4>Compute ({{services.compute.name}})</h4>
+		<p>The OpenStack cloud operating system enables enterprises and service providers to offer on-demand computing resources, by provisioning and managing large networks of virtual machines. </p>
 		<div class="btn-group">
 			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">
@@ -26,8 +26,8 @@
 	</div>
 	
 	<div class="span4" ng-show="services['object-store']">
-		<h2>Object Storage ({{services['object-store'].name}})</h2>
-		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+		<h4>Object Storage ({{services['object-store'].name}})</h4>
+		<p>Object Storage is ideal for cost effective, scale-out storage. It provides a fully distributed, API-accessible storage platform that can be integrated directly into applications or used for backup, archiving and data retention.</p>
 		<div class="btn-group">
 			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">

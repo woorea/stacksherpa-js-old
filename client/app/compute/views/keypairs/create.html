@@ -16,9 +16,17 @@
 						<tr>
 							<td>
 								<label>Name</label>
-								<input type="text" data-ng-model="create_keypair.name" placeholder="Type something…" />
-								<span class="help-block">Example block-level help text here.</span>
+								<input type="text" data-ng-model="create_keypair.name" style="margin-bottom: 0px"/>
+								<button class="btn" data-ng-click="onCreate()">Create Key Pair</button>
+								<span class="help-block"></span>
 							</td>
+							<tr>
+								<td>
+									<label>Public Key (readonly)</label>
+									<textarea data-ng-model="create_keypair.public_key" disabled="disabled" style="width: 350px"/>
+									<span class="help-block"></span>
+								</td>
+							</tr>
 						</tr>
 					</table>
 				</fieldset>
@@ -29,16 +37,19 @@
 						<tr>
 							<td>
 								<label>Name</label>
-								<input type="text" data-ng-model="import_keypair.name" placeholder="Type something…" />
-								<span class="help-block">Example block-level help text here.</span>
+								<input type="text" data-ng-model="import_keypair.name" />
+								<span class="help-block"></span>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<label>Public Key</label>
-								<textarea data-ng-model="import_keypair['public key']" placeholder="Type something…" />
-								<span class="help-block">Example block-level help text here.</span>
+								<textarea data-ng-model="import_keypair['public key']" style="width: 350px" />
+								<span class="help-block"></span>
 							</td>
+						</tr>
+						<tr>
+							<td><button class="btn" data-ng-click="onImport()">Import Key Pair</button></td>
 						</tr>
 					</table>
 				</fieldset>
@@ -48,7 +59,6 @@
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
-		<button class="btn" data-ng-click="onImport()">Create Key Pair</button>
 	</div>
 </div>
 
