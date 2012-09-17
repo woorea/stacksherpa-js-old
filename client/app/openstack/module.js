@@ -246,14 +246,13 @@ openstack.run(function(OpenStack) {
 				callback();
 			}).error(default_error_handler);
 		},
-		detach : function(region, id, action, callback) {
+		detach : function(region, id, volume_id, callback) {
 
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 
 			OpenStack.ajax({
 				method : "DELETE",
-				url : endpoint + "/servers/" + id + "/os-volume_attachments",
-				data : action
+				url : endpoint + "/servers/" + id + "/os-volume_attachments/" + volume_id
 			}).success(function(data, status, headers, config) {
 				callback();
 			}).error(default_error_handler);
