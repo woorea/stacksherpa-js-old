@@ -764,14 +764,14 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 		if(typeof snapshot != 'undefined') {
 			
 			OpenStack.Snapshots.delete($routeParams.region, snapshot.id, function(data) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
 			angular.forEach($scope.snapshots, function(snapshot) {
 				if(snapshot.checked) {
 					OpenStack.Snapshots.delete($routeParams.region, snapshot.id, function(data) {
-						$scope.onRefresh();
+						
 					});
 				}
 			});
