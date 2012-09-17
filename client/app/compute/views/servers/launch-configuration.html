@@ -1,12 +1,10 @@
 <div data-ng-controller="LaunchServerConfigurationCtrl">
-	<h1>Server Configuration</h1>
-	
 	<div style="overflow-y: auto">
 	<table class="table">
 		<tr>
 			<td colspan="2">
 				<label>Name</label>
-				<input placeholder="Type something…" ng-model="server.name" />
+				<input type="text" placeholder="Type something…" ng-model="server.name" />
 				<span class="help-block"></span>
 			</td>
 		</tr>
@@ -16,9 +14,9 @@
 				<input type="password" ng-model="server.adminPass" />
 				<span class="help-block"></span>
 			</td>
-			<td class="form-inline">
+			<td>
 				<label>Flavor</label>
-				<select ng-model="server.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}"></select>
+				<select ng-model="server.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors | orderBy:'+ram'" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}"></select>
 				<span class="help-block"></span>
 			</td>
 		</tr>

@@ -18,9 +18,9 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 			
 			opts.headers = opts.headers || {};
 			
-			if(proxy) {
+			if(this.proxy) {
 				opts.headers['X-URI'] = opts.url;
-				opts.url = proxy;
+				opts.url = this.proxy;
 			}
 			
 			var access = this.getAccess()

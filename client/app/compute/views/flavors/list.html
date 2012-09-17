@@ -29,7 +29,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="flavor in flavors">
+				<tr ng-repeat="flavor in flavors | orderBy:'+ram'">
 					<td><input id="checkbox-flavor-{{flavor.id}" type="checkbox" ng-model="item.checked" /></td>
 					<td>{{flavor.id}}</td>
 					<td>{{flavor.name}}</td>

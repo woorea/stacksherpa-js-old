@@ -42,6 +42,7 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 	}
 	
 	//TODO : use angular filter for this
+	/*
 	$scope.logo = function(name) {
 		name = name.toLowerCase();
 		if(name.startsWith('debian')) {
@@ -56,6 +57,7 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 			return '/images/icons/linux.png';
 		}
 	}
+	*/
 	
 })
 portal.directive('withSelectionCheckboxes', function() {

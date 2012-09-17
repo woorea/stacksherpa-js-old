@@ -33,7 +33,7 @@
 						<tr ng-repeat="image in images">
 							<td><input type="checkbox" ng-model="image.checked"/></td>
 							<td>
-								<img ng-src="{{logo(image.name)}}" style="width: 32px" />
+								<img ng-src="{{image.name|logo}}" style="width: 32px" />
 							</td>
 							<td><a href="${g.createLink(action : 'show', params : [tenantId : params.tenantId, imageId : item.id])}">{{image.name}}</a></td>
 							<td>{{image.metadata.min_ram}}</td>

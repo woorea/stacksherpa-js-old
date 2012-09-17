@@ -1,20 +1,48 @@
 var compute = angular.module("compute",[]);
 compute.config(function($routeProvider) {
 	$routeProvider
-		.when("/:tenant/compute/:region/servers", {controller : "ServerListCtrl", templateUrl : "app/compute/views/servers/list.html"})
-		.when("/:tenant/compute/:region/servers/:id", {controller : "ServerShowCtrl", templateUrl : "app/compute/views/servers/show.html"})
-		.when("/:tenant/compute/:region/images", {controller : "ImageListCtrl", templateUrl : "app/compute/views/images/list.html"})
-		.when("/:tenant/compute/:region/images/:id", {controller : "ImageShowCtrl", templateUrl : "app/compute/views/images/show.html"})
-		.when("/:tenant/compute/:region/flavors", {controller : "FlavorListCtrl", templateUrl : "app/compute/views/flavors/list.html"})
-		.when("/:tenant/compute/:region/flavors/:id", {controller : "FlavorShowCtrl", templateUrl : "app/compute/views/flavors/show.html"})
-		.when("/:tenant/compute/:region/floating-ips", {controller : "FloatingIpListCtrl", templateUrl : "app/compute/views/floatingips/list.html"})
-		.when("/:tenant/compute/:region/volumes", {controller : "VolumeListCtrl", templateUrl : "app/compute/views/volumes/list.html"})
-		.when("/:tenant/compute/:region/volumes/:id", {controller : "VolumeShowCtrl", templateUrl : "app/compute/views/volumes/show.html"})
-		.when("/:tenant/compute/:region/snapshots", {controller : "SnapshotListCtrl", templateUrl : "app/compute/views/snapshots/list.html"})
-		.when("/:tenant/compute/:region/snapshots/:id", {controller : "SnapshotShowCtrl", templateUrl : "app/compute/views/snapshots/show.html"})
-		.when("/:tenant/compute/:region/key-pairs", {controller : "KeyPairListCtrl", templateUrl : "app/compute/views/keypairs/list.html"})
-		.when("/:tenant/compute/:region/security-groups", {controller : "SecurityGroupListCtrl", templateUrl : "app/compute/views/securitygroups/list.html"})
-		.when("/:tenant/compute/:region/security-groups/:id", {controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html"})
+		.when("/:tenant/compute/:region/servers", {
+			controller : "ServerListCtrl", templateUrl : "app/compute/views/servers/list.html", menu : "servers"
+		})
+		.when("/:tenant/compute/:region/servers/:id", {
+			controller : "ServerShowCtrl", templateUrl : "app/compute/views/servers/show.html", menu : "servers"
+		})
+		.when("/:tenant/compute/:region/images", {
+			controller : "ImageListCtrl", templateUrl : "app/compute/views/images/list.html", menu : "images"
+		})
+		.when("/:tenant/compute/:region/images/:id", {
+			controller : "ImageShowCtrl", templateUrl : "app/compute/views/images/show.html", menu : "images"
+		})
+		.when("/:tenant/compute/:region/flavors", {
+			controller : "FlavorListCtrl", templateUrl : "app/compute/views/flavors/list.html", menu : "flavors"
+		})
+		.when("/:tenant/compute/:region/flavors/:id", {
+			controller : "FlavorShowCtrl", templateUrl : "app/compute/views/flavors/show.html", menu : "flavors"
+		})
+		.when("/:tenant/compute/:region/floating-ips", {
+			controller : "FloatingIpListCtrl", templateUrl : "app/compute/views/floatingips/list.html", menu : "floating-ips"
+		})
+		.when("/:tenant/compute/:region/volumes", {
+			controller : "VolumeListCtrl", templateUrl : "app/compute/views/volumes/list.html", menu : "volumes"
+		})
+		.when("/:tenant/compute/:region/volumes/:id", {
+			controller : "VolumeShowCtrl", templateUrl : "app/compute/views/volumes/show.html", menu : "volumes"
+		})
+		.when("/:tenant/compute/:region/snapshots", {
+			controller : "SnapshotListCtrl", templateUrl : "app/compute/views/snapshots/list.html", menu : "snapshots"
+		})
+		.when("/:tenant/compute/:region/snapshots/:id", {
+			controller : "SnapshotShowCtrl", templateUrl : "app/compute/views/snapshots/show.html", menu : "snapshots"
+		})
+		.when("/:tenant/compute/:region/key-pairs", {
+			controller : "KeyPairListCtrl", templateUrl : "app/compute/views/keypairs/list.html", menu : "key-pairs"
+		})
+		.when("/:tenant/compute/:region/security-groups", {
+			controller : "SecurityGroupListCtrl", templateUrl : "app/compute/views/securitygroups/list.html", menu : "security-groups"
+		})
+		.when("/:tenant/compute/:region/security-groups/:id", {
+			controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html", menu : "security-groups"
+		})
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 
@@ -1007,4 +1035,31 @@ compute.directive("wizard", function() {
 
 		scope.show(0);
 	}
+});
+compute.filter('logo', function() {
+	return function(name) {
+		name = name.toLowerCase();
+		if(name.indexOf("debian") == 0) {
+			return '/images/icons/debian.png';
+		} else if (name.indexOf("ubuntu") == 0){
+			return '/images/icons/ubuntu.png';
+		} else if (name.indexOf("fedora") == 0){
+			return '/images/icons/fedora.png';
+		} else if (name.indexOf("windows") == 0){
+			return '/images/icons/windows.png';
+		} else {
+			return '/images/icons/linux.png';
+		}
+	}
+});
+compute.directive('menu', function($route, $location, $compile) {
+	
+	return function(scope, element, attrs) {
+		
+		element.find('li').removeClass('active').filter(function() {
+			return $(this).data("menu") == $route.current.menu;
+		}).addClass('active');
+		
+	}
+
 });

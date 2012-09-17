@@ -1,17 +1,55 @@
 <div data-ng-controller="LaunchServerSummaryCtrl">
+	<h2>Summary</h2>
 	<table class="details">
 		<tbody>
 			<tr>
 				<th>Name</th>
 				<th>Flavor</th>
 				<th>Image</th>
-				<th>Status</th>
+				<th>Instances</th>
 			</tr>
 			<tr>
 				<td>{{server.name}}</td>
-				<td>{{server.flavor}}</td>
-				<td>{{server.image}}</td>
-				<td>{{server.status}}</td>
+				<td>{{server.flavorRef}}</td>
+				<td>{{server.imageRef}}</td>
+				<td>{{server.min}} - {{server.min}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Metadata</h2>
+	<table class="details">
+		<tbody>
+			<tr>
+				<th>Key</th>
+				<th>Value</th>
+			</tr>
+			<tr data-ng-repeat="(key, value) in server.metadata">
+				<td>{{key}}</td>
+				<td>{{value}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Personality</h2>
+	<table class="details">
+		<tbody>
+			<tr>
+				<th>File</th>
+			</tr>
+			<tr data-ng-repeat="personality in server.personality">
+				<td>{{personality.path}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Security</h2>
+	<table class="details">
+		<tbody>
+			<tr>
+				<th scope="row">KeyPair</th>
+				<td>{{server.keyPairName}}</td>
+			</tr>
+			<tr>
+				<th scope="row">Security Groups</th>
+				<td>{{server.securityGroups|json}}</td>
 			</tr>
 		</tbody>
 	</table>

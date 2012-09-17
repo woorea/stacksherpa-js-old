@@ -1,16 +1,36 @@
 var identity = angular.module("identity",[]);
 identity.config(function($routeProvider) {
 	$routeProvider
-		.when("/:tenant/identity/tenants", {controller : "TenantListCtrl", templateUrl : "app/identity/views/tenants/list.html"})
-		.when("/:tenant/identity/tenants/:id", {controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/show.html"})
-		.when("/:tenant/identity/users", {controller : "UserListCtrl", templateUrl : "app/identity/views/users/list.html"})
-		.when("/:tenant/identity/users/:id", {controller : "UserShowCtrl", templateUrl : "app/identity/views/users/show.html"})
-		.when("/:tenant/identity/roles", {controller : "RoleListCtrl", templateUrl : "app/identity/views/roles/list.html"})
-		.when("/:tenant/identity/roles/:id", {controller : "RoleShowCtrl", templateUrl : "app/identity/views/roles/show.html"})
-		.when("/:tenant/identity/services", {controller : "ServiceListCtrl", templateUrl : "app/identity/views/services/list.html"})
-		.when("/:tenant/identity/services/:id", {controller : "ServiceShowCtrl", templateUrl : "app/identity/views/services/show.html"})
-		.when("/:tenant/identity/endpoints", {controller : "EndpointListCtrl", templateUrl : "app/identity/views/endpoints/list.html"})
-		.when("/:tenant/identity/endpoints/:id", {controller : "EndpointShowCtrl", templateUrl : "app/identity/views/endpoints/show.html"})
+		.when("/:tenant/identity/tenants", {
+			controller : "TenantListCtrl", templateUrl : "app/identity/views/tenants/list.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/tenants/:id", {
+			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/show.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/users", {
+			controller : "UserListCtrl", templateUrl : "app/identity/views/users/list.html", menu : "users"
+		})
+		.when("/:tenant/identity/users/:id", {
+			controller : "UserShowCtrl", templateUrl : "app/identity/views/users/show.html", menu : "users"
+		})
+		.when("/:tenant/identity/roles", {
+			controller : "RoleListCtrl", templateUrl : "app/identity/views/roles/list.html", menu : "roles"
+		})
+		.when("/:tenant/identity/roles/:id", {
+			controller : "RoleShowCtrl", templateUrl : "app/identity/views/roles/show.html", menu : "roles"
+		})
+		.when("/:tenant/identity/services", {
+			controller : "ServiceListCtrl", templateUrl : "app/identity/views/services/list.html", menu : "services"
+		})
+		.when("/:tenant/identity/services/:id", {
+			controller : "ServiceShowCtrl", templateUrl : "app/identity/views/services/show.html", menu : "services"
+		})
+		.when("/:tenant/identity/endpoints", {
+			controller : "EndpointListCtrl", templateUrl : "app/identity/views/endpoints/list.html", menu : "endpoints"
+		})
+		.when("/:tenant/identity/endpoints/:id", {
+			controller : "EndpointShowCtrl", templateUrl : "app/identity/views/endpoints/show.html", menu : "endpoints"
+		})
 });
 identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 

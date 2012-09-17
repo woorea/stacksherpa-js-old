@@ -9,7 +9,7 @@
 	</thead>
 	<tbody>
 		<tr data-ng-repeat="image in images">
-			<td><img ng-src="{{logo(image.name)}}" style="width: 32px" /></td>
+			<td><img ng-src="{{image.name|logo}}" style="width: 32px" /></td>
 			<td>{{image.name}}</td>
 			<td style="text-align: center">
 				<button class="btn" data-ng-click="onSelectImage(image)"><span class="icon-ok"></span> Select Image</a>
