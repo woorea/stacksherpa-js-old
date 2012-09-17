@@ -488,7 +488,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-security-group-rules",
 				data : { security_group_rule : rule }
 			}).success(function(data, status, headers, config) {
-				callback();
+				callback(data.security_group_rule);
 			}).error(default_error_handler);
 		},
 		removeRule : function(region, id, callback) {

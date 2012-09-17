@@ -946,8 +946,8 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	
 	$scope.onAddRule = function(rule) {
 		
-		OpenStack.SecurityGroups.addRule($routeParams.region, $scope.security_group.id, $scope.rule, function(data) {
-			$scope.security_group.rules.push(data.security_group_rule);
+		OpenStack.SecurityGroups.addRule($routeParams.region, $scope.security_group.id, $scope.rule, function(security_group_rule) {
+			$scope.security_group.rules.push(security_group_rule);
 			resetAddRule();
 		})
 		

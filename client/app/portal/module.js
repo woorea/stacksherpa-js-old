@@ -13,7 +13,7 @@ portal.config(function($routeProvider) {
 		.when("/404", {templateUrl : "app/portal/views/404.html"})
 		.otherwise({controller : "OtherwiseCtrl", template : "<br />"})
 });
-portal.run(function($rootScope, $location, OpenStack) {
+portal.run(function($rootScope, $window, $location, OpenStack) {
 	
 	var reloaded = OpenStack.reload();
 	
