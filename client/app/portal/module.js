@@ -46,24 +46,6 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
 		$location.path("/")
 	}
 	
-	//TODO : use angular filter for this
-	/*
-	$scope.logo = function(name) {
-		name = name.toLowerCase();
-		if(name.startsWith('debian')) {
-			return '/images/icons/debian.png';
-		} else if (name.startsWith('ubuntu')){
-			return '/images/icons/ubuntu.png';
-		} else if (name.startsWith('fedora')){
-			return '/images/icons/fedora.png';
-		} else if (name.startsWith('windows')){
-			return '/images/icons/windows.png';
-		} else {
-			return '/images/icons/linux.png';
-		}
-	}
-	*/
-	
 })
 portal.directive('withSelectionCheckboxes', function() {
 	return function(scope, element, attrs) {
@@ -160,10 +142,14 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 			url : provider.indentityURL + "/tokens",
 			data : {auth : provider.auth}
 		}).success(function(data, status, headers, config) {
-			$scope.$root.isLoggedIn = true;
-			OpenStack.setAuthenticationURL(provider.indentityURL);
-			OpenStack.setAccess(data.access);
-			$location.path("/unscoped");
+			if(data.access) {
+				$scope.$root.isLoggedIn = true;
+				OpenStack.setAuthenticationURL(provider.indentityURL);
+				OpenStack.setAccess(data.access);
+				$location.path("/unscoped");
+			} else {
+				alert('UNAUTHORIZED : Invalid credentials');
+			}
 		}).error(function(data, status, headers, config) {
 			alert(status);
 		})
