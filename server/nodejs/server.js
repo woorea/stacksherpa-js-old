@@ -68,6 +68,6 @@ route.all('/api', function(req, res) {
 });
 
 var app = connect()
-	.use(connect.static('../web'))
+	.use(connect.static('../../client'))
 	.use(route)
-	.listen(7070);
+	.listen(9876);

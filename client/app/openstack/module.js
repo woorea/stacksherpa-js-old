@@ -1,9 +1,8 @@
 var openstack = angular.module("openstack",[]);
-openstack.constant("proxy", "http://localhost:7070/api")
-openstack.factory("OpenStack", function($http, proxy, $cacheFactory) {
+openstack.factory("OpenStack", function($http, $cacheFactory) {
 	
 	return {
-		proxy : proxy,
+		proxy : stacksherpa.config.proxy || alert('Please configure the http-proxy url in stacksherpa.js'),
 		cache : $cacheFactory('openstack'),
 		ajax : function(opts) {
 			

@@ -49,8 +49,9 @@ eb.registerHandler("rest-broadcast-request", restBroadcastHandler)
 println "EventBus started!"
 
 def webServerConf = [
-	port : 8080,
 	host : '0.0.0.0',
+	port : 9876,
+	web_root : "../../client",
 	bridge : true,
 	inbound_permitted : [
 		[:]
