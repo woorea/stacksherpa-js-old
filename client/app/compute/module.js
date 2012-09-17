@@ -641,7 +641,7 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 	
 	$scope.onAssociate = function() {
 		
-		OpenStack.Servers.action($routeParams.region, {
+		OpenStack.Servers.action($routeParams.region, $scope.serverId, {
 			addFloatingIp : {
 				address : $scope.floating_ips[0].ip
 			}

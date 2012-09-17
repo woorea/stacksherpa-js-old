@@ -107,6 +107,8 @@ portal.directive('bootstrapModal', function($http, $templateCache, $compile) {
 });
 portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	
+	$scope.logout();
+	
 	$scope.providers = {
 		passwordCredentials : {
 			indentityURL : "http://192.168.1.37:5000/v2.0",
