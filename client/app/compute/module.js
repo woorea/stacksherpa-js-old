@@ -586,7 +586,7 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 		if(floatingIp) {
 			
 			OpenStack.FloatingIps.deallocate($routeParams.region, floatingIp.id, function(data) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
@@ -646,6 +646,7 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 				address : $scope.floating_ips[0].ip
 			}
 		}, function(data) {
+			$scope.$root.$broadcast('floating-ips.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		})
 		
@@ -955,14 +956,14 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	
 	$scope.onRemoveRule = function(rule) {
 		
-		OpenStack.SecurityGroups.addRule($routeParams.region, rule.id, function(data) {
+		OpenStack.SecurityGroups.removeRule($routeParams.region, rule.id, function(data) {
 			$scope.security_group.rules = $scope.security_group.rules.filter(function(sgr) {
 				return sgr.id != rule.id;
 			});
 		});
 	}
 	
-	OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, success : function(security_group) {
+	OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, refresh : true, success : function(security_group) {
 		$scope.security_group = security_group;
 		resetAddRule();
 	}});
