@@ -683,7 +683,7 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 	$scope.onDetach = function(volume) {
 		
 		OpenStack.Servers.detach($routeParams.region, volume.attachments[0].serverId, volume.id, function() {
-			
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -798,7 +798,7 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("SnapshotShowCtrl",function($scope, $routeParams, OpenStack) {
 });
-compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, Snapshots) {
+compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var volume_id = ""
 	if(typeof $scope.volumes != 'undefined') {
