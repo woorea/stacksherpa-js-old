@@ -90,6 +90,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { pause : {} }, function(data) {
 			$scope.server.status = 'PAUSED';
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -98,6 +99,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unpause : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -106,6 +108,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { suspend : {} }, function(data) {
 			$scope.server.status = 'SUSPENDED';
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -114,6 +117,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { resume : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -122,6 +126,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { lock : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -130,25 +135,32 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unlock : {} }, function(data) {
 			$scope.server.status = 'ACTIVE';
+			$scope.onRefresh(true);
 		});
 		
 	}
 	
 	$scope.onResizeConfirm = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} }, function(data) { });
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} }, function(data) {
+			$scope.onRefresh(true);
+		});
 		
 	}
 	
 	$scope.onResizeRevert = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { revertResize : {} }, function(data) { });
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { revertResize : {} }, function(data) {
+			$scope.onRefresh(true);
+		});
 		
 	}
 	
 	$scope.onDelete = function() {
 		
-		OpenStack.Servers.delete($routeParams.region, $routeParams.id, function(data) { });
+		OpenStack.Servers.delete($routeParams.region, $routeParams.id, function(data) {
+			$location.path("/" + $routeParams.tenant + "/compute/" + $routeParams.region + "/servers")
+		});
 		
 	}
 
@@ -663,7 +675,7 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 		if(typeof volume != 'undefined') {
 			
 			OpenStack.Volumes.delete($routeParams.region, volume.id, function() {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
