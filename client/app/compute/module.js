@@ -395,6 +395,7 @@ compute.controller("LaunchServerConfigurationCtrl",function($scope, $routeParams
 	
 	OpenStack.Flavors.list({region : $routeParams.region, success : function(flavors) {
 		$scope.flavors = flavors;
+		$scope.server.flavorRef = flavors[0].id;
 	}});
 	
 });
@@ -495,8 +496,8 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 		"X-Auth-Token" : OpenStack.getAccess().token.id,
 		"X-URI" : endpoint + "/images",
 		"x-image-meta-name" : "",
-		"x-image-meta-disk_format" : "raw",
-		"x-image-meta-container_format" : "bare",
+		"x-image-meta-disk_format" : "qcow2",
+		"x-image-meta-container_format" : "ovf",
 		"x-image-meta-min-ram" : 0,
 		"x-image-meta-min-disk" : 0,
 		"x-image-meta-store" : "file"
@@ -859,7 +860,7 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 		if(typeof keypair != 'undefined') {
 			
 			OpenStack.KeyPairs.delete($routeParams.region, keypair.name, function(data) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
@@ -908,6 +909,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			url : endpoint + "/os-keypairs",
 			data : {keypair : $scope.import_keypair}
 		}).success(function(data, status, headers, config) {
+			$scope.$root.$broadcast('keypairs.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(function(data, status, headers, config) {
 
@@ -922,6 +924,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			data : {keypair : $scope.create_keypair}
 		}).success(function(data, status, headers, config) {
 			$scope.create_keypair.public_key = data.keypair["public_key"];
+			$scope.$root.$broadcast('keypairs.refresh');
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -970,11 +973,11 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	
 	var resetAddRule = function() {
 		$scope.rule = {
-			"ip_protocol": "",
+			"ip_protocol": "TCP",
 	        "from_port": "",
 	        "to_port": "",
 	        "cidr": "0.0.0.0/0",
-	        "group_id": "",
+	        "group_id": null,
 	        "parent_group_id": $scope.security_group.id
 		}
 	}
@@ -982,8 +985,7 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	$scope.onAddRule = function(rule) {
 		
 		OpenStack.SecurityGroups.addRule($routeParams.region, $scope.security_group.id, $scope.rule, function(security_group_rule) {
-			$scope.security_group.rules.push(security_group_rule);
-			resetAddRule();
+			$scope.onRefresh(true);
 		})
 		
 		
@@ -992,16 +994,24 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	$scope.onRemoveRule = function(rule) {
 		
 		OpenStack.SecurityGroups.removeRule($routeParams.region, rule.id, function(data) {
+			$scope.onRefresh(true);
+			/*
 			$scope.security_group.rules = $scope.security_group.rules.filter(function(sgr) {
 				return sgr.id != rule.id;
 			});
+			*/
 		});
 	}
 	
-	OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, refresh : true, success : function(security_group) {
-		$scope.security_group = security_group;
-		resetAddRule();
-	}});
+	$scope.onRefresh = function(sync) {
+		OpenStack.SecurityGroups.show({region : $routeParams.region, id : $routeParams.id, refresh : sync, success : function(security_group) {
+			$scope.security_group = security_group;
+			resetAddRule();
+		}});
+	}
+	
+	
+	$scope.onRefresh(false);
 	
 });
 compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, OpenStack) {

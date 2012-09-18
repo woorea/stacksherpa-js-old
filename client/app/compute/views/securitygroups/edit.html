@@ -3,10 +3,8 @@
 </div>
 <div class="row">
 	<div class="span12">
-		<h1>Edit Security Group Rules</h1>
-		<hr />
-		<h2>{{security_group.name}}</h2>
-		<p>{{security_group.description}}</p>
+		<h1>{{security_group.name}}</h1>
+		<h2>{{security_group.description}}</h2>
 		<hr />
 		<table class="table table-striped">
 			<thead>
@@ -21,8 +19,8 @@
 				<tr>
 					<td><br /></td>
 					<td><select ng-model="rule.ip_protocol" ng-options="protocol as protocol for protocol in ['TCP','UDP','ICMP']"></select></td>
-					<td><input type="text" ng-model="rule.from_port" /></td>
-					<td><input type="text" ng-model="rule.to_port" /></td>
+					<td><input type="number" ng-model="rule.from_port" /></td>
+					<td><input type="number" ng-model="rule.to_port" /></td>
 					<td><input type="text" ng-model="rule.cidr" placeholder="0.0.0.0/24"/></td>
 					<td><button class="btn" ng-click="onAddRule()"><i class="icon-ok"></i> Add</button></td>
 				</tr>

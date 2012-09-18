@@ -7,41 +7,39 @@
 		<fieldset>
 			<table style="width: 100%">
 				<tr>
-					<td colspan="2">
+					<td colspan="3">
 						<label>Name</label>
-						<input type="text" data-ng-model="image['x-image-meta-name']"  placeholder="Type something…" />
-						<span class="help-block">Example block-level help text here.</span>
+						<input type="text" data-ng-model="image['x-image-meta-name']"  placeholder="" style="width: 98%"/>
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Disk Format</label>
 						<select data-ng-model="image['x-image-meta-disk_format']" ng-options="diskFormat for diskFormat in ['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']"></select>
-						<span class="help-block">Example block-level help text here.</span>
+						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>Container Format</label>
 						<select data-ng-model="image['x-image-meta-container_format']" ng-options="containerFormat for containerFormat in ['aki', 'ari', 'ami', 'bare', 'ovf']"></select>
-						<span class="help-block">Example block-level help text here.</span>
+						<span class="help-block"></span>
+					</td>
+					<td>
+						<label>Image File</label>
+						<input type="file" file-upload />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Min. Disk</label>
-						<input type="text" data-ng-model="image['x-image-meta-min-disk']" placeholder="Type something…" />
-						<span class="help-block">Example block-level help text here.</span>
+						<input type="number" data-ng-model="image['x-image-meta-min-disk']" placeholder="Type something…" />
+						<span class="help-block"></span>
 					</td>
-					<td>
-						<label>Min. RAM</label>
-						<input type="text" data-ng-model="image['x-image-meta-min-ram']" placeholder="Type something…" />
-						<span class="help-block">Example block-level help text here.</span>
-					</td>
-				</tr>
-				<tr>
 					<td colspan="2">
-						<label>Image File</label>
-						<input type="file" file-upload />
-						<span class="help-block">Example block-level help text here.</span>
+						<label>Min. RAM</label>
+						<input type="number" data-ng-model="image['x-image-meta-min-ram']" placeholder="Type something…" />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 			</table>
