@@ -61,7 +61,7 @@ route.all('/api', function(req, res) {
 					res.setHeader("Content-Type", pres.headers["content-type"]);
 					
 					pres.on("data", function(chunk) {
-						res.write(chunk);
+						var flushed = res.write(chunk);
 					});
 					
 					pres.on("end", function() {
@@ -80,8 +80,15 @@ route.all('/api', function(req, res) {
 					res.end("Internal Error");
 				});
 				
+				preq.on("drain", function() {
+					req.resume();
+				});
+				
 				req.on("data", function(chunk) {
-					preq.write(chunk);
+					var flushed = preq.write(chunk);
+					if(!flushed) {
+						req.pause();
+					}
 				});
 
 				req.on("end", function(chunk) {
