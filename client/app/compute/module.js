@@ -43,6 +43,12 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups/:id", {
 			controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html", menu : "security-groups"
 		})
+		.when("/:tenant/compute/:region", { redirectTo : function(routeParams, locationPath, locationSearch) {
+			return locationPath + "/servers";
+		}})
+});
+compute.controller("ComputeCtrl",function($scope, $location, $routeParams, OpenStack) {
+	
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 

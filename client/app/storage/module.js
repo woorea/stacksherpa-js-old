@@ -1,8 +1,11 @@
 var storage = angular.module("storage",[]);
 storage.config(function($routeProvider) {
 	$routeProvider
-		.when("/:tenant/storage/:region/containers", {controller : "ContainerListCtrl", templateUrl : "app/storage/views/containers/list.html"})
-		.when("/:tenant/storage/:region/containers/:container", {controller : "ContainerShowCtrl", templateUrl : "app/storage/views/containers/show.html"})
+		.when("/:tenant/object-store/:region/containers", {controller : "ContainerListCtrl", templateUrl : "app/storage/views/containers/list.html"})
+		.when("/:tenant/object-store/:region/containers/:container", {controller : "ContainerShowCtrl", templateUrl : "app/storage/views/containers/show.html"})
+		.when("/:tenant/object-store/:region", { redirectTo : function(routeParams, locationPath, locationSearch) {
+			return locationPath + "/containers";
+		}})
 });
 storage.controller("ContainerListCtrl",function($scope, $routeParams, OpenStack) {
 	

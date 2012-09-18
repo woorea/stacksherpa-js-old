@@ -8,7 +8,7 @@
 		<div class="modal-body">
 			<p>
 				<label for='identity-endpoint'>Authentication URL:</label>
-				<select ng-model="endpoint" ng-options="endpoint for endpoint in provider.identity.endpoints" style="width: 98%" ng-hide="provider.name == 'custom'"/>
+				<select ng-model="endpoint" ng-options="endpoint.publicURL as endpoint.publicURL for endpoint in provider.identity.endpoints" style="width: 98%" ng-hide="provider.name == 'custom'"/>
 				<input type="text" ng-model="endpoint" style="width: 98%" ng-show="provider.name == 'custom'"/>
 			</p>
 			<p>

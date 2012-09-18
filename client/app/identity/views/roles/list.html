@@ -8,13 +8,13 @@
 		<h1>Role List</h1>
 		<hr />
 		<div class="well">
-			<table class="actions">
+			<table style="width: 100%">
 				<tr>
 					<td>
 						<button data-bootstrap-modal="app/identity/views/roles/create.html" class="btn"><i class="icon-plus"></i> Create</button>
-						<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
 					</td>
-					<td class="right">
+					<td style="text-align: right">
+						<button data-ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
 						<button data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
 					</td>
 				</tr>
@@ -36,11 +36,10 @@
 					<td>{{item.name}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group" style="float: right; margin-right: 35px">
-							<button data-toggle="dropdown" class="btn dropdown-toggle">
-								Quick Actions<span class="caret"></span>
+							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="#/identity/users/{{item.id}}"><i class="icon-pencil"></i> Edit</a></li>
+								<li><a href="#/identity/users/{{item.id}}"><i class="icon-edit"></i> Edit</a></li>
 								<li class="divider"></li>
 								<li><a ng-click="onDelete()" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>

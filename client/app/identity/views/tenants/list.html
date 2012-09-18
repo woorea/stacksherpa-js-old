@@ -8,13 +8,14 @@
 		<h1>Tenant List</h1>
 		<hr />
 		<div class="well">
-			<table class="actions">
+			<table style="width: 100%">
 				<tr>
 					<td>
-						<button data-bootstrap-modal="app/identity/views/tenants/create.html" class="btn"><i class="icon-plus"></i> Create</button>
-						<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
+						<button data-bootstrap-modal="app/identity/views/tenants/create.html" class="btn"><i class="icon-plus"></i> Create Tenant</button>
+						
 					</td>
-					<td class="right">
+					<td style="text-align: right">
+						<button data-ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
 						<button data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
 					</td>
 				</tr>
@@ -36,8 +37,14 @@
 					<td><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}">{{tenant.name}}</a></td>
 					<td>{{tenant.description}}</td>
 					<td>{{tenant.enabled}}</td>
-					<td class="right">
-						<button data-ng-click="onDelete(tenant)" class="btn confirm-delete"><i class="icon-trash"></i> Delete</a>
+					<td class="btn-toolbar">
+						<div class="btn-group" style="float: right; margin-right: 35px">
+							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a data-ng-click="onDelete(tenant)"><i class="icon-remove"></i> Delete</a></li>
+							</ul>
+						</div>
 					</td>
 				</tr>
 			</tbody>

@@ -33,17 +33,46 @@ portal.run(function($rootScope, $window, $location, OpenStack) {
 	});
 	
 });
-portal.controller("StackSherpaCtrl", function($scope, $routeParams) {
-	$scope.modal = '';
+portal.controller("StackSherpaCtrl", function($scope, $routeParams, OpenStack) {
 	
-	
-	//$scope.$location = $location;
-	//$scope.$route = $route;
 	$scope.$routeParams = $routeParams;
 	
-	$scope.onLogout = function() {
-		$location.path("/")
+	if($scope.$root.isLoggedIn) {
+
+		$scope.main_menu = []
+
+		if($routeParams.tenant) {
+			$scope.isKeystoneAdmin = _.intersection(
+				_.pluck(OpenStack.getAccess().user.roles, 'name'),
+				OpenStack.getProvider().identity.admin_roles
+			).length > 0
+
+			if($scope.isKeystoneAdmin) {
+				$scope.main_menu.push({
+					name : "Identity",
+					type : "identity",
+					endpoints : [
+						{ region : OpenStack.getProvider().title }
+					]
+				});
+			}
+
+			angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
+				//check if this is a real openstack service
+				if(_.include(['compute','object-store'], service.type) && service.endpoints[0].region) {
+					$scope.main_menu.push(service);
+				}
+			});
+			
+			$scope.services = OpenStack.services;
+		}
+
+		$scope.onLogout = function() {
+			$location.path("/")
+		}
+
 	}
+
 	
 })
 portal.directive('withSelectionCheckboxes', function() {
@@ -113,7 +142,7 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	
 	
 	$scope.$watch('provider.name', function() {
-		$scope.endpoint = $scope.provider.identity.endpoints[0];
+		$scope.endpoint = $scope.provider.identity.endpoints[0].publicURL;
 		$scope.authentication = $scope.provider.identity.authentication[0];
 		$scope.auth = {
 			passwordCredentials : {
@@ -150,6 +179,7 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 				$scope.$root.isLoggedIn = true;
 				OpenStack.setProvider($scope.provider);
 				OpenStack.setAccess(data.access);
+				$scope.$root.$broadcast('new.access');
 				$location.path("/unscoped");
 			} else {
 				alert('UNAUTHORIZED : Invalid credentials');
@@ -165,7 +195,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 	$scope.onTenantSelected = function(tenant) {
 		OpenStack.ajax({
 			method : "POST",
-			url : OpenStack.getProvider().identity.endpoints[0] + "/tokens",
+			url : OpenStack.getProvider().identity.endpoints[0].publicURL + "/tokens",
 			data : { auth : {
 				token : {
 					id : OpenStack.getAccess().token.id
@@ -174,6 +204,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 			}}
 		}).success(function(data, status, headers, config) {
 			OpenStack.setAccess(data.access);
+			$scope.$root.$broadcast('new.access');
 			$.cookie("X-Auth-Token", data.access.token.id);
 			$location.path("/" + tenant.name + "/dashboard");
 		}).error(function(data, status, headers, config) {
@@ -184,7 +215,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 	$scope.onRefresh = function(sync) {
 		OpenStack.ajax({
 			method : "GET",
-			url : OpenStack.getProvider().identity.endpoints[0] + "/tenants",
+			url : OpenStack.getProvider().identity.endpoints[0].publicURL + "/tenants",
 			refresh : sync
 		}).success(function(data, status, headers, config) {
 			if(!angular.isArray(data.tenants)) {

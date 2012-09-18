@@ -60,7 +60,11 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 		},
 		getAccess : function() {
 			var access = localStorage.getItem("access");
-			return access != null ? angular.fromJson(access) : access;
+			try {
+				return angular.fromJson(access)
+			} catch(e) {
+				return null;
+			}
 		},
 		setTenants : function(tenants) {
 			localStorage.setItem("tenants", angular.toJson(tenants));

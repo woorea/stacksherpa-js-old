@@ -1,16 +1,18 @@
+<div class="row" data-ng-controller="ComputeCtrl">
+	<ng-include src="'app/compute/views/common/nav.html'">
+</div>
 <div class="row">
-	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
-	<div class="span10">
+	<div class="span12">
 		<div class="well">
 		<table style="width: 100%">
 		<tr>
-		<td>
-		<button data-bootstrap-modal="app/compute/views/keypairs/create.html" class="btn"><i class="icon-plus"></i> Create</button>
-		<button ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
-		</td>
-		<td style="text-align: right">
-		<button ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</button>
-		</td>
+			<td>
+				<button data-bootstrap-modal="app/compute/views/keypairs/create.html" class="btn"><i class="icon-plus"></i> Create Key Pair</button>
+			</td>
+			<td style="text-align: right">
+				<button ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
+				<button ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</button>
+			</td>
 		</tr>
 		</table>
 		</div>
@@ -31,7 +33,7 @@
 					<td class="btn-toolbar">
 						<div class="btn-group" style="float:right; margin-right: 35px">
 							<button data-toggle="dropdown" class="btn dropdown-toggle">
-								Available Actions<span class="caret"></span>
+								<span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>

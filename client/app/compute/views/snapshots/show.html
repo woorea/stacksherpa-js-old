@@ -1,6 +1,8 @@
+<div class="row" data-ng-controller="ComputeCtrl">
+	<ng-include src="'app/compute/views/common/nav.html'">
+</div>
 <div class="row">
-	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
-	<div class="span10">
+	<div class="span12">
 		<h1>Attach Volume</h1>
 		<form action="${createLink(controller : 'volumes', action : 'attach', params : [tenantId : params.tenantId, volumeId : params.volumeId])}" method="POST">
 		<table class="table table-striped">

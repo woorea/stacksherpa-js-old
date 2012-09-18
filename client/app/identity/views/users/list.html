@@ -8,13 +8,13 @@
 		<h1>User List</h1>
 		<hr />
 		<div class="well">
-			<table class="actions">
+			<table style="width: 100%">
 				<tr>
 					<td>
 						<button data-bootstrap-modal="app/identity/views/users/create.html" class="btn"><i class="icon-plus"></i> Create</button>
-						<button data-ng-click="onDelete()" class="btn"><i class="icon-minus"></i> Delete</button>
 					</td>
-					<td class="right">
+					<td style="text-align: right">
+						<button data-ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
 						<button data-ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</button>
 					</td>
 				</tr>
@@ -43,8 +43,14 @@
 						<span ng-show="!item.tenantId.length">N/A</span>
 					</td>
 					<td>{{item.enabled}}</td>
-					<td style="text-align:right">
-						<button ng-click="onDelete(item)" class="btn confirm-delete"><i class="icon-remove"></i> Delete</a>
+					<td class="btn-toolbar">
+						<div class="btn-group" style="float: right; margin-right: 35px">
+							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a data-ng-click="onDelete(item)"><i class="icon-remove"></i> Delete</a></li>
+							</ul>
+						</div>
 					</td>
 				</tr>
 			</tbody>

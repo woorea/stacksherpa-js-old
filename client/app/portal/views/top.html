@@ -1,9 +1,19 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="StackSherpaCtrl">
 	<div class="navbar-inner">
 		<div class="container">
 			<a class="brand" href="#/unscoped">StackSherpa</a>
 			<div class="nav-collapse collapse">
-				<ul class="nav"></ul>
+				<ul class="nav">
+					<li class="dropdown" ng-repeat="menu_option in main_menu">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#">{{menu_option.name}} <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="endpoint in menu_option.endpoints">
+								<a ng-href="#/{{$routeParams.tenant}}/{{menu_option.type}}/{{endpoint.region}}" ng-hide="menu_option.type == 'identity'">{{endpoint.region}}</a>
+								<a ng-href="#/{{$routeParams.tenant}}/{{menu_option.type}}" ng-show="menu_option.type == 'identity'">{{endpoint.region}}</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
 				<ul class="nav pull-right">
 					<li class="divider-vertical"></li>
 					<li class="dropdown">

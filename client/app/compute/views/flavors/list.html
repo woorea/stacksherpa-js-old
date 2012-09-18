@@ -1,12 +1,14 @@
+<div class="row" data-ng-controller="ComputeCtrl">
+	<ng-include src="'app/compute/views/common/nav.html'">
+</div>
 <div class="row">
-	<div class="span2"><ng-include src="'app/compute/views/common/nav.html'"></div>
-	<div class="span10">
+	<div class="span12">
 		<div class="well">
 		<table style="width: 100%">
 			<tbody>
 				<tr>
 					<td>
-						<button class="btn btn-launch" data-bootstrap-modal="app/compute/views/flavors/create.html"><span class="icon-plus"></span> Create</button>
+						<button class="btn btn-launch" data-bootstrap-modal="app/compute/views/flavors/create.html"><span class="icon-plus"></span> Create Flavor</button>
 					</td>
 					<td style="text-align: right">
 						<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
@@ -37,7 +39,15 @@
 					<td>{{flavor.vcpus}}</td>
 					<td>{{flavor.disk}}</td>
 					<td>{{flavor.rxTxFactor}}</td>
-					<td class="right"><a href="${createLink(action: 'delete', params : [flavorId : item.id])}" class="btn"><i class="icon-remove"></i> Delete</a></td>
+					<td class="btn-toolbar">
+						<div class="btn-group" style="float: right; margin-right: 35px">
+							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="${createLink(action: 'delete', params : [flavorId : item.id])}" class="btn"><i class="icon-remove"></i> Delete</a></li>
+							</ul>
+						</div>
+					</td>
 				</tr>
 			</tbody>
 		</table>

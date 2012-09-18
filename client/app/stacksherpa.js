@@ -9,7 +9,10 @@ var stacksherpa = {
 				identity : {
 					authentication : ["passwordCredentials"],
 					endpoints : [
-						"http://192.168.1.37:5000/v2.0"
+						{ 
+							publicURL : "http://192.168.1.37:5000/v2.0",
+							adminURL : "http://192.168.1.37:35357/v2.0"
+						}
 					],
 					admin_roles : ["KeystoneAdmin", "KeystoneServiceAdmin"]
 				}
@@ -21,7 +24,10 @@ var stacksherpa = {
 				identity : {
 					authentication : ["passwordCredentials"],
 					endpoints : [
-						"https://nova-api.trystack.org:5443"
+						{ 
+							publicURL : "https://nova-api.trystack.org:5443",
+							adminURL : "https://nova-api.trystack.org:5443"
+						}
 					],
 					admin_roles : []
 				}
@@ -33,7 +39,10 @@ var stacksherpa = {
 				identity : {
 					authentication : ["passwordCredentials", "RAX-KSKEY:apiKeyCredentials"],
 					endpoints : [
-						"https://identity.api.rackspacecloud.com/v2.0"
+						{ 
+							publicURL : "https://identity.api.rackspacecloud.com/v2.0",
+							adminURL : "https://identity.api.rackspacecloud.com/v2.0"
+						}
 					],
 					admin_roles : ["identity:user-admin"]
 				}
@@ -45,7 +54,10 @@ var stacksherpa = {
 				identity : {
 					authentication : ["passwordCredentials", "apiAccessKeyCredentials"],
 					endpoints : [
-						"https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0"
+						{ 
+							publicURL : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0",
+							adminURL : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0"
+						}
 					],
 					admin_roles : []
 				}
