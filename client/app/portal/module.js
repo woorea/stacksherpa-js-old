@@ -29,7 +29,7 @@ portal.run(function($rootScope, $window, $location, OpenStack) {
 	}
 	
 	$rootScope.$on('$viewContentLoaded', function(event) {
-		$window._gaq.push(['_trackPageview', $location.path()]);
+		//$window._gaq.push(['_trackPageview', $location.path()]);
 	});
 	
 });
@@ -51,7 +51,6 @@ portal.directive('withSelectionCheckboxes', function() {
 
 		scope.checkAll = function() {
 			var items = scope[attrs.withSelectionCheckboxes];
-			console.log(items);
 			angular.forEach(items, function(item) {
 				item.checked = scope.checkedAll;
 			});
@@ -62,7 +61,7 @@ portal.directive('withSelectionCheckboxes', function() {
 			if(items && items.length) {
 				var isCheckedAll = true;
 				angular.forEach(items, function(item) {
-				    if (!item.checked) {
+				    if (item && !item.checked) {
 						isCheckedAll = false;
 						return;
 					}
@@ -109,43 +108,47 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	
 	$scope.logout();
 	
-	$scope.providers = {
-		passwordCredentials : {
-			indentityURL : "http://192.168.1.37:5000/v2.0",
-			auth : {
+	$scope.providers = stacksherpa.config.providers;
+	
+	
+	
+	$scope.$watch('provider.name', function() {
+		$scope.endpoint = $scope.provider.identity.endpoints[0];
+		$scope.authentication = $scope.provider.identity.authentication[0];
+		$scope.auth = {
+			passwordCredentials : {
 				passwordCredentials : {
-					username : "admin",
-					password : "secret0"
+					username : "",
+					password : ""
 				}
-			}
-		},
-		apiAccessKeyCredentials : {
-			indentityURL : "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0",
-			auth : {
+			},
+			apiAccessKeyCredentials : {
 				apiAccessKeyCredentials : {
 					accessKey : "",
 					secretKey : ""
 				}
-			}
+			},
+			"RAX-KSKEY:apiKeyCredentials" : {
+				"RAX-KSKEY:apiKeyCredentials" : {
+					username : "",
+					apiKey : ""
+				}
+			},
+			"jsonCredentials" : ""
 		}
-	}
+	});
 	
-	$scope.auth_methods = function() {
-		return Object.keys($scope.providers);
-	}
-	
-	$scope.selectedProvider = "passwordCredentials";
+	$scope.provider = $scope.providers[0];
 	
 	$scope.onLogin = function() {
-		var provider = $scope.providers[$scope.selectedProvider];
 		OpenStack.ajax({
 			method : "POST",
-			url : provider.indentityURL + "/tokens",
-			data : {auth : provider.auth}
+			url : $scope.endpoint + "/tokens",
+			data : {auth : $scope.auth[$scope.authentication]}
 		}).success(function(data, status, headers, config) {
 			if(data.access) {
 				$scope.$root.isLoggedIn = true;
-				OpenStack.setAuthenticationURL(provider.indentityURL);
+				OpenStack.setProvider($scope.provider);
 				OpenStack.setAccess(data.access);
 				$location.path("/unscoped");
 			} else {
@@ -162,7 +165,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 	$scope.onTenantSelected = function(tenant) {
 		OpenStack.ajax({
 			method : "POST",
-			url : OpenStack.getAuthenticationURL() + "/tokens",
+			url : OpenStack.getProvider().identity.endpoints[0] + "/tokens",
 			data : { auth : {
 				token : {
 					id : OpenStack.getAccess().token.id
@@ -178,32 +181,53 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 		})
 	}
 	
-	OpenStack.ajax({
-		method : "GET",
-		url : OpenStack.getAuthenticationURL() + "/tenants",
-		refresh : true
-	}).success(function(data, status, headers, config) {
-		if(!angular.isArray(data.tenants)) {
-			//weird json from trystack
-			data.tenants = data.tenants.values;
-		}
-		OpenStack.setTenants(data.tenants);
-		$scope.tenants = data.tenants;
-	}).error(function(data, status, headers, config) {
-	});
+	$scope.onRefresh = function(sync) {
+		OpenStack.ajax({
+			method : "GET",
+			url : OpenStack.getProvider().identity.endpoints[0] + "/tenants",
+			refresh : sync
+		}).success(function(data, status, headers, config) {
+			if(!angular.isArray(data.tenants)) {
+				//weird json from trystack
+				data.tenants = data.tenants.values;
+			}
+			OpenStack.setTenants(data.tenants);
+			$scope.tenants = data.tenants;
+		}).error(function(data, status, headers, config) {
+		});
+	}
+	
+	$scope.onRefresh(false);
 
 });
 portal.controller("TenantCtrl",function($scope, OpenStack) {
 	
 	OpenStack.services = {}
 	
+	//TODO: check if this is a real openstack service
 	angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
 		OpenStack.services[service.type] = service;
 	});
 	
-	$scope.isKeystoneAdmin = OpenStack.getAccess().user.roles.filter(function(role) {
+	console.log(_.intersection(
+		_.pluck(OpenStack.getAccess().user.roles, 'name'),
+		OpenStack.getProvider().identity.admin_roles
+	));
+	
+	$scope.isKeystoneAdmin = _.intersection(
+		_.pluck(OpenStack.getAccess().user.roles, 'name'),
+		OpenStack.getProvider().identity.admin_roles
+	).length > 0
+	
+	console.log($scope.isKeystoneAdmin);
+	
+	console.log(OpenStack.services);
+	
+	/*
+	$scope.isKeystoneAdmin = .filter(function(role) {
 		return role.name == 'KeystoneAdmin' || role.name == 'KeystoneServiceAdmin';
 	}).length > 0;
+	*/
 	
 	$scope.services = OpenStack.services;
 	
@@ -213,7 +237,7 @@ portal.controller("MyAccountCtrl",function($scope, OpenStack) {
 	
 });
 
-portal.controller("UserListCtrl",function($scope, OpenStack) {
+portal.controller("portal.UserListCtrl",function($scope, OpenStack) {
 	
 });
 

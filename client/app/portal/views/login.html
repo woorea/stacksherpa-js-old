@@ -1,39 +1,57 @@
 <div id="login" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<h3>Login on
-			<select ng-init="provider='hpcloud'" ng-model="selectedProvider" ng-options="name for name in auth_methods()" class="pull-right">
+			<select ng-model="provider" ng-options="provider as provider.title for provider in providers" class="pull-right">
 			</select>
 		</h3>
 	</div>
 		<div class="modal-body">
 			<p>
 				<label for='identity-endpoint'>Authentication URL:</label>
-				<input type='text' ng-model="providers[selectedProvider].indentityURL" style="width: 98%" />
-				<strong>devstack</strong> : https://localhost:5000/v2.0<br />
-				<strong>trystack</strong> : https://nova-api.trystack.org:5443<br />
-				<strong>hpcloud</strong> : https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0
+				<select ng-model="endpoint" ng-options="endpoint for endpoint in provider.identity.endpoints" style="width: 98%" ng-hide="provider.name == 'custom'"/>
+				<input type="text" ng-model="endpoint" style="width: 98%" ng-show="provider.name == 'custom'"/>
 			</p>
-			<ng-switch on="selectedProvider">
+			<p>
+				<label for='identity-auth-method'>Authentication Methods:</label>
+				<select ng-model="authentication" ng-options="auth_method for auth_method in provider.identity.authentication" style="width: 98%" />
+			</p>
+			<ng-switch on="authentication">
 			<div ng-switch-when="passwordCredentials">
 			<p>
 				<label for='username'>Username:</label>
-				<input type="text" data-ng-model="providers[selectedProvider].auth.passwordCredentials.username" />
+				<input type="text" ng-model="auth[authentication].passwordCredentials.username" />
 			</p>
 
 			<p>
 				<label for='password'>Password:</label>
-				<input type="password" data-ng-model="providers[selectedProvider].auth.passwordCredentials.password" />
+				<input type="password" ng-model="auth[authentication].passwordCredentials.password" />
 			</p>
 			</div>
 			<div ng-switch-when="apiAccessKeyCredentials">
 			<p>
 				<label for='access-key'>Access Key:</label>
-				<input type='text' ng-model="providers[selectedProvider].auth.apiAccessKeyCredentials.accessKey" />
+				<input type='text' ng-model="auth[authentication].apiAccessKeyCredentials.accessKey" />
 			</p>
 			<p>
 				<label for='secret-key'>Secret Key:</label>
-				<input type='password' ng-model="providers[selectedProvider].auth.apiAccessKeyCredentials.secretKey" />
+				<input type='text' ng-model="auth[authentication].apiAccessKeyCredentials.secretKey" />
 			</p>
+			</div>
+			<div ng-switch-when="RAX-KSKEY:apiKeyCredentials">
+				<p>
+					<label for='access-key'>Username:</label>
+					<input type='text' ng-model="auth[authentication]['RAX-KSKEY:apiKeyCredentials'].username" />
+				</p>
+				<p>
+					<label for='secret-key'>API Key:</label>
+					<input type='text' ng-model="auth[authentication]['RAX-KSKEY:apiKeyCredentials'].apiKey" />
+				</p>
+			</div>
+			<div ng-switch-when="jsonCredentials">
+				<p>
+					<label for='access-key'>JSON Keystone Authentication:</label>
+					<textarea ng-model="auth[authentication]" style="width: 96%"></textarea>
+				</p>
 			</div>
 			</ng-switch>
 			<!--

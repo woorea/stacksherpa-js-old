@@ -11,7 +11,6 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 			}
 			
 			if(angular.isDefined(opts.refresh) && opts.refresh) {
-				console.log(this.cache.remove);
 				this.cache.remove(opts.url);
 			}
 			
@@ -35,26 +34,26 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 		endpoint : function(serviceType, regionName, interface) {
 			var access = this.getAccess();
 			if(access && angular.isArray(access.serviceCatalog)) {
-				var service = access.serviceCatalog.filter(function(service) {
-					return service.type == serviceType;
-				})[0];
-				if(regionName) {
-					var endpoint = service.endpoints.filter(function(endpoint) {
-						return endpoint.region == regionName;
-					})[0];
-					return endpoint[interface];
-				} else {
-					return service.endpoints[0][interface];
+				for(var i = 0; i< access.serviceCatalog.length; i++) {
+					var service = access.serviceCatalog[i];
+					if(service.type == serviceType) {
+						for(var j = 0; j < service.endpoints.length; j++) {
+							var endpoint = service.endpoints[j];
+							if(angular.isDefined(endpoint.region) && endpoint.region == regionName) {
+								return endpoint[interface]
+							}
+						}
+					}
 				}
-			} else {
-				return null;
 			}
+			return null;
 		},
-		setAuthenticationURL : function(url) {
-			localStorage.setItem("os_auth_url", url);
+		setProvider : function(provider) {
+			localStorage.setItem("provider", angular.toJson(provider));
 		},
-		getAuthenticationURL : function() {
-			return localStorage.getItem("os_auth_url");
+		getProvider : function() {
+			var provider = localStorage.getItem("provider");
+			return provider != null ? angular.fromJson(provider) : provider;
 		},
 		setAccess : function(access) {
 			localStorage.setItem("access", angular.toJson(access));
@@ -74,9 +73,9 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 			return this.getAccess() != null;
 		},
 		logout : function() {
+			localStorage.removeItem("provider");
 			localStorage.removeItem("access");
 			localStorage.removeItem("tenants");
-			localStorage.removeItem("os_auth_url");
 		},
 		compute : {},
 		storage : {}

@@ -8,7 +8,7 @@ identity.config(function($routeProvider) {
 			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/show.html", menu : "tenants"
 		})
 		.when("/:tenant/identity/users", {
-			controller : "UserListCtrl", templateUrl : "app/identity/views/users/list.html", menu : "users"
+			controller : "identity.UserListCtrl", templateUrl : "app/identity/views/users/list.html", menu : "users"
 		})
 		.when("/:tenant/identity/users/:id", {
 			controller : "UserShowCtrl", templateUrl : "app/identity/views/users/show.html", menu : "users"
@@ -34,7 +34,7 @@ identity.config(function($routeProvider) {
 });
 identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	$scope.onDelete = function(item) {
 		if(typeof item != 'undefined') {
@@ -80,7 +80,7 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 });
 identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	$scope.onRefresh = function() {
 		OpenStack.ajax({
@@ -102,7 +102,7 @@ identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 });
 identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 	
 	$scope.tenant = {
 		name : "",
@@ -126,17 +126,17 @@ identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack)
 });
 
 
-identity.controller("UserListCtrl",function($scope, $routeParams, OpenStack) {
+identity.controller("identity.UserListCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
-
-	$scope.onDelete = function() {
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
+	
+	$scope.onDelete = function(item) {
 		if(typeof item != 'undefined') {
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/users/" + item.id
 			}).success(function(data, status, headers, config) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			}).error(function(data, status, headers, config) {
 
 			});
@@ -156,27 +156,34 @@ identity.controller("UserListCtrl",function($scope, $routeParams, OpenStack) {
 		}
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
+		console.log("refresh");
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/users"
+			url : endpoint + "/users",
+			refresh : sync
 		}).success(function(data, status, headers, config) {
-			$scope.users = data.users;
+			if(data.users) {
+				$scope.users = data.users;
+			} else {
+				//weird: if tenant only have one user a object is returned instead of array
+				$scope.users = [data.user]
+			}
 		}).error(function(data, status, headers, config) {
 
 		});
 	}
 	
 	$scope.$on('users.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 	
 });
 identity.controller("UserShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	OpenStack.ajax({
 		method : "GET",
@@ -190,7 +197,7 @@ identity.controller("UserShowCtrl",function($scope, $routeParams, OpenStack) {
 });
 identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 	
 	$scope.user = {
 		
@@ -222,7 +229,7 @@ identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 
 identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	$scope.onDelete = function() {
 		if(typeof item != 'undefined') {
@@ -270,7 +277,7 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 });
 identity.controller("RoleShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	OpenStack.ajax({
 		method : "GET",
@@ -284,7 +291,7 @@ identity.controller("RoleShowCtrl",function($scope, $routeParams, OpenStack) {
 });
 identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 	
 	$scope.role = {
 		
@@ -307,7 +314,7 @@ identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 
 identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	$scope.onDelete = function() {
 		
@@ -356,7 +363,7 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 });
 identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	OpenStack.ajax({
 		method : "GET",
@@ -386,7 +393,7 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 
 identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 	
 	$scope.service = {
 		
@@ -409,7 +416,7 @@ identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack
 
 identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	$scope.onDelete = function(item) {
 		if(typeof item != 'undefined') {
@@ -459,7 +466,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 });
 identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 
 	OpenStack.ajax({
 		method : "GET",
@@ -473,7 +480,7 @@ identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack)
 });
 identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || "http://192.168.1.37:35357/v2.0";
+	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0];
 	
 	$scope.endpoint = {
 		service_id : $scope.service.id,
