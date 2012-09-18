@@ -46,10 +46,12 @@
 									<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu">
+										<!--
 										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/images/{{image.id}}">Show</a></li>
-										<li><a data-bootstrap-modal="app/compute/views/servers/launch.html">Launch</a></li>
+										-->
+										<li><a data-bootstrap-modal="app/compute/views/servers/launch.html"><span class="icon-play"></span> Launch</a></li>
 										<li class="divider"></li>
-										<li><a ng-click="onDelete(image)" class="confirm-delete">Delete ...</a></li>
+										<li><a ng-click="onDelete(image)"><span class="icon-remove"></span> Delete</a></li>
 									</ul>
 								</div>
 							</td>

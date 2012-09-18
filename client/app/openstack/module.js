@@ -234,7 +234,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/servers/" + id + "/action",
 				data : action
 			}).success(function(data, status, headers, config) {
-				callback();
+				callback(data);
 			}).error(default_error_handler);
 		},
 		attach : function(region, id, action, callback) {

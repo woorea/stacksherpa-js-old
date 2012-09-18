@@ -176,7 +176,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 				server.flavor = flavor;
 			}});
 			$scope.server = server;
-			if(_.include(['RESIZE','REVERT_RESIZE','REBUILD'], $scope.server.status)) {
+			if(_.include(['BUILD','RESIZE','REVERT_RESIZE','REBUILD'], $scope.server.status)) {
 				setTimeout(function() {
 					$scope.onRefresh(true);
 				}, 15000);
@@ -213,7 +213,7 @@ compute.controller("ServerShowVncConsoleCtrl", function($scope, $routeParams, Op
 			type : "novnc"
 		}
 	}, function(data) {
-		$scope.$root.$broadcast('modal.hide');
+		$scope.console = data.console;
 	});
 	
 });
@@ -449,7 +449,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		if(typeof image != 'undefined') {
 			
 			OpenStack.Images.delete($routeParams.region, image.id, function() {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
@@ -489,7 +489,7 @@ compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 
 compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");
+	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL") + "/v1";
 	
 	$scope.image = {
 		"X-Auth-Token" : OpenStack.getAccess().token.id,
@@ -498,10 +498,13 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 		"x-image-meta-disk_format" : "raw",
 		"x-image-meta-container_format" : "bare",
 		"x-image-meta-min-ram" : 0,
-		"x-image-meta-min-disk" : 0
+		"x-image-meta-min-disk" : 0,
+		"x-image-meta-store" : "file"
 	}
 	
 	$scope.onUpload = function() {
+		
+		$scope.image["x-image-meta-size"] = $scope.file.size;
 		
 		$.ajax({
 			crossDomain : true,
