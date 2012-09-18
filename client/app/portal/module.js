@@ -204,30 +204,17 @@ portal.controller("TenantCtrl",function($scope, OpenStack) {
 	
 	OpenStack.services = {}
 	
-	//TODO: check if this is a real openstack service
 	angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
-		OpenStack.services[service.type] = service;
+		//check if this is a real openstack service
+		if(service.endpoints[0].region) {
+			OpenStack.services[service.type] = service;
+		}
 	});
-	
-	console.log(_.intersection(
-		_.pluck(OpenStack.getAccess().user.roles, 'name'),
-		OpenStack.getProvider().identity.admin_roles
-	));
 	
 	$scope.isKeystoneAdmin = _.intersection(
 		_.pluck(OpenStack.getAccess().user.roles, 'name'),
 		OpenStack.getProvider().identity.admin_roles
 	).length > 0
-	
-	console.log($scope.isKeystoneAdmin);
-	
-	console.log(OpenStack.services);
-	
-	/*
-	$scope.isKeystoneAdmin = .filter(function(role) {
-		return role.name == 'KeystoneAdmin' || role.name == 'KeystoneServiceAdmin';
-	}).length > 0;
-	*/
 	
 	$scope.services = OpenStack.services;
 	

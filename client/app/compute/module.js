@@ -53,10 +53,9 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 				$scope.onRefresh();
 			});
 		} else {
-			angular.forEach($scope.volumes, function(server) {
+			angular.forEach($scope.servers, function(server) {
 				if(server.checked) {
-					OpenStack.Servers.delete($regionParams.region, server.id, function() {
-					});
+					OpenStack.Servers.delete($routeParams.region, server.id, function() { });
 				}
 			});
 		}
@@ -78,7 +77,7 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 	
 	$scope.$on('servers.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
 	$scope.onRefresh(false);
@@ -125,7 +124,7 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 	$scope.onLock = function() {
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { lock : {} }, function(data) {
-			$scope.server.status = 'ACTIVE';
+			$scope.server.status = 'LOCK';
 			$scope.onRefresh(true);
 		});
 		
@@ -171,8 +170,17 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, Op
 				server.flavor = flavor;
 			}});
 			$scope.server = server;
+			if(_.include(['RESIZE','REVERT_RESIZE','REBUILD'], $scope.server.status)) {
+				setTimeout(function() {
+					$scope.onRefresh(true);
+				}, 15000);
+			}
 		}});
 	}
+	
+	$scope.$on('server.refresh', function(event, args) {
+		$scope.onRefresh(true);
+	});
 
 	$scope.onRefresh(false);
 
@@ -185,6 +193,7 @@ compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack)
 				type : $scope.type
 			}
 		}, function(data) {
+			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 	}
@@ -231,6 +240,7 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 	$scope.onResize = function() {
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "resize" : $scope.resize }, function(data) {
+			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 		
@@ -260,6 +270,7 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 	$scope.onRebuild = function() {
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "rebuild" : $scope.server }, function(data) {
+			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
 		

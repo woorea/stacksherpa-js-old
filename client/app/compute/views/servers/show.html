@@ -6,7 +6,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<a href="#/{{$routeParams.tenant}}/compute/{{endpoint.region}}/servers" class="btn btn-show"><span class="icon-list"></span> Back</a>
+							<a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/servers" class="btn btn-show"><span class="icon-list"></span> Back</a>
 						</td>
 						<td style="text-align: right">
 							<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
@@ -17,6 +17,7 @@
 				</tbody>
 			</table>
 		</div>
+		<h1>{{server.name}}</h1>
 		<table style="width: 100%; table-layout: fixed">
 			<tr>
 				<td style="vertical-align: top">
@@ -33,9 +34,7 @@
 									<table class="{style.details}}">
 										<tbody>
 											<tr>
-												<td style="border: 0;">
-													{{server.status}} ({{server.progress}} %)
-												</td>
+												<td style="border: 0;">{{server.status}} ({{server.progress}} %)</td>
 												<td style="border: 0; text-align: right">
 													<div ng-show="server.status == 'ACTIVE'">
 													<a data-bootstrap-modal="app/compute/views/servers/reboot.html">Reboot</a>
@@ -53,8 +52,8 @@
 													| <a data-ng-click="onUnlock()">Unlock</a>
 													</div>
 													<div ng-show="server.status == 'VERIFY_RESIZE'">
-													<a data-ng-click="onResizeVerify()">Confirm Resize</a>
-													| <a data-ng-click="onResizeRevert()">Revert Resize</a>
+													<a data-ng-click="onResizeVerify()">Confirm</a>
+													| <a data-ng-click="onResizeRevert()">Revert</a>
 													</div>
 												</td>
 											</tr>
@@ -63,8 +62,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="text-weight: bold">Config Drive</td>
-								<td>{{server.configDrive}}</td>
+								<td style="text-weight: bold">Disk Config</td>
+								<td>{{server['OS-DCF:diskConfig']}}</td>
 							</tr>
 							<tr>
 								<td style="text-weight: bold">Created</td>
@@ -128,11 +127,9 @@
 												<td style="border: 0; text-align: right">
 													{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk
 												</td>
-												<g:if test="{{server.status == 'ACTIVE'}}">
 													<td style="border: 0">
-														<a data-bootstrap-modal="app/compute/views/servers/resize.html">Resize</a>
+														<a data-bootstrap-modal="app/compute/views/servers/resize.html" ng-show="server.status == 'ACTIVE'">Resize</a>
 													</td>
-												</g:if>
 											</tr>
 										</tbody>
 									</table>
@@ -148,11 +145,11 @@
 							</tr>
 							<tr>
 								<td style="text-weight: bold">Tenant ID</td>
-								<td>{{server.tenantId}}</td>
+								<td>{{server.tenant_id}}</td>
 							</tr>
 							<tr>
 								<td style="text-weight: bold">User ID</td>
-								<td>{{server.userId}}</td>
+								<td>{{server.user_id}}</td>
 							</tr>
 						</tbody>
 					</table>
