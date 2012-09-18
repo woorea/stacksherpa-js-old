@@ -8,6 +8,10 @@ var connect = require('connect');
 
 var route = router();
 
+var headers_not_supported = [
+	"connection","host","accept-language","origin","user-agent","pragma","cache-control","accept-encoding","x-requested-with","referer","x-uri","cookie"
+]
+
 route.all('/api', function(req, res) {
 	
 	
@@ -30,25 +34,38 @@ route.all('/api', function(req, res) {
 				var options = urls.parse(xuri);
 
 				options.method = req.method
+				
+				options.headers = {}
+				
+				for(req_header in req.headers) {
+					if(headers_not_supported.indexOf(req_header) == -1) {
+						options.headers[req_header] = req.headers[req_header];
+						console.log("added: " + req_header + "==" + req.headers[req_header])
+					}
+				}
+				
+				/*
 				options.headers = {
 					"accept" : "application/json",
 					"content-type" : req.headers["content-type"] || "application/json",
 					"content-length" : req.headers["content-length"] || 0
 				}
-
+				
+				
 				if(req.headers["x-auth-token"]) {
 					options.headers["x-auth-token"] = req.headers["x-auth-token"];
 				}
-
+				*/
 				var responseHandler = function(pres) {
+					
 					res.setHeader("Content-Type", pres.headers["content-type"]);
 					
 					pres.on("data", function(chunk) {
-						res.write(chunk);
+						var flushed = res.write(chunk);
 					});
 					
 					pres.on("end", function() {
-						res.end();
+						res.end("");
 					});
 				}
 				
@@ -62,9 +79,16 @@ route.all('/api', function(req, res) {
 				preq.on("error", function(chunk) {
 					res.end("Internal Error");
 				});
-
+				
+				preq.on("drain", function() {
+					req.resume();
+				});
+				
 				req.on("data", function(chunk) {
-					preq.write(chunk);
+					var flushed = preq.write(chunk);
+					if(!flushed) {
+						req.pause();
+					}
 				});
 
 				req.on("end", function(chunk) {
