@@ -68,7 +68,7 @@ route.all('/api', function(req, res) {
 				});
 
 				req.on("end", function(chunk) {
-					preq.end(chunk);
+					preq.end("");
 				});
 			} catch (e) {
 				res.end("");
@@ -121,7 +121,7 @@ route.get('/swift/download', function(req, res) {
 	});
 
 	req.on("end", function(chunk) {
-		preq.end(chunk);
+		preq.end();
 	});
 	
 });
