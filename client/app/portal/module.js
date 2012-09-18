@@ -139,10 +139,12 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	
 	$scope.providers = stacksherpa.config.providers;
 	
-	
-	
-	$scope.$watch('provider.name', function() {
-		$scope.endpoint = $scope.provider.identity.endpoints[0].publicURL;
+	$scope.$watch('provider', function() {
+		if($scope.provider.identity.endpoints.length) {
+			$scope.endpoint = $scope.provider.identity.endpoints[0].publicURL;
+		} else {
+			$scope.endpoint = ""
+		}
 		$scope.authentication = $scope.provider.identity.authentication[0];
 		$scope.auth = {
 			passwordCredentials : {
