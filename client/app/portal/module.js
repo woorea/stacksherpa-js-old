@@ -38,13 +38,17 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams, OpenStack) {
 	$scope.$routeParams = $routeParams;
 	
 	if($scope.$root.isLoggedIn) {
+		
+		$scope.access = OpenStack.getAccess();
+		
+		$scope.provider = OpenStack.getProvider();
 
 		$scope.main_menu = []
 
 		if($routeParams.tenant) {
 			$scope.isKeystoneAdmin = _.intersection(
-				_.pluck(OpenStack.getAccess().user.roles, 'name'),
-				OpenStack.getProvider().identity.admin_roles
+				_.pluck($scope.access.user.roles, 'name'),
+				$scope.provider.identity.admin_roles
 			).length > 0
 
 			if($scope.isKeystoneAdmin) {
@@ -52,12 +56,12 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams, OpenStack) {
 					name : "Identity",
 					type : "identity",
 					endpoints : [
-						{ region : OpenStack.getProvider().title }
+						{ region : $scope.provider.title }
 					]
 				});
 			}
 
-			angular.forEach(OpenStack.getAccess().serviceCatalog, function(service) {
+			angular.forEach($scope.access.serviceCatalog, function(service) {
 				//check if this is a real openstack service
 				if(_.include(['compute','object-store'], service.type) && service.endpoints[0].region) {
 					$scope.main_menu.push(service);
@@ -230,7 +234,7 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 		});
 	}
 	
-	$scope.onRefresh(false);
+	$scope.onRefresh(true);
 
 });
 portal.controller("TenantCtrl",function($scope, OpenStack) {

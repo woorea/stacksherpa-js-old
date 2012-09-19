@@ -4,7 +4,7 @@
 		<tr>
 			<td colspan="3">
 				<label>Name</label>
-				<input type="text" placeholder="Type something…" ng-model="server.name" style="width: 96%"/>
+				<input type="text" placeholder="" ng-model="server.name" style="width: 96%"/>
 				<span class="help-block"></span>
 			</td>
 			<td>
@@ -21,17 +21,17 @@
 			</td>
 			<td>
 				<label>Min.</label>
-				<input name="server.min" type="number" ng-model="server.min" class="span1"/>
+				<input type="number" ng-model="server.min_count" class="span1"/>
 				<span class="help-block"></span>
 			</td>
 			<td>
 				<label>Max.</label>
-				<input name="server.max" type="number" ng-model="server.max" class="span1"/>
+				<input type="number" ng-model="server.max_count" class="span1"/>
 				<span class="help-block"></span>
 			</td>
 			<td>
 				<label>Disk Config</label>
-				<select ng-model="server.diskConfig" ng-options="opt for opt in ['MANUAL','AUTO']" />
+				<select ng-model="server['OS-DCF:diskConfig']" ng-options="opt for opt in ['MANUAL','AUTO']" />
 				<span class="help-block"></span>
 			</td>
 		</tr>

@@ -286,14 +286,14 @@ openstack.run(function(OpenStack) {
 				opts.success(data.floating_ips);
 			}).error(default_error_handler);
 		},
-		allocate : function(region, server, callback) {
+		allocate : function(region, data, callback) {
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "POST",
 				url : endpoint + "/os-floating-ips",
-				data : {server : server}
+				data : data
 			}).success(function(data, status, headers, config) {
 				callback();
 			}).error(default_error_handler);

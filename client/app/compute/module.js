@@ -49,23 +49,29 @@ compute.config(function($routeProvider) {
 });
 compute.controller("ComputeCtrl",function($scope, $location, $routeParams, OpenStack) {
 	
+	$scope.access = OpenStack.getAccess();
+	
+	$scope.hasRole = function(role_name) {
+		return _.include(_.pluck($scope.access.user.roles, 'name'), role_name);
+	}
+	
+	
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 
 	$scope.onDelete = function(server) {
-		
 		if(typeof server != 'undefined') {
-			OpenStack.Servers.delete($regionParams.region, server.id, function() {
-				$scope.onRefresh();
-			});
+			OpenStack.Servers.delete($routeParams.region, server.id, function() {});
 		} else {
 			angular.forEach($scope.servers, function(server) {
 				if(server.checked) {
-					OpenStack.Servers.delete($routeParams.region, server.id, function() { });
+					OpenStack.Servers.delete($routeParams.region, server.id, function() {});
 				}
 			});
 		}
-		
+		setTimeout(function() {
+			$scope.onRefresh(true);
+		}, 15000);
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -92,7 +98,6 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
 
 	$scope.onPause = function() {
-		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { pause : {} }, function(data) {
 			$scope.server.status = 'PAUSED';
 			$scope.onRefresh(true);
@@ -240,7 +245,7 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 	
 	$scope.resize = {
 		flavorRef : $scope.server.flavor.id,
-		diskConfig : ""
+		auto_disk_config : $scope.server['OS-DCF:diskConfig'] == 'AUTO'
 	}
 	
 	$scope.onResize = function() {
@@ -270,7 +275,7 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 		//accessIPv6 : "",
 		metadata : $scope.server.metadata,
 		personality : [],
-		diskConfig : 'AUTO'
+		auto_disk_config : $scope.server['OS-DCF:diskConfig'] == 'AUTO'
 	}
 	
 	$scope.onRebuild = function() {
@@ -365,16 +370,18 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 	$scope.server = {
 		metadata : {},
 		personality : [],
-		securityGroups : [{name : 'default'}],
-		min : 1,
-		max : 1,
-		diskConfig : 'AUTO'
+		security_groups : [{name : 'default'}],
+		min_count : 1,
+		max_count : 1,
+		'OS-DCF:diskConfig' : 'AUTO'
 	}
 	
 	$scope.onLaunch = function() {
 		OpenStack.Servers.create($routeParams.region, $scope.server, function(data) {
-			$scope.$root.$broadcast('servers.refresh');
 			$scope.$root.$broadcast('modal.hide');
+			setTimeout(function() {
+				$scope.$root.$broadcast('servers.refresh');
+			}, 1000);
 		});
 	}
 	
@@ -449,22 +456,20 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		
 		if(typeof image != 'undefined') {
 			
-			OpenStack.Images.delete($routeParams.region, image.id, function() {
-				$scope.onRefresh(true);
-			});
+			OpenStack.Images.delete($routeParams.region, image.id, function() { });
 			
 		} else {
 			angular.forEach($scope.images, function(image) {
 				if(image.checked) {
 					
-					OpenStack.Images.delete($routeParams.region, image.id, function() {
-						
-					});
+					OpenStack.Images.delete($routeParams.region, image.id, function() {});
 					
 				}
 			});
 		}
-		
+		setTimeout(function() {
+			$scope.onRefresh(true);
+		}, 2000);
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -602,7 +607,14 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 	}
 	
 	$scope.onCreate = function() {
-		$scope.$root.$broadcast('modal.hide');
+		
+		OpenStack.Flavors.create({region : $routeParams.region, data : {
+			flavor : $scope.flavor
+		}, success : function(data) {
+			$scope.$root.$broadcast('flavors.refresh');
+			$scope.$root.$broadcast('modal.hide');
+		}});
+
 	}
 	
 });
@@ -616,9 +628,7 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 				removeFloatingIp : {
 					address : floatingIp.ip
 				}
-			}, function(data) {
-				$scope.onRefresh();
-			});
+			}, function(data) { });
 			
 		} else {
 			angular.forEach($scope.floating_ips, function(floatingIp) {
@@ -627,11 +637,13 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 					removeFloatingIp : {
 						address : floatingIp.ip
 					}
-				}, function(data) {
-				});
+				}, function(data) { });
 				
 			});
 		}
+		setTimeout(function() {
+			$scope.onRefresh(true);
+		}, 15000);
 	}
 
 	$scope.onDeallocate = function(floatingIp) {
@@ -853,24 +865,32 @@ compute.controller("SnapshotShowCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var volume_id = ""
-	if(typeof $scope.volumes != 'undefined') {
-		volume_id = $scope.volumes[0].id
-	}
-	
-	$scope.snapshot = {
-		"volume_id": volume_id,
-		"display_name": "snap-002",
-		"display_description": "Daily backup",
-		"force": true
-	}
-	
-	$scope.onCreate = function() {
-		OpenStack.Snapshots.create($routeParams.region, $scope.snapshot, function(data) {
-			$scope.$root.$broadcast('snapshots.refresh');
+	OpenStack.Volumes.list({region : $routeParams.region, refresh : true, success : function(volumes) {
+		$scope.volumes = volumes;
+		if($scope.volumes.length) {
+			var volume_id = ""
+			if(typeof $scope.volumes != 'undefined') {
+				volume_id = $scope.volumes[0].id
+			}
+
+			$scope.snapshot = {
+				"volume_id": volume_id,
+				"display_name": "snap-002",
+				"display_description": "Daily backup",
+				"force": true
+			}
+
+			$scope.onCreate = function() {
+				OpenStack.Snapshots.create($routeParams.region, $scope.snapshot, function(data) {
+					$scope.$root.$broadcast('snapshots.refresh');
+					$scope.$root.$broadcast('modal.hide');
+				});
+			}
+		} else {
+			alert('You do not have any volume yet');
 			$scope.$root.$broadcast('modal.hide');
-		});
-	}
+		}
+	}});
 	
 });
 compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {

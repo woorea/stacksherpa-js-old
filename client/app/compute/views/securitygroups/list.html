@@ -22,7 +22,7 @@
 			<thead>
 				<tr>
 					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
-					<th>Tenant</th>
+					<th ng-show="hasRole('admin')">Tenant</th>
 					<th>Name</th>
 					<th>Description</th>
 					<th><br /></th>
@@ -31,7 +31,7 @@
 			<tbody>
 				<tr ng-repeat="item in security_groups">
 					<td><input type="checkbox" ng-model="item.checked" /></td>
-					<td>{{item.tenant_id}}</td>
+					<td ng-show="hasRole('admin')">{{item.tenant_id}}</td>
 					<td>{{item.name}}</td>
 					<td>{{item.description}}</td>
 					<td class="btn-toolbar">

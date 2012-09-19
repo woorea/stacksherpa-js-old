@@ -1,0 +1,23 @@
+<div>
+	<div style="overflow-y: auto">
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<label>Name</label>
+				<input type="text" placeholder="" ng-model="server.name" style="width: 96%"/>
+				<span class="help-block"></span>
+			</td>
+			<td>
+				<label>Administration Password</label>
+				<input type="password" ng-model="server.adminPass" />
+				<span class="help-block"></span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<label><input type="checkbox" ng-model="server.auto_disk_config" /> Auto Disk Config</label>
+			</td>
+		</tr>
+	</table>
+	</div>
+</div>

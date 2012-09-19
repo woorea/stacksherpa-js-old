@@ -9,44 +9,44 @@
 				<tr>
 					<td colspan="2">
 						<label>Name</label>
-						<input type="text" data-ng-model="flavor.name" placeholder="Type something…" value="${fieldValue(bean : item, field : 'name')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="name"/></span>
+						<input type="text" data-ng-model="flavor.name" placeholder="" required />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>RAM</label>
-						<input type="text" data-ng-model="flavor.ram" placeholder="Type something…" value="${fieldValue(bean : item, field : 'ram')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="ram"/></span>
+						<input type="number" data-ng-model="flavor.ram" placeholder="" required />
+						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>vCPUs</label>
-						<input type="text" data-ng-model="flavor.vcpus" placeholder="Type something…" value="${fieldValue(bean : item, field : 'vcpus')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="vcpus"/></span>
+						<input type="number" data-ng-model="flavor.vcpus" placeholder="" required />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Root Disk (Gb)</label>
-						<input type="text" data-ng-model="flavor.disk" placeholder="Type something…" value="${fieldValue(bean : item, field : 'disk')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="disk"/></span>
+						<input type="number" data-ng-model="flavor.disk" placeholder="" required />
+						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>Swap</label>
-						<input type="text" data-ng-model="flavor.swap" value="${fieldValue(bean : item, field : 'swap')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="swap"/></span>
+						<input type="number" data-ng-model="flavor.swap" placeholder="" required />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				</tr>
 					<td>
 						<label>Ephemeral Disk (Gb)</label>
-						<input type="text" data-ng-model="flavor.ephemeralGb" value="${fieldValue(bean : item, field : 'ephemeralGb')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="ephemeralGb"/></span>
+						<input type="number" data-ng-model="flavor['OS-FLV-EXT-DATA:ephemeral']" required />
+						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>RX/TX</label>
-						<input type="text" data-ng-model="flavor.rxtxFactor" value="${fieldValue(bean : item, field : 'rxtxFactor')}">
-						<span class="help-block"><g:renderErrors bean="${item}" as="list" field="rxtxFactor"/></span>
+						<input type="text" data-ng-model="flavor.rxtx_factor" />
+						<span class="help-block"></span>
 					</td>
 				</tr>
 			</table>

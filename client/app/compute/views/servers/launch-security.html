@@ -3,11 +3,15 @@
 	<tbody>
 		<tr>
 			<td>Key Pair</td>
-			<td><select data-ng-model="server.keyPairName" data-ng-options="keyPair.keypair.name as keyPair.keypair.name for keyPair in keyPairs"></select></td>
+			<td>
+				<select data-ng-model="server.key_name" data-ng-options="keyPair.name as keyPair.name for keyPair in keyPairs">
+					<option value="">Select a key pair</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td>Security Groups</td>
-			<td><select data-ng-model="server.securityGroups" data-ng-options="securityGroup as securityGroup.name for securityGroup in securityGroups" multiple="multiple"></select></td>
+			<td><select data-ng-model="server.security_groups" data-ng-options="securityGroup as securityGroup.name for securityGroup in securityGroups" multiple="multiple"></select></td>
 		</tr>
 	<tbody>
 </table>

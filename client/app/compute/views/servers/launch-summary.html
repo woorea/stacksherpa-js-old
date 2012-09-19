@@ -12,7 +12,7 @@
 				<td>{{server.name}}</td>
 				<td>{{server.flavorRef}}</td>
 				<td>{{server.imageRef}}</td>
-				<td>{{server.min}} - {{server.min}}</td>
+				<td>{{server.min_count}} - {{server.max_count}}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -45,11 +45,11 @@
 		<tbody>
 			<tr>
 				<th scope="row">KeyPair</th>
-				<td>{{server.keyPairName}}</td>
+				<td>{{server.key_name}}</td>
 			</tr>
 			<tr>
 				<th scope="row">Security Groups</th>
-				<td>{{server.securityGroups|json}}</td>
+				<td>{{server.security_groups|json}}</td>
 			</tr>
 		</tbody>
 	</table>

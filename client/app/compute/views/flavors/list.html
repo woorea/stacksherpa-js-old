@@ -44,7 +44,7 @@
 							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="${createLink(action: 'delete', params : [flavorId : item.id])}"><i class="icon-remove"></i> Delete</a></li>
+								<li><a ng-click="onDelete(flavor)"><i class="icon-remove"></i> Delete</a></li>
 							</ul>
 						</div>
 					</td>

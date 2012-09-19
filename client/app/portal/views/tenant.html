@@ -34,7 +34,7 @@
 			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li ng-repeat="endpoint in services['object-store'].endpoints">
-					<a ng-href="#/{{$routeParams.tenant}}/storage/{{endpoint.region}}/containers">{{endpoint.region}}</a>
+					<a ng-href="#/{{$routeParams.tenant}}/object-store/{{endpoint.region}}/containers">{{endpoint.region}}</a>
 				</li>
 			</ul>
 		</div>

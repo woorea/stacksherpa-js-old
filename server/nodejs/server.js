@@ -9,7 +9,7 @@ var connect = require('connect');
 var route = router();
 
 var headers_not_supported = [
-	"connection","host","accept-language","origin","user-agent","pragma","cache-control","accept-encoding","x-requested-with","referer","x-uri","cookie"
+	"connection","host","accept-language","origin","user-agent","pragma","cache-control","accept-encoding","x-requested-with","referer","x-uri","cookie","accept-charset"
 ]
 
 route.all('/api', function(req, res) {
