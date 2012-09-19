@@ -16,6 +16,9 @@
 							<label>Image File</label>
 							<input type="file" file-upload />
 							<span class="help-block"></span>
+							<div class="progress progress-striped active">
+							  <div class="bar" style="width: {{upload_progress}}%;"></div>
+							</div>
 					</td>
 					<td colspan="3" ng-hide="creation_method == 'upload'">
 							<label>Image URL</label>

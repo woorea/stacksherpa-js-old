@@ -80,7 +80,7 @@ route.all('/api', function(req, res) {
 					}
 				});
 
-				req.on("end", function(chunk) {
+				req.on("end", function() {
 					preq.end("");
 				});
 			} catch (e) {

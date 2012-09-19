@@ -509,6 +509,8 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	$scope.creation_method = "upload"
 	
+	$scope.upload_progress = 0;
+	
 	$scope.image = {
 		"X-Auth-Token" : OpenStack.getAccess().token.id,
 		"X-URI" : endpoint + "/images",
@@ -528,27 +530,49 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	$scope.onUpload = function() {
 		
-		if ($scope.creation_method == 'upload') {
-			$scope.image["x-image-meta-size"] = $scope.file.size;
-		}
-
-		$.ajax({
+		var ajaxOptions = {
 			crossDomain : true,
 			type: "POST",
 			url : OpenStack.proxy,
 			headers : $scope.image,
-	        data: $scope.creation_method == 'upload' ? $scope.file : "",
+			data: $scope.creation_method == 'upload' ? $scope.file : "",
 			dataType : "json",
-	        processData: false,
-	        contentType: "application/octet-stream",
-	        success: function(data) {
+			processData: false,
+			contentType: "application/octet-stream",
+			success: function(data) {
 				$scope.$root.$broadcast('images.refresh');
 				$scope.$root.$broadcast('modal.hide');
-	        },
-	        error: function(data) {
-	          console.log(data);
-	        }
-	      });
+			},
+			error: function(data) {
+				console.log(data);
+			}
+		}
+		
+		if ($scope.creation_method == 'upload') {
+			$scope.image["x-image-meta-size"] = $scope.file.size;
+			ajaxOptions.xhr = function() {
+				var xhr = new window.XMLHttpRequest();
+			    //Upload progress
+			    xhr.upload.addEventListener("progress", function(evt){
+			      if (evt.lengthComputable) {
+					$scope.$apply(function() {
+						$scope.upload_progress = Math.floor((evt.loaded / evt.total) * 100);
+					});
+			      }
+			    }, false);
+			    //Download progress
+			    xhr.addEventListener("progress", function(evt){
+			      if (evt.lengthComputable) {
+			        var percentComplete = evt.loaded / evt.total;
+			        //Do something with download progress
+			        console.log(percentComplete);
+			      }
+			    }, false);
+			    return xhr;
+			}
+		}
+		
+		$.ajax(ajaxOptions)
 	}
 	
 });
