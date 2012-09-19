@@ -7,9 +7,9 @@
 		<fieldset>
 			<table class="table-form">
 				<tr>
-					<td colspan="2">
+					<td colspan="3">
 						<label>Name</label>
-						<input type="text" data-ng-model="flavor.name" placeholder="" required />
+						<input type="text" data-ng-model="flavor.name" placeholder="" style="width: 98%" required />
 						<span class="help-block"></span>
 					</td>
 				</tr>
@@ -24,20 +24,18 @@
 						<input type="number" data-ng-model="flavor.vcpus" placeholder="" required />
 						<span class="help-block"></span>
 					</td>
-				</tr>
-				<tr>
 					<td>
 						<label>Root Disk (Gb)</label>
 						<input type="number" data-ng-model="flavor.disk" placeholder="" required />
 						<span class="help-block"></span>
 					</td>
+				</tr>
+				<tr>
 					<td>
 						<label>Swap</label>
 						<input type="number" data-ng-model="flavor.swap" placeholder="" required />
 						<span class="help-block"></span>
 					</td>
-				</tr>
-				</tr>
 					<td>
 						<label>Ephemeral Disk (Gb)</label>
 						<input type="number" data-ng-model="flavor['OS-FLV-EXT-DATA:ephemeral']" required />

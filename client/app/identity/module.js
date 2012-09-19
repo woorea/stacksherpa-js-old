@@ -57,8 +57,7 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/tenants/" + item.id
-			}).success(function(data, status, headers, config) {
-				$scope.onRefresh();
+			}).success(function(data, status, headers, config) {	
 			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
@@ -66,18 +65,22 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 					OpenStack.ajax({
 						method : "DELETE",
 						url : endpoint + "/tenants/" + item.id
-					}).success(function(data, status, headers, config) {
-						
-					}).error(identity_error_handler);
+					})
+					.success(function(data, status, headers, config) {})
+					.error(identity_error_handler);
 				}
 			});
 		}
+		setTimeout(function() {
+			$scope.onRefresh(true);
+		},3000);
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/tenants"
+			url : endpoint + "/tenants",
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.tenants = data.tenants;
 		}).error(identity_error_handler);
@@ -87,7 +90,7 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {

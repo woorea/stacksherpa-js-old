@@ -181,17 +181,15 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 			url : $scope.endpoint + "/tokens",
 			data : {auth : $scope.auth[$scope.authentication]}
 		}).success(function(data, status, headers, config) {
-			if(data.access) {
-				$scope.$root.isLoggedIn = true;
-				OpenStack.setProvider($scope.provider);
-				OpenStack.setAccess(data.access);
-				$scope.$root.$broadcast('new.access');
-				$location.path("/unscoped");
-			} else {
-				alert('UNAUTHORIZED : Invalid credentials');
-			}
+			$scope.$root.isLoggedIn = true;
+			OpenStack.setProvider($scope.provider);
+			OpenStack.setAccess(data.access);
+			$scope.$root.$broadcast('new.access');
+			$location.path("/unscoped");
 		}).error(function(data, status, headers, config) {
-			alert(status);
+			if(data.error) {
+				alert(data.error.message);
+			}
 		})
 	}
 	
@@ -214,7 +212,9 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 			$.cookie("X-Auth-Token", data.access.token.id);
 			$location.path("/" + tenant.name + "/dashboard");
 		}).error(function(data, status, headers, config) {
-			alert(status);
+			if(data.error) {
+				alert(data.error.message);
+			}
 		})
 	}
 	
@@ -231,6 +231,10 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 			OpenStack.setTenants(data.tenants);
 			$scope.tenants = data.tenants;
 		}).error(function(data, status, headers, config) {
+			$location.path("/login");
+			if(data.error) {
+				alert(data.error.message);
+			}
 		});
 	}
 	

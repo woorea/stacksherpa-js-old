@@ -10,42 +10,36 @@
 
 				<tr>
 					<td>
-						<label>Username</label>
-						<input type="text" data-ng-model="user.username" />
-						<span class="help-block">Example block-level help text here.</span>
+						<label>Name</label>
+						<input type="text" data-ng-model="user.name" />
+						<span class="help-block"></span>
 					</td>
-				</tr>
-				<tr>
+					
 					<td>
 						<label>Password</label>
-						<input type="text" data-ng-model="user['OS-KSADM:password']" />
-						<span class="help-block">Example block-level help text here.</span>
+						<!-- OS-KSADM:password ??? -->
+						<input type="text" data-ng-model="user.password" />
+						<span class="help-block"></span>
 					</td>
-				</tr>
-				<tr>
 					<td>
 						<label>Default Tenant</label>
 						<select data-ng-model="user.tenantId" ng-options="tenant.id as tenant.name for tenant in tenants">
 							<option value="">Select a Tenant ...</option>
 						</select>
-						<span class="help-block">Example block-level help text here.</span>
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label>Name</label>
-						<input type="text" data-ng-model="user.name" />
-						<span class="help-block">Example block-level help text here.</span>
+						<label>Username</label>
+						<input type="text" data-ng-model="user.username" />
+						<span class="help-block"></span>
 					</td>
-				</tr>
-				<tr>
 					<td>
 						<label>eMail</label>
 						<input type="text" data-ng-model="user.email" />
-						<span class="help-block">Example block-level help text here.</span>
+						<span class="help-block"></span>
 					</td>
-				</tr>
-				<tr>
 					<td>
 						<label class="checkbox">
 							<input type="checkbox" data-ng-model="user.enabled" value="true" /> Enabled

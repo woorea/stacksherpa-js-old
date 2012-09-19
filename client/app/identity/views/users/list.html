@@ -5,8 +5,6 @@
 </div>
 <div class="row">
 	<div class="span12">
-		<h1>User List</h1>
-		<hr />
 		<div class="well">
 			<table style="width: 100%">
 				<tr>
@@ -25,7 +23,7 @@
 				<tr>
 					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
 					<th>Id</th>
-					<th>Username</th>
+					<th>Name</th>
 					<th>eMail</th>
 					<th>Tenant</th>
 					<th>Enabled</th>
@@ -36,7 +34,7 @@
 				<tr ng-repeat="item in users">
 					<td><input type="checkbox" ng-model="item.checked" /></td>
 					<td>{{item.id}}</td>
-					<td>{{item.username}}</td>
+					<td>{{item.name}}</td>
 					<td>{{item.email}}</td>
 					<td>
 						<a href="#/{{$routeParams.tenant}}/identity/tenants/{{item.tenantId}}" ng-show="item.tenantId.length">{{item.tenantId}}</a>
