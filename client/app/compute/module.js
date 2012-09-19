@@ -505,7 +505,7 @@ compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 
 compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
-	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL") + "/v1";
+	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");
 	
 	$scope.creation_method = "upload"
 	

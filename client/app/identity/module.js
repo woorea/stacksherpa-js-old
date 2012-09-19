@@ -28,9 +28,6 @@ identity.config(function($routeProvider) {
 		.when("/:tenant/identity/endpoints", {
 			controller : "EndpointListCtrl", templateUrl : "app/identity/views/endpoints/list.html", menu : "endpoints"
 		})
-		.when("/:tenant/identity/endpoints/:id", {
-			controller : "EndpointShowCtrl", templateUrl : "app/identity/views/endpoints/show.html", menu : "endpoints"
-		})
 		.when("/:tenant/identity", { redirectTo : function(routeParams, locationPath, locationSearch) {
 			return locationPath + "/tenants";
 		}})
@@ -409,7 +406,8 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 	$scope.onRefreshEndpoints = function() {
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/endpoints"
+			url : endpoint + "/endpoints",
+			refresh : true
 		}).success(function(data, status, headers, config) {
 			$scope.endpoints = data.endpoints.filter(function(endpoint) {
 				return (endpoint.service_id.localeCompare($routeParams.id) == 0);
@@ -467,37 +465,22 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 			});
 		}
 	}
-
-	/*
-	$scope.onRefresh = function() {
-		OpenStack.ajax({
-			method : "GET",
-			url : endpoint + "/endpoints"
-		}).success(function(data, status, headers, config) {
-			$scope.endpoints = data.endpoints;
-		}).error(function(data, status, headers, config) {
-
-		});
+	
+	$scope.onEdit = function(endpoint) {
+		$scope.endpoint = endpoint;
 	}
 	
-	$scope.$on('endpoints.refresh', function(event, args) {
-		$scope.onRefresh();
-	});
-	
-	$scope.onRefresh();
-	*/
-	
-});
-identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack) {
-	
-	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
-
-	OpenStack.ajax({
-		method : "GET",
-		url : endpoint + "/endpoints/" + $routeParams.id
-	}).success(function(data, status, headers, config) {
-		$scope.endpoint = data.endpoint;
-	}).error(identity_error_handler);
+	$scope.onUpdate = function() {
+		OpenStack.ajax({
+			method : "PUT",
+			url : endpoint + "/endpoints/" + $scope.endpoint.id,
+			data : { "endpoint" : $scope.endpoint }
+		}).success(function(data, status, headers, config) {
+			$scope.endpoint = {}
+			$scope.onRefreshEndpoints();
+			$scope.$root.$broadcast('modal.hide');
+		}).error(identity_error_handler);
+	}
 	
 });
 identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStack) {
