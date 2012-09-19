@@ -468,9 +468,19 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 	}
 
 	$scope.onRefresh = function(sync) {
-		
+		if($scope.poller) {
+			clearTimeout($scope.poller);
+		}
 		OpenStack.Images.list({service : "compute", region : $routeParams.region, refresh : sync, success : function(images) {
 			$scope.images = images;
+			var poll = images.filter(function(image) {
+				return image.status == 'SAVING'
+			}).length > 0;
+			if(poll) {
+				$scope.poller = setTimeout(function() {
+					$scope.onRefresh(true);
+				}, 60000);
+			}
 		}});
 
 	}
@@ -492,6 +502,8 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL") + "/v1";
 	
+	$scope.creation_method = "upload"
+	
 	$scope.image = {
 		"X-Auth-Token" : OpenStack.getAccess().token.id,
 		"X-URI" : endpoint + "/images",
@@ -503,16 +515,24 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 		"x-image-meta-store" : "file"
 	}
 	
+	if($scope.creation_method == 'download') {
+		$scope.image["x-glance-api-copy-from"] = $scope.href;
+	} else if ($scope.creation_method == 'href') {
+		$scope.image["x-image-meta-location"] = $scope.href;
+	}
+	
 	$scope.onUpload = function() {
 		
-		$scope.image["x-image-meta-size"] = $scope.file.size;
-		
+		if ($scope.creation_method == 'upload') {
+			$scope.image["x-image-meta-size"] = $scope.file.size;
+		}
+
 		$.ajax({
 			crossDomain : true,
 			type: "POST",
 			url : OpenStack.proxy,
 			headers : $scope.image,
-	        data: $scope.file,
+	        data: $scope.creation_method == 'upload' ? $scope.file : "",
 			dataType : "json",
 	        processData: false,
 	        contentType: "application/octet-stream",

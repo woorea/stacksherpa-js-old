@@ -44,20 +44,9 @@ route.all('/api', function(req, res) {
 					}
 				}
 				
-				/*
-				options.headers = {
-					"accept" : "application/json",
-					"content-type" : req.headers["content-type"] || "application/json",
-					"content-length" : req.headers["content-length"] || 0
-				}
-				
-				
-				if(req.headers["x-auth-token"]) {
-					options.headers["x-auth-token"] = req.headers["x-auth-token"];
-				}
-				*/
 				var responseHandler = function(pres) {
 					
+					res.statusCode = pres.statusCode;
 					res.setHeader("Content-Type", pres.headers["content-type"]);
 					
 					pres.on("data", function(chunk) {

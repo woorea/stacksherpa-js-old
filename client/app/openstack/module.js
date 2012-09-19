@@ -87,11 +87,18 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 
 });
 
-var default_error_handler = function(data, status, headers, config) { 
-	console.log(data);
-	console.log(status);
-	console.log(headers);
-	console.log(config);
+var default_error_handler = function(data, status, headers, config) {
+	try {
+		if(data.badRequest) {
+			alert(data.badRequest.message);
+		}
+		console.log(data);
+		console.log(status);
+		console.log(headers);
+		console.log(config);
+	} catch(e) {
+		console.log(e);
+	}
 }
 
 var default_compute_options = {

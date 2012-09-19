@@ -35,6 +35,19 @@ identity.config(function($routeProvider) {
 			return locationPath + "/tenants";
 		}})
 });
+var identity_error_handler = function(data, status, headers, config) {
+	try {
+		if(data.error) {
+			alert(data.error.message);
+		}
+		console.log(data);
+		console.log(status);
+		console.log(headers);
+		console.log(config);
+	} catch(e) {
+		console.log(e);
+	}
+}
 identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
@@ -46,9 +59,7 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 				url : endpoint + "/tenants/" + item.id
 			}).success(function(data, status, headers, config) {
 				$scope.onRefresh();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
 				if(item.checked) {
@@ -57,9 +68,7 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 						url : endpoint + "/tenants/" + item.id
 					}).success(function(data, status, headers, config) {
 						
-					}).error(function(data, status, headers, config) {
-
-					});
+					}).error(identity_error_handler);
 				}
 			});
 		}
@@ -71,36 +80,86 @@ identity.controller("TenantListCtrl",function($scope, $routeParams, OpenStack) {
 			url : endpoint + "/tenants"
 		}).success(function(data, status, headers, config) {
 			$scope.tenants = data.tenants;
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 	
-	$scope.onRefresh();
-
+	$scope.$on('tenants.refresh', function(event, args) {
+		$scope.onRefresh(true);
+	});
 	
+	$scope.onRefresh();
 
 });
 identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/tenants/" + $routeParams.id
+			url : endpoint + "/tenants/" + $routeParams.id,
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.tenant = data.tenant;
-		}).error(function(data, status, headers, config) {
+		}).error(identity_error_handler);
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/users",
+			refresh : sync
+		}).success(function(data, status, headers, config) {
+			if(data.users) {
+				$scope.users = data.users;
+			} else {
+				//weird: if tenant only have one user a object is returned instead of array
+				$scope.users = [data.user]
+			}
+		}).error(identity_error_handler);
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/OS-KSADM/roles",
+			refresh : sync,
+		}).success(function(data, status, headers, config) {
+			$scope.roles = data.roles;
+		}).error(identity_error_handler);
+		OpenStack.ajax({
+			method : "GET",
+			url : endpoint + "/tenants/" + $routeParams.id + "/users",
+			refresh : sync,
+		}).success(function(data, status, headers, config) {
+			$scope.users_on_tenant = data.users;
+			angular.forEach(data.users, function(user) {
+				OpenStack.ajax({
+					method : "GET",
+					url : endpoint + "/tenants/" + $routeParams.id + "/users/" + user.id + "/roles",
+					refresh : sync
+				}).success(function(data, status, headers, config) {
+					user.roles_on_tenant = data.roles;
+				}).error(function(data, status, headers, config) {
 
-		});
+				});
+			});
+		}).error(identity_error_handler);
 	}
 	
-	$scope.$on('tenants.refresh', function(event, args) {
-		$scope.onRefresh();
-	});
+	$scope.addUserOnTenant = function(user_id, role_id) {
+		OpenStack.ajax({
+			method : "PUT",
+			url : endpoint + "/tenants/" + $routeParams.id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh(true)
+		}).error(identity_error_handler);
+	}
 	
-	$scope.onRefresh();
+	$scope.removeUserFromTenant = function(user_id, role_id) {
+		OpenStack.ajax({
+			method : "DELETE",
+			url : endpoint + "/tenants/" + $routeParams.id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id
+		}).success(function(data, status, headers, config) {
+			$scope.onRefresh(true)
+		}).error(identity_error_handler);
+	}
+	
+	$scope.onRefresh(false);
 
 });
 identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack) {
@@ -121,9 +180,7 @@ identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack)
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('tenants.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 
 });
@@ -140,9 +197,7 @@ identity.controller("identity.UserListCtrl",function($scope, $routeParams, OpenS
 				url : endpoint + "/users/" + item.id
 			}).success(function(data, status, headers, config) {
 				$scope.onRefresh(true);
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
 				if(item.checked) {
@@ -151,16 +206,13 @@ identity.controller("identity.UserListCtrl",function($scope, $routeParams, OpenS
 						url : endpoint + "/users/" + item.id
 					}).success(function(data, status, headers, config) {
 						
-					}).error(function(data, status, headers, config) {
-
-					});
+					}).error(identity_error_handler);
 				}
 			});
 		}
 	}
 
 	$scope.onRefresh = function(sync) {
-		console.log("refresh");
 		OpenStack.ajax({
 			method : "GET",
 			url : endpoint + "/users",
@@ -172,9 +224,7 @@ identity.controller("identity.UserListCtrl",function($scope, $routeParams, OpenS
 				//weird: if tenant only have one user a object is returned instead of array
 				$scope.users = [data.user]
 			}
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 	
 	$scope.$on('users.refresh', function(event, args) {
@@ -193,9 +243,7 @@ identity.controller("UserShowCtrl",function($scope, $routeParams, OpenStack) {
 		url : endpoint + "/users/" + $routeParams.id
 	}).success(function(data, status, headers, config) {
 		$scope.user = data.user;
-	}).error(function(data, status, headers, config) {
-	
-	});
+	}).error(identity_error_handler);
 	
 });
 identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
@@ -211,9 +259,7 @@ identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 		url : endpoint + "/tenants"
 	}).success(function(data, status, headers, config) {
 		$scope.tenants = data.tenants;
-	}).error(function(data, status, headers, config) {
-
-	});
+	}).error(identity_error_handler);
 
 	$scope.onCreate = function() {
 		OpenStack.ajax({
@@ -223,9 +269,7 @@ identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('users.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 
 });
@@ -241,9 +285,7 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 				url : endpoint + "/OS-KSADM/roles/" + item.id
 			}).success(function(data, status, headers, config) {
 				$scope.onRefresh();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
 				if(item.checked) {
@@ -252,9 +294,7 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 						url : endpoint + "/OS-KSADM/roles/" + item.id
 					}).success(function(data, status, headers, config) {
 						
-					}).error(function(data, status, headers, config) {
-
-					});
+					}).error(identity_error_handler);
 				}
 			});
 		}
@@ -266,9 +306,7 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 			url : endpoint + "/OS-KSADM/roles"
 		}).success(function(data, status, headers, config) {
 			$scope.roles = data.roles;
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 	
 	$scope.$on('roles.refresh', function(event, args) {
@@ -287,9 +325,7 @@ identity.controller("RoleShowCtrl",function($scope, $routeParams, OpenStack) {
 		url : endpoint + "/OS-KSADM/roles/" + $routeParams.id
 	}).success(function(data, status, headers, config) {
 		$scope.role = data.role;
-	}).error(function(data, status, headers, config) {
-	
-	});
+	}).error(identity_error_handler);
 	
 });
 identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
@@ -308,9 +344,7 @@ identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('users.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 
 });
@@ -327,9 +361,7 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 				url : endpoint + "/OS-KSADM/services/" + item.id
 			}).success(function(data, status, headers, config) {
 				$scope.onRefresh();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
 				if(item.checked) {
@@ -338,9 +370,7 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 						url : endpoint + "/OS-KSADM/services/" + item.id
 					}).success(function(data, status, headers, config) {
 						
-					}).error(function(data, status, headers, config) {
-
-					});
+					}).error(identity_error_handler);
 				}
 			});
 		}
@@ -352,9 +382,7 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 			url : endpoint + "/OS-KSADM/services"
 		}).success(function(data, status, headers, config) {
 			$scope.services = data["OS-KSADM:services"];
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 	
 	$scope.$on('services.refresh', function(event, args) {
@@ -373,9 +401,7 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 		url : endpoint + "/OS-KSADM/services/" + $routeParams.id
 	}).success(function(data, status, headers, config) {
 		$scope.service = data["OS-KSADM:service"];
-	}).error(function(data, status, headers, config) {
-	
-	});
+	}).error(identity_error_handler);
 	
 	$scope.onRefreshEndpoints = function() {
 		OpenStack.ajax({
@@ -385,9 +411,7 @@ identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) 
 			$scope.endpoints = data.endpoints.filter(function(endpoint) {
 				return (endpoint.service_id.localeCompare($routeParams.id) == 0);
 			});
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 	
 	$scope.onRefreshEndpoints();
@@ -410,9 +434,7 @@ identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('services.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 
 });
@@ -428,9 +450,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 				url : endpoint + "/endpoints/" + item.id
 			}).success(function(data, status, headers, config) {
 				$scope.onRefresh();
-			}).error(function(data, status, headers, config) {
-
-			});
+			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.endpoints, function(item) {
 				if(item.checked) {
@@ -439,9 +459,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 						url : endpoint + "/endpoints/" + item.id
 					}).success(function(data, status, headers, config) {
 						
-					}).error(function(data, status, headers, config) {
-
-					});
+					}).error(identity_error_handler);
 				}
 			});
 		}
@@ -476,9 +494,7 @@ identity.controller("EndpointShowCtrl",function($scope, $routeParams, OpenStack)
 		url : endpoint + "/endpoints/" + $routeParams.id
 	}).success(function(data, status, headers, config) {
 		$scope.endpoint = data.endpoint;
-	}).error(function(data, status, headers, config) {
-	
-	});
+	}).error(identity_error_handler);
 	
 });
 identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStack) {
@@ -505,9 +521,12 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 		}).success(function(data, status, headers, config) {
 			$scope.$root.$broadcast('endpoints.refresh');
 			$scope.$root.$broadcast('modal.hide');
-		}).error(function(data, status, headers, config) {
-
-		});
+		}).error(identity_error_handler);
 	}
 
+});
+compute.filter('_rest', function() {
+	return function(array) {
+		return _.rest(array);
+	}
 });
