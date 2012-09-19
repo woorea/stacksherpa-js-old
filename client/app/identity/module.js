@@ -450,7 +450,7 @@ identity.controller("EndpointListCtrl",function($scope, $routeParams, OpenStack)
 				method : "DELETE",
 				url : endpoint + "/endpoints/" + item.id
 			}).success(function(data, status, headers, config) {
-				$scope.onRefresh();
+				$scope.onRefreshEndpoints();
 			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.endpoints, function(item) {
@@ -513,6 +513,11 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 });
 compute.filter('_rest', function() {
 	return function(array) {
-		return _.rest(array);
+		if(array) {
+			return _.rest(array);
+		} else {
+			return []
+		}
+		
 	}
 });
