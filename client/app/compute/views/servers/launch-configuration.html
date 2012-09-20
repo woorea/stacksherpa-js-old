@@ -1,40 +1,32 @@
-<div data-ng-controller="LaunchServerConfigurationCtrl">
-	<div style="overflow-y: auto">
-	<table style="width: 100%">
-		<tr>
-			<td colspan="3">
-				<label>Name</label>
-				<input type="text" placeholder="" ng-model="server.name" style="width: 96%"/>
-				<span class="help-block"></span>
-			</td>
-			<td>
-				<label>Administration Password</label>
-				<input type="password" ng-model="server.adminPass" />
-				<span class="help-block"></span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>Flavor</label>
-				<select ng-model="server.flavorRef" ng-options="flavor.id as flavor.name for flavor in flavors | orderBy:'+ram'" optionValue="${{it.name + ' - ' + it.vcpus + ' vCPUs, ' + it.ram + ' RAM, ' + it.disk + ' Disk'}}"></select>
-				<span class="help-block"></span>
-			</td>
-			<td>
-				<label>Min.</label>
-				<input type="number" ng-model="server.min_count" class="span1"/>
-				<span class="help-block"></span>
-			</td>
-			<td>
-				<label>Max.</label>
-				<input type="number" ng-model="server.max_count" class="span1"/>
-				<span class="help-block"></span>
-			</td>
-			<td>
-				<label>Disk Config</label>
-				<select ng-model="server['OS-DCF:diskConfig']" ng-options="opt for opt in ['MANUAL','AUTO']" />
-				<span class="help-block"></span>
-			</td>
-		</tr>
-	</table>
-	</div>
-</div>
+<table style="width: 100%">
+	<tr>
+		<td colspan="3">
+			<label>Name</label>
+			<input type="text" placeholder="" ng-model="server.name" style="width: 96%"/>
+			<span class="help-block"></span>
+		</td>
+		<td>
+			<label>Administration Password</label>
+			<input type="password" ng-model="server.adminPass" />
+			<span class="help-block"></span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label>Min.</label>
+			<input type="number" ng-model="server.min_count" class="span1"/>
+			<span class="help-block"></span>
+		</td>
+		<td>
+			<label>Max.</label>
+			<input type="number" ng-model="server.max_count" class="span1"/>
+			<span class="help-block"></span>
+		</td>
+		<td>
+			<label>Disk Config</label>
+			<label><input type="radio" name="diskConfig" ng-model="server['OS-DCF:diskConfig']" value="AUTO"/> AUTO</label>
+			<label><input type="radio" name="diskConfig" ng-model="server['OS-DCF:diskConfig']" value="MANUAL"/> MANUAL</label>
+			<span class="help-block"></span>
+		</td>
+	</tr>
+</table>

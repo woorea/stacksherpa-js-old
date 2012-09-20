@@ -4,6 +4,14 @@ body {
 #server-launch.modal {
 	width: 860px;
 	margin: -250px 0 0 -430px;
+	overflow: visible;
+}
+table#server-show {
+	table-layout: fixed;
+	width: 100%;
+}
+table#server-show td {
+	height: 60px;
 }
 table.details {
 	table-layout: fixed;

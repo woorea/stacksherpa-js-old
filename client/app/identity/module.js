@@ -35,7 +35,7 @@ identity.config(function($routeProvider) {
 var identity_error_handler = function(data, status, headers, config) {
 	try {
 		if(data.error) {
-			alert(data.error.message);
+			$.bootstrapGrowl(data.error.message, {type : 'error'});
 		}
 		console.log(data);
 		console.log(status);
@@ -178,6 +178,7 @@ identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack)
 			url : endpoint + "/tenants/",
 			data : { tenant : $scope.tenant }
 		}).success(function(data, status, headers, config) {
+			$.bootstrapGrowl("Tenant created", {type : 'success'});
 			$scope.$root.$broadcast('tenants.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(identity_error_handler);
@@ -267,6 +268,7 @@ identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 			url : endpoint + "/users",
 			data : { user : $scope.user }
 		}).success(function(data, status, headers, config) {
+			$.bootstrapGrowl("User created", {type : 'success'});
 			$scope.$root.$broadcast('users.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(identity_error_handler);
@@ -342,6 +344,7 @@ identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 			url : endpoint + "/OS-KSADM/roles",
 			data : { role : $scope.role }
 		}).success(function(data, status, headers, config) {
+			$.bootstrapGrowl("Role created", {type : 'success'});
 			$scope.$root.$broadcast('users.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(identity_error_handler);
@@ -433,6 +436,7 @@ identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack
 			url : endpoint + "/OS-KSADM/services",
 			data : { "OS-KSADM:service" : $scope.service }
 		}).success(function(data, status, headers, config) {
+			$.bootstrapGrowl("Service created", {type : 'success'});
 			$scope.$root.$broadcast('services.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(identity_error_handler);
@@ -505,6 +509,7 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 			url : endpoint + "/endpoints",
 			data : { "endpoint" : $scope.endpoint }
 		}).success(function(data, status, headers, config) {
+			$.bootstrapGrowl("Endpoint created", {type : 'success'});
 			$scope.$root.$broadcast('endpoints.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}).error(identity_error_handler);

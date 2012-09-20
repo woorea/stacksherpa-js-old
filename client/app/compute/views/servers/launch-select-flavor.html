@@ -1,0 +1,23 @@
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th><br /></th>
+			<th>Name</th>
+			<th>RAM</th>
+			<th>vCPUs</th>
+			<th>Disk</th>
+			<th>RX / TX</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr data-ng-repeat="flavor in flavors">
+			<td><input type="radio" name="flavor" ng-model="$parent.$parent.selected_flavor_index" value="{{$index}}"></td>
+			<td>{{flavor.name}}</td>
+			<td>{{flavor.ram}}</td>
+			<td>{{flavor.vcpus}}</td>
+			<td>{{flavor.disk}}</td>
+			<td>{{flavor.rxtx_factor}}</td>
+		</tr>
+	<tbody>
+</table>

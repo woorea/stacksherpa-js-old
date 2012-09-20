@@ -1,29 +1,27 @@
-<div data-ng-controller="LaunchServerPersonalityCtrl">
-	<table class="table table-stripped">
-		<thead>
-			<tr>
-				<th>Path</th>
-				<th>Contents</th>
-				<th><br /></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><input type="text" ng-model="path" /></td>
-				<td><input type="text" ng-model="contents" /></td>
-				<td style="text-align: center">
-					<button class="btn" data-ng-click="onAddPersonality()"><span class="icon-plus"></span></a>
-				</td>
-			</tr>
-		<tbody>
-		<tbody>
-			<tr data-ng-repeat="personality in server.personality">
-				<td>{{personality.path}}</td>
-				<td>{{personality.contents}}</td>
-				<td style="text-align: center">
-					<button class="btn" data-ng-click="onRemovePersonality(personality.path)"><span class="icon-minus"></span></a>
-				</td>
-			</tr>
-		<tbody>
-	</table>
-</div>
+<table class="table table-stripped" ng-controller="PersonalityCtrl">
+	<thead>
+		<tr>
+			<th>Path</th>
+			<th>Contents</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="text" ng-model="path" /></td>
+			<td><input type="text" ng-model="contents" /></td>
+			<td style="text-align: center">
+				<button class="btn" data-ng-click="onAddPersonality()"><span class="icon-plus"></span></a>
+			</td>
+		</tr>
+	<tbody>
+	<tbody>
+		<tr data-ng-repeat="personality in server.personality">
+			<td>{{personality.path}}</td>
+			<td>{{personality.contents}}</td>
+			<td style="text-align: center">
+				<button class="btn" data-ng-click="onRemovePersonality(personality.path)"><span class="icon-minus"></span></a>
+			</td>
+		</tr>
+	<tbody>
+</table>

@@ -1,4 +1,3 @@
-<div data-ng-controller="LaunchServerSecurityCtrl">
 <table class="table table-stripped">
 	<tbody>
 		<tr>
@@ -11,8 +10,7 @@
 		</tr>
 		<tr>
 			<td>Security Groups</td>
-			<td><select data-ng-model="server.security_groups" data-ng-options="securityGroup as securityGroup.name for securityGroup in securityGroups" multiple="multiple"></select></td>
+			<td><select data-ng-model="selected_security_groups" data-ng-options="securityGroup as securityGroup.name for securityGroup in securityGroups" multiple="multiple"></select></td>
 		</tr>
 	<tbody>
 </table>
-</div>

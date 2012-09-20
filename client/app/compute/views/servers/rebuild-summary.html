@@ -2,27 +2,11 @@
 	<tbody>
 		<tr>
 			<th style="text-align: left">Name</th>
-			<th style="text-align: left">Flavor</th>
 			<th style="text-align: left">Image</th>
 		</tr>
 		<tr>
 			<td>{{server.name}}</td>
-			<td>{{flavors[selected_flavor_index].name}} ({{flavors[selected_flavor_index].ram}} RAM, {{flavors[selected_flavor_index].vcpus}} vCPUS, {{flavors[selected_flavor_index].disk}} Disk)</td>
 			<td><img ng-src="{{selected_image.name|logo}}" style="width: 32px" /> {{selected_image.name}}</td>
-		</tr>
-		<tr>
-			<th style="text-align: left">Instances:</th>
-			<th style="text-align: left">KeyPair:</th>
-			<th style="text-align: left">Security Groups:</th>
-		</tr>
-		<tr>
-			<td><strong>Min:</strong> {{server.min_count}} - <strong>Max:</strong> {{server.max_count}}</td>
-			<td>{{server.key_name}}</td>
-			<td>
-				<ul ng-repeat="sg in selected_security_groups">
-					<li>{{sg.name}}</li>
-				</ul>
-			</td>
 		</tr>
 	</tbody>
 </table>

@@ -6,6 +6,7 @@
 	<div class="modal-body">
 		<fieldset>
 			<table style="width: 100%">
+				<!--
 				<tr>
 					<td>
 						<label>Flavor</label>
@@ -13,12 +14,14 @@
 						<span class="help-block"></span>
 					</td>
 				</tr>
+				-->
 				<tr>
 					<td>
 						<label><input type="checkbox" ng-model="resize.auto_disk_config" /> Auto Disk Config</label>
 					</td>
 				</tr>
 			</table>
+			<div ng-include src="'app/compute/views/servers/launch-select-flavor.html'"></div>
 		</fieldset>
 	</div>
 	<div class="modal-footer">

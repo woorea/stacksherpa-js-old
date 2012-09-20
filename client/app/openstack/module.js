@@ -90,7 +90,7 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 var default_error_handler = function(data, status, headers, config) {
 	try {
 		if(data.badRequest) {
-			alert(data.badRequest.message);
+			$.bootstrapGrowl(data.badRequest.message, {type : 'error'});
 		}
 		console.log(data);
 		console.log(status);

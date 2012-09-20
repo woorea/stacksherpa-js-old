@@ -21,18 +21,18 @@
 				</table>
 			</div>
 			<h1>{{server.name}}</h1>
-			<table style="width: 100%; table-layout: fixed">
+			<table id="server-show">
 				<tr>
 					<td style="vertical-align: top">
 						<!-- LEFT -->
 						<table class="table table-stripped {style.details}}">
 							<tbody>
 								<tr>
-									<td style="text-weight: bold">ID</td>
+									<td style="font-weight: bold">ID</td>
 									<td>{{server.id}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Status</td>
+									<td style="font-weight: bold">Status</td>
 									<td>
 										<table class="{style.details}}">
 											<tbody>
@@ -69,15 +69,15 @@
 									</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Disk Config</td>
+									<td style="font-weight: bold">Disk Config</td>
 									<td>{{server['OS-DCF:diskConfig']}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Created</td>
+									<td style="font-weight: bold">Created</td>
 									<td>{{server.created}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Updated</td>
+									<td style="font-weight: bold">Updated</td>
 									<td>{{server.updated}}</td>
 								</tr>
 								<tr ng-show="server.status == 'ACTIVE'">
@@ -111,54 +111,34 @@
 						<table class="table table-stripped {style.details}}">
 							<tbody>
 								<tr>
-									<td style="text-weight: bold">Image</td>
-									<td style="vertical-align: top">
-										<table class="{style.details}}">
-											<tbody>
-												<tr>
-													<td style="border: 0; text-align: right; vertical-align: middle">
-														<img ng-src="{{server.image.name|logo}}" style="width: 32px" />
-														{{server.image.name}}
-													</td>
-													<td style="border: 0; text-align: right; vertical-align: middle">
-														<a data-bootstrap-modal="app/compute/views/servers/rebuild.html" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+									<td style="font-weight: bold">Image</td>
+									<td style="vertical-align: middle">
+										<img ng-src="{{server.image.name|logo}}" style="width: 32px; margin-right: 8px" />
+										<span style="margin-right: 8px">{{server.image.name}}</span>
+										<a data-bootstrap-modal="app/compute/views/servers/rebuild.html" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
 									</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Flavor</td>
+									<td style="font-weight: bold">Flavor</td>
 									<td>
-										<table class="{style.details}}">
-											<tbody>
-												<tr>
-													<td style="border: 0; text-align: right">
-														{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk
-													</td>
-														<td style="border: 0">
-															<a data-bootstrap-modal="app/compute/views/servers/resize.html" ng-show="server.status == 'ACTIVE'">Resize</a>
-														</td>
-												</tr>
-											</tbody>
-										</table>
+										<span style="margin-right: 8px">{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk</span>
+										<a data-bootstrap-modal="app/compute/views/servers/resize.html" ng-show="server.status == 'ACTIVE'">Resize</a>
 									</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Host</td>
+									<td style="font-weight: bold">Host</td>
 									<td>{{server.hostId}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Key Name</td>
+									<td style="font-weight: bold">Key Name</td>
 									<td>{{server.key_name}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">Tenant ID</td>
+									<td style="font-weight: bold">Tenant ID</td>
 									<td>{{server.tenant_id}}</td>
 								</tr>
 								<tr>
-									<td style="text-weight: bold">User ID</td>
+									<td style="font-weight: bold">User ID</td>
 									<td>{{server.user_id}}</td>
 								</tr>
 							</tbody>
