@@ -1,4 +1,4 @@
-var portal = angular.module("portal",["openstack","common.file-upload","compute","identity","storage"]);
+var portal = angular.module("portal",["ss.ui","openstack",,"compute","identity","storage"]);
 portal.config(function($routeProvider) {
 	$routeProvider
 		.when("/login", {controller : "LoginCtrl", templateUrl : "app/portal/views/login.html"})
@@ -78,64 +78,6 @@ portal.controller("StackSherpaCtrl", function($scope, $routeParams, OpenStack) {
 	}
 
 	
-})
-portal.directive('withSelectionCheckboxes', function() {
-	return function(scope, element, attrs) {
-
-		scope.checkAll = function() {
-			var items = scope[attrs.withSelectionCheckboxes];
-			angular.forEach(items, function(item) {
-				item.checked = scope.checkedAll;
-			});
-		}
-
-		scope.allChecked = function() {
-			var items = scope[attrs.withSelectionCheckboxes];
-			if(items && items.length) {
-				var isCheckedAll = true;
-				angular.forEach(items, function(item) {
-				    if (item && !item.checked) {
-						isCheckedAll = false;
-						return;
-					}
-				});
-				return isCheckedAll;
-			} else {
-				return false;
-			}
-		};
-	}
-})
-portal.directive('bootstrapModal', function($http, $templateCache, $compile) {
-	
-	return function(scope, element, attrs) {
-		
-		$modal = $('#modal');
-		
-		var modalScope;
-		
-		element.click(function() {
-			
-			if (modalScope) modalScope.$destroy();
-			modalScope = scope.$new();
-			
-			var partial = attrs.bootstrapModal;
-			
-			//TODO: use $templateCache
-			//$http.get(partial, {cache: $templateCache}).success(function(response) {
-			$http.get(partial).success(function(response) {
-				$modal.html(response);
-				$compile($modal.contents())(modalScope);
-			});
-			//scope.$root.$broadcast('modal.show',{view : partial});
-		});
-		scope.onCloseModal = function() {
-			$modal.html('');
-		}
-		scope.$on('modal.hide', function(event, args) {
-			$modal.html('');
-		})
-	}
 });
 portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-ng-app="portal">
+<html>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
@@ -24,12 +24,15 @@
 				"bootstrap/js/bootstrap.min.js",
 				"js/scripts.js",
 				"app/stacksherpa.js",
+				"app/common/ss.ui.js",
 				"app/openstack/module.js",
-				"app/common/common-file-upload.js",
 				"app/compute/module.js",
 				"app/identity/module.js",
 				"app/storage/module.js",
-				"app/portal/module.js"
+				"app/portal/module.js",
+				function() {
+					angular.bootstrap(document, ['portal']);
+				}
 			);
 		</script>
 		<!--
@@ -47,5 +50,5 @@
 
 		</script>
 		-->
-	<body>
+	</body>
 </html>

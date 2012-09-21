@@ -516,13 +516,3 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 	}
 
 });
-compute.filter('_rest', function() {
-	return function(array) {
-		if(array) {
-			return _.rest(array);
-		} else {
-			return []
-		}
-		
-	}
-});
