@@ -99,7 +99,12 @@ angular.module('ss.ui',[])
 
 			scope.totalSteps = $steps.length;
 
-			scope.show(0);
+			setTimeout(function() {
+				$steps = $('.step')
+				scope.$apply(function() {
+					scope.show(0);
+				});
+			},3000);
 		}
 	})
 	.directive('withSelectionCheckboxes', function() {

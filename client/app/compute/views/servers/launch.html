@@ -5,26 +5,8 @@
 			<h3 id="myModalLabel">Launch Server</h3>
 		</div>
 		<div class="modal-body">
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-select-image.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-select-flavor.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-configuration.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-metadata.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-personality.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-security.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-summary.html'"></div>
+			<div class="step" ng-repeat="step in steps">
+				<ng-include src="step" />
 			</div>
 		</div>
 		<div class="modal-footer">

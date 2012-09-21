@@ -47,14 +47,41 @@ compute.config(function($routeProvider) {
 			return locationPath + "/servers";
 		}})
 });
-compute.controller("ComputeCtrl",function($scope, $location, $routeParams, OpenStack) {
+compute.controller("ComputeCtrl",function($scope, $location, $routeParams, $q, OpenStack) {
 	
 	$scope.access = OpenStack.getAccess();
 	
-	$scope.hasRole = function(role_name) {
-		return _.include(_.pluck($scope.access.user.roles, 'name'), role_name);
+	$scope.endpoint = OpenStack.endpoint("compute", $routeParams.region, "publicURL");
+	
+	var extensions_promise = OpenStack.ajax({
+		method : 'GET',
+		url : $scope.endpoint + '/extensions'
+	}).success(function(data, status, headers, config) {
+		$scope.extensions = data.extensions;
+	});
+	
+	$scope.hasRole = function(name) {
+		return _.include(_.pluck($scope.access.user.roles, 'name'), name);
 	}
 	
+	extensions_promise.then(function() {
+		
+		
+		
+		//now i can paint the menu
+		
+		$scope.loaded = true;
+		
+		$scope.hasExtension = function(alias) {
+			
+			
+			return _.find($scope.extensions, function(ext) {
+				return ext.alias == alias;
+			});
+
+		}
+		
+	});
 	
 });
 compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
@@ -379,6 +406,18 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack)
 });
 
 compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack) {
+	
+	$scope.steps = [
+		'app/compute/views/servers/launch-select-image.html',
+		'app/compute/views/servers/launch-select-flavor.html',
+		'app/compute/views/servers/launch-configuration.html',
+		'app/compute/views/servers/launch-metadata.html',
+		'app/compute/views/servers/launch-personality.html'
+	]
+	if($scope.hasExtension('os-keypairs') || $scope.hasExtension('os-security-groups')) {
+		$scope.steps.push('app/compute/views/servers/launch-security.html');
+	}
+	$scope.steps.push('app/compute/views/servers/launch-summary.html');
 	
 	$scope.keyPairs = []
 	$scope.securityGroups = []

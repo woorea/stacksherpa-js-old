@@ -87,6 +87,21 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 
 });
 
+openstack.directive('ssResourceList', function(OpenStack) {
+	return {
+		restrict : 'A',
+		transclude : true,
+		link : function(scope, element, attrs) {
+			scope.onRefresh = function() {
+				alert('refresh');
+			}
+			scope.onDelete = function() {
+				alert('delete');
+			}
+		}
+	}
+})
+
 var default_error_handler = function(data, status, headers, config) {
 	try {
 		if(data.badRequest) {
