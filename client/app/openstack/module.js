@@ -101,20 +101,19 @@ openstack.directive('ssResourceList', function(OpenStack) {
 		}
 	}
 })
-
-var default_error_handler = function(data, status, headers, config) {
-	try {
-		if(data.badRequest) {
-			$.bootstrapGrowl(data.badRequest.message, {type : 'error'});
+openstack.factory('compute_error_handler', function(bus) {
+	return {
+		handler : function(data, status, headers, config) {
+			try {
+				if(data.badRequest) {
+					bus.broadcast('notification.error', data.badRequest.message);
+				}
+			} catch(e) {
+				console.log(e);
+			}
 		}
-		console.log(data);
-		console.log(status);
-		console.log(headers);
-		console.log(config);
-	} catch(e) {
-		console.log(e);
 	}
-}
+})
 
 var default_compute_options = {
 	service: "compute",
@@ -122,7 +121,7 @@ var default_compute_options = {
 	method : "GET"
 }
 
-openstack.run(function(OpenStack) {
+openstack.run(function(OpenStack, bus, compute_error_handler) {
 	
 	var flavors_api = {
 		list : function(opts) {
@@ -131,7 +130,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.flavors);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 			
 		},
 		show : function(opts) {
@@ -140,7 +139,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.flavor);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 			
 		},
 		create : function(opts) {
@@ -149,7 +148,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.flavor);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 			
 		},
 		delete : function(opts) {
@@ -158,7 +157,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success();
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	}
 	
@@ -170,7 +169,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.images);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		
 		show : function(service, region, id, modelOrCallback) {
@@ -208,15 +207,19 @@ openstack.run(function(OpenStack) {
 	var servers_api = {
 		
 		list : function(opts) {
+			bus.broadcast('notification.info', 'server.list.start');
 			
 			var options = angular.extend({}, default_compute_options, {path : "/servers/detail"}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				opts.success(data.servers);
-			}).error(default_error_handler);
+				bus.broadcast('servers', data.servers);
+				bus.broadcast('notification.success', 'server.list.success');
+			}).error(compute_error_handler.handler);
 			
 		},
 		create : function(region, server, callback) {
+			
+			bus.broadcast('notification.info', 'server.list.start');
 			
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
@@ -225,30 +228,45 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/servers",
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
-				callback(data.server);
-			}).error(default_error_handler);
+				if(_.isUndefined(callback)) {
+					bus.broadcast('servers', data.servers);
+				} else {
+					opts.success(data.server);
+				};
+				bus.broadcast('notification.success', 'server.list.success');
+			}).error(compute_error_handler.handler);
 		},
 		show : function(opts) {
+			bus.broadcast('notification.info', 'server.show.start');
 			
 			var options = angular.extend({}, default_compute_options, {path : "/servers/" + opts.id}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
-				opts.success(data.server);
-			}).error(default_error_handler);
+				if(_.isUndefined(opts.success)) {
+					bus.broadcast('server', data.server);
+				} else {
+					opts.success(data.server);
+				};
+				bus.broadcast('notification.success', 'server.show.success');
+			}).error(compute_error_handler.handler);
 		},
 		delete : function(region, id, callback) {
-			
+			bus.broadcast('notification.info', 'server.'+id+'.delete.start');
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/servers/" + id
 			}).success(function(data, status, headers, config) {
-				callback()
-			}).error(default_error_handler);
+				if(!_.isUndefined(callback)) {
+					callback(data);
+				}
+				
+				bus.broadcast('notification.info', 'server.'+id+'.delete.end');
+			}).error(compute_error_handler.handler);
 		},
 		action : function(region, id, action, callback) {
-			
+			bus.broadcast('notification.info', 'server.'+id+'.action.start');
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
@@ -256,11 +274,14 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/servers/" + id + "/action",
 				data : action
 			}).success(function(data, status, headers, config) {
-				callback(data);
-			}).error(default_error_handler);
+				if(!_.isUndefined(callback)) {
+					callback(data);
+				}
+				bus.broadcast('notification.info', 'server.'+id+'.action.success');
+			}).error(compute_error_handler.handler);
 		},
 		attach : function(region, id, action, callback) {
-			
+			bus.broadcast('notification.info', 'server.'+id+'.attach.start');
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 			
 			OpenStack.ajax({
@@ -268,19 +289,25 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/servers/" + id + "/os-volume_attachments",
 				data : action
 			}).success(function(data, status, headers, config) {
-				callback();
-			}).error(default_error_handler);
+				if(!_.isUndefined(callback)) {
+					callback();
+				}
+				bus.broadcast('notification.info', 'server.'+id+'.action.end');
+			}).error(compute_error_handler.handler);
 		},
 		detach : function(region, id, volume_id, callback) {
-
+			bus.broadcast('notification.info', 'server.'+id+'.detach.start');
 			var endpoint = OpenStack.endpoint("compute", region, "publicURL");
 
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/servers/" + id + "/os-volume_attachments/" + volume_id
 			}).success(function(data, status, headers, config) {
-				callback();
-			}).error(default_error_handler);
+				if(!_.isUndefined(callback)) {
+					callback();
+				}
+				bus.broadcast('notification.info', 'server.'+id+'.detach.end');
+			}).error(compute_error_handler.handler);
 		}
 	}
 	
@@ -291,7 +318,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.floating_ip_pools);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		list : function(opts) {
 			
@@ -299,7 +326,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.floating_ips);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		allocate : function(region, data, callback) {
 			
@@ -311,7 +338,7 @@ openstack.run(function(OpenStack) {
 				data : data
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		deallocate : function(region, id, callback) {
 			
@@ -322,7 +349,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-floating-ips/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	}
 	
@@ -333,7 +360,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.volumes);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 			
 		},
 		create : function(region, volume, callback) {
@@ -346,7 +373,7 @@ openstack.run(function(OpenStack) {
 				data : {volume : volume}
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		show : function(region, id, modelOrCallback) {
 			
@@ -361,7 +388,7 @@ openstack.run(function(OpenStack) {
 				} else { //isCallback
 					modelOrCallback(data.volume)
 				}
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -372,7 +399,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-volumes/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	}
 	
@@ -383,7 +410,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.snapshots);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 			
 		},
 		create : function(region, snapshot, callback) {
@@ -396,7 +423,7 @@ openstack.run(function(OpenStack) {
 				data : {snapshot : snapshot}
 			}).success(function(data, status, headers, config) {
 				callback();
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		show : function(region, id, modelOrCallback) {
 			
@@ -411,7 +438,7 @@ openstack.run(function(OpenStack) {
 				} else { //isCallback
 					modelOrCallback(data.snapshots)
 				}
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -422,7 +449,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-snapshots/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	};
 	
@@ -435,7 +462,7 @@ openstack.run(function(OpenStack) {
 				opts.success($.map(data.keypairs, function(el,idx) {
 					return el.keypair;
 				}));
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		create : function(region, server, callback) {
 			
@@ -447,7 +474,7 @@ openstack.run(function(OpenStack) {
 				data : {server : server}
 			}).success(function(data, status, headers, config) {
 				callback(data);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -458,7 +485,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-keypairs/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	};
 	
@@ -470,7 +497,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.security_groups)
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		create : function(region, security_group, callback) {
 			
@@ -482,7 +509,7 @@ openstack.run(function(OpenStack) {
 				data : {security_group : security_group}
 			}).success(function(data, status, headers, config) {
 				callback(data);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		show : function(opts) {
 			
@@ -490,7 +517,7 @@ openstack.run(function(OpenStack) {
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
 				opts.success(data.security_group);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		delete : function(region, id, callback) {
 			
@@ -501,7 +528,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-security-groups/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		addRule : function(region, id, rule, callback) {
 			
@@ -513,7 +540,7 @@ openstack.run(function(OpenStack) {
 				data : { security_group_rule : rule }
 			}).success(function(data, status, headers, config) {
 				callback(data.security_group_rule);
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		},
 		removeRule : function(region, id, callback) {
 			
@@ -524,7 +551,7 @@ openstack.run(function(OpenStack) {
 				url : endpoint + "/os-security-group-rules/" + id
 			}).success(function(data, status, headers, config) {
 				callback()
-			}).error(default_error_handler);
+			}).error(compute_error_handler.handler);
 		}
 	};
 	

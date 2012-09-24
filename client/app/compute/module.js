@@ -84,139 +84,112 @@ compute.controller("ComputeCtrl",function($scope, $location, $routeParams, $q, O
 	});
 	
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ServerListCtrl",function($scope, $routeParams, bus, OpenStack) {
 
-	$scope.onDelete = function(server) {
-		if(typeof server != 'undefined') {
-			OpenStack.Servers.delete($routeParams.region, server.id, function() {});
-		} else {
-			angular.forEach($scope.servers, function(server) {
+	$scope.onDelete = function(servers) {
+		if(_.isArray(servers)) {
+			_.each(servers, function(server) {
 				if(server.checked) {
-					OpenStack.Servers.delete($routeParams.region, server.id, function() {});
+					OpenStack.Servers.delete($routeParams.region, server.id)
 				}
 			});
+		} else {
+			OpenStack.Servers.delete($routeParams.region, servers.id)
 		}
-		$.bootstrapGrowl("Deleting ...");
-		setTimeout(function() {
-			$scope.onRefresh(true);
-		}, 12000);
 	}
 
 	$scope.onRefresh = function(sync) {
-		
-		OpenStack.Servers.list({region : $routeParams.region, refresh : sync, success : function(servers) {
-			angular.forEach(servers, function(server) {
-				OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
-				OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
-					server.flavor = flavor;
-				}});
-			});
-			$scope.servers = servers;
-		}});
-
+		OpenStack.Servers.list({region : $routeParams.region, refresh : sync});
 	}
 	
-	$scope.$on('servers.refresh', function(event, args) {
-		$scope.onRefresh(true);
+	bus.on('servers', function(servers) {
+		_.each(servers, function(server) {
+			OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
+			OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
+				server.flavor = flavor;
+			}});
+		});
+		$scope.servers = servers;
 	});
 	
-	$scope.onRefresh(false);
+	OpenStack.Servers.list({region : $routeParams.region, refresh : false});
 
 });
-compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, OpenStack) {
+compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, bus, OpenStack) {
 
 	$scope.onPause = function() {
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { pause : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { pause : {} });
 		
 	}
 	
 	$scope.onUnpause = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unpause : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unpause : {} });
 		
 	}
 	
 	$scope.onSuspend = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { suspend : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { suspend : {} });
 		
 	}
 	
 	$scope.onResume = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { resume : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { resume : {} });
 		
 	}
 	
 	$scope.onLock = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { lock : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { lock : {} });
 		
 	}
 	
 	$scope.onUnlock = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unlock : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unlock : {} });
 		
 	}
 	
 	$scope.onResizeConfirm = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} });
 		
 	}
 	
 	$scope.onResizeRevert = function() {
 		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { revertResize : {} }, function(data) {
-			$scope.onRefresh(true);
-		});
+		OpenStack.Servers.action($routeParams.region, $routeParams.id, { revertResize : {} });
 		
 	}
 	
 	$scope.onDelete = function() {
 		
 		OpenStack.Servers.delete($routeParams.region, $routeParams.id, function(data) {
-			$.bootstrapGrowl("Deleting the server...");
 			$location.path("/" + $routeParams.tenant + "/compute/" + $routeParams.region + "/servers")
 		});
 		
 	}
 
 	$scope.onRefresh = function(sync) {
-		OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : sync, success : function(server) {
-			OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
-			OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
-				server.flavor = flavor;
-			}});
-			$scope.server = server;
-			if(_.include(['BUILD','RESIZE','REVERT_RESIZE','REBUILD'], $scope.server.status)) {
-				setTimeout(function() {
-					$scope.onRefresh(true);
-				}, 15000);
-			}
-		}});
+		OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : sync});
 	}
 	
-	$scope.$on('server.refresh', function(event, args) {
-		$scope.onRefresh(true);
+	bus.on('server', function(server) {
+		OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
+		OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
+			server.flavor = flavor;
+		}});
+		$scope.server = server;
+		if(_.include(['BUILD','RESIZE','REVERT_RESIZE','REBUILD'], $scope.server.status)) {
+			setTimeout(function() {
+				$scope.onRefresh(true);
+			}, 15000);
+		}
 	});
 
-	$scope.onRefresh(false);
+	OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : false});
 
 });
 compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
@@ -227,7 +200,6 @@ compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack)
 				type : $scope.type
 			}
 		}, function(data) {
-			$.bootstrapGrowl("The server is now rebooting ...");
 			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
@@ -274,7 +246,6 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 	$scope.onResize = function() {
 		$scope.resize.flavorRef = $scope.flavors[$scope.selected_flavor_index].id;
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "resize" : $scope.resize }, function(data) {
-			$.bootstrapGrowl("The server is now resizing ...");
 			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
@@ -318,7 +289,6 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 	$scope.onRebuild = function() {
 		$scope.server.imageRef = $scope.selected_image.id;
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "rebuild" : $scope.server }, function(data) {
-			$.bootstrapGrowl("The server is now rebuilding ...");
 			$scope.$root.$broadcast('server.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
@@ -336,7 +306,6 @@ compute.controller("ServerChangePasswordCtrl", function($scope, $routeParams, Op
 				adminPass : $scope.adminPass
 			}
 		}, function(data) {
-			$.bootstrapGrowl("The server password has been changed successfully ...", {type : 'success'});
 			$scope.$root.$broadcast('modal.hide');
 		});
 		
@@ -356,7 +325,6 @@ compute.controller("ServerCreateImageCtrl", function($scope, $routeParams, OpenS
 	$scope.onCreateImage = function() {
 		
 		OpenStack.Servers.action($routeParams.region, $routeParams.id, { "createImage" : $scope.image }, function(data) {
-			$.bootstrapGrowl("The server image has been created successfully ...", {type : 'success'});
 			$scope.$root.$broadcast('modal.hide');
 		});
 		
@@ -439,7 +407,6 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 		});
 		OpenStack.Servers.create($routeParams.region, $scope.server, function(server) {
 			$scope.$root.$broadcast('modal.hide');
-			$.bootstrapGrowl("Creating " + server.id + "...");
 			setTimeout(function() {
 				$scope.$root.$broadcast('servers.refresh');
 			}, 1000);
@@ -586,7 +553,6 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 			processData: false,
 			contentType: "application/octet-stream",
 			success: function(data) {
-				$.bootstrapGrowl("The image has been created successfully ...", {type : 'success'});
 				$scope.$root.$broadcast('images.refresh');
 				$scope.$root.$broadcast('modal.hide');
 			},
@@ -681,7 +647,6 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 		OpenStack.Flavors.create({region : $routeParams.region, data : {
 			flavor : $scope.flavor
 		}, success : function(data) {
-			$.bootstrapGrowl("The flavor has been created successfully ...", {type : 'success'});
 			$scope.$root.$broadcast('flavors.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		}});
@@ -723,7 +688,6 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 			
 			OpenStack.FloatingIps.deallocate($routeParams.region, floatingIp.id, function(data) {
 				$scope.onRefresh(true);
-				$.bootstrapGrowl("The floating ip has been deallocated successfully ...", {type : 'success'});
 			});
 			
 		} else {
@@ -763,7 +727,6 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 		OpenStack.FloatingIps.allocate($routeParams.region, {
 			pool : $scope.pool
 		}, function(data) {
-			$.bootstrapGrowl("The floating ip has been allocated successfully ...", {type : 'success'});
 			$scope.$root.$broadcast('floating-ips.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		});
@@ -784,7 +747,6 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 				address : $scope.floating_ips[0].ip
 			}
 		}, function(data) {
-			$.bootstrapGrowl("The floating ip has been associated successfully ...", {type : 'success'});
 			$scope.$root.$broadcast('floating-ips.refresh');
 			$scope.$root.$broadcast('modal.hide');
 		})
@@ -802,7 +764,6 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 		if(typeof volume != 'undefined') {
 			
 			OpenStack.Volumes.delete($routeParams.region, volume.id, function() {
-				$.bootstrapGrowl("The volume has been deleted successfully ...", {type : 'success'});
 				$scope.onRefresh(true);
 			});
 			
@@ -823,7 +784,6 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 	$scope.onDetach = function(volume) {
 		
 		OpenStack.Servers.detach($routeParams.region, volume.attachments[0].serverId, volume.id, function() {
-			$.bootstrapGrowl("The volume has been detached successfully ...", {type : 'success'});
 			$scope.onRefresh(true);
 		});
 		

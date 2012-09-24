@@ -1,4 +1,31 @@
 angular.module('ss.ui',[])
+	.factory("bus", function() {
+		var topics = {};
+		var bus = {
+			broadcast : function(topic_name, message) {
+				var subscribers = topics[topic_name]
+				if(subscribers) {
+					_.each(subscribers, function(fn) {
+						fn.call(undefined, message);
+					});
+				}
+			},
+			on : function(topic_name, fn) {
+				var subscribers = topics[topic_name]
+				if(!subscribers) {
+					subscribers = topics[topic_name] = []
+				}
+				subscribers.push(fn);
+				return function() {
+					bus.broadcast('notification.debug', 'Unregister subscribers of ' + topic_name + ' topic.')
+					_.reject(subscribers, function(subscriber) {
+						fn == subscriber;
+					});
+				}
+			}
+		}
+		return bus;
+	})
 	.filter('logo', function() {
 		return function(name) {
 			if(name) {
@@ -168,4 +195,21 @@ angular.module('ss.ui',[])
 				$modal.html('');
 			})
 		}
+	})
+	.run(function($rootScope, bus) {
+		bus.on('notification.info', function(message) {
+			$.bootstrapGrowl(message);
+		});
+		bus.on('notification.success', function(message) {
+			$.bootstrapGrowl(message, {type : 'success'});
+		});
+		bus.on('notification.error', function(message) {
+			$.bootstrapGrowl(message, {type : 'error'});
+		});
+		bus.on('notification.log', function(message) {
+			console.log(message);
+		});
+		bus.on('notification.debug', function(message) {
+			console.log(message);
+		});
 	});
