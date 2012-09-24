@@ -49,16 +49,24 @@ angular.module('ss.ui',[])
 		}
 
 	})
-	.directive("wizard", function() {
+	.directive("wizard", function($http, $compile) {
 
 		return function(scope, element, attrs) {
-
-			var $steps = $('.step')
-
+			
+			var $modal_body = $('.modal-body')
 			var $footer = $('.modal-footer')
 			var $previous = $footer.find('.btn-previous')
 			var $next = $footer.find('.btn-next')
 			var $finish = $footer.find('.btn-finish')
+			
+			_.each(scope.steps, function(step) {
+				var ws = $('<div class="wizard-step"></div>').appendTo($modal_body);
+				$http.get(step).success(function(response) {
+					ws.html($compile(response)(scope));
+				});
+			});
+			
+			var $steps = $('.wizard-step')
 
 			var ui = function() {
 				//$previous.prop("disabled", scope.step == 0)
@@ -98,13 +106,9 @@ angular.module('ss.ui',[])
 			}
 
 			scope.totalSteps = $steps.length;
-
-			setTimeout(function() {
-				$steps = $('.step')
-				scope.$apply(function() {
-					scope.show(0);
-				});
-			},3000);
+			
+			scope.show(0);
+			
 		}
 	})
 	.directive('withSelectionCheckboxes', function() {

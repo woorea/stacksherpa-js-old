@@ -10,8 +10,8 @@ var stacksherpa = {
 					authentication : ["passwordCredentials"],
 					endpoints : [
 						{ 
-							publicURL : "http://192.168.1.37:5000/v2.0",
-							adminURL : "http://192.168.1.37:35357/v2.0"
+							publicURL : "http://192.168.1.39:5000/v2.0",
+							adminURL : "http://192.168.1.39:35357/v2.0"
 						}
 					],
 					admin_roles : ["KeystoneAdmin", "KeystoneServiceAdmin"]

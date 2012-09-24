@@ -35,3 +35,6 @@ table.details th {
 .white {
 	background-color: white !important;
 }
+.wizard-step {
+	display: none;
+}
