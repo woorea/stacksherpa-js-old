@@ -42,7 +42,7 @@
 													</td>
 													<td style="border: 0; padding: 0; padding-right: 8px; text-align: right">
 														<div ng-show="server.status == 'ACTIVE'">
-														<a data-bootstrap-modal="app/compute/views/servers/reboot.html">Reboot</a>
+														<a class="modal-link" modal-src="app/compute/views/servers/reboot.html">Reboot</a>
 														<span ng-show="hasRole('admin')">
 														| <a data-ng-click="onPause()">Pause</a>
 														| <a data-ng-click="onSuspend()">Suspend</a>
@@ -82,24 +82,24 @@
 								</tr>
 								<tr ng-show="server.status == 'ACTIVE'">
 									<td colspan="2">
-										<a data-bootstrap-modal="app/compute/views/servers/console.html">Show console output</a> |
-										<a data-bootstrap-modal="app/compute/views/servers/sshinfo.html">SSH Connection Information</a> | 
-										<a data-bootstrap-modal="app/compute/views/servers/vnc.html">VNC Connection</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/console.html">Show console output</a> |
+										<a class="modal-link" modal-src="app/compute/views/servers/sshinfo.html">SSH Connection Information</a> | 
+										<a class="modal-link" modal-src="app/compute/views/servers/vnc.html">VNC Connection</a>
 									</td>
 								</tr>
 								<tr ng-show="server.status == 'ACTIVE'">
 									<td colspan="2">
-										<a data-bootstrap-modal="app/compute/views/servers/create-image.html">Create Image</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/create-image.html">Create Image</a>
 									</td>
 								</tr>
 								<tr ng-show="server.status == 'ACTIVE'">
 									<td colspan="2">
-										<a data-bootstrap-modal="app/compute/views/servers/change-password.html">Change Password</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/change-password.html">Change Password</a>
 									</td>
 								</tr>
 								<tr ng-show="hasRole('admin') && server.status == 'ACTIVE'">
 									<td colspan="2">
-										<a data-bootstrap-modal="app/compute/views/servers/backup.html">Create Backup</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/backup.html">Create Backup</a>
 									</td>
 								</tr>
 							</tbody>
@@ -115,14 +115,14 @@
 									<td style="vertical-align: middle">
 										<img ng-src="{{server.image.name|logo}}" style="width: 32px; margin-right: 8px" />
 										<span style="margin-right: 8px">{{server.image.name}}</span>
-										<a data-bootstrap-modal="app/compute/views/servers/rebuild.html" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/rebuild.html" data-ng-show="server.status == 'ACTIVE'">Rebuild</a>
 									</td>
 								</tr>
 								<tr>
 									<td style="font-weight: bold">Flavor</td>
 									<td>
 										<span style="margin-right: 8px">{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk</span>
-										<a data-bootstrap-modal="app/compute/views/servers/resize.html" ng-show="server.status == 'ACTIVE'">Resize</a>
+										<a class="modal-link" modal-src="app/compute/views/servers/resize.html" ng-show="server.status == 'ACTIVE'">Resize</a>
 									</td>
 								</tr>
 								<tr>

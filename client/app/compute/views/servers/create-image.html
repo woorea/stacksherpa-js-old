@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-ng-controller="ServerCreateImageCtrl">
+<div data-ng-controller="ServerCreateImageCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Image</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Create Image</h3>
 	</div>
 	<div class="modal-body">
 		<fieldset>
@@ -17,7 +17,9 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
 		<button class="btn btn-small btn-primary" data-ng-click="onCreateImage()">Create Image</button>
 	</div>
 </div>

@@ -45,6 +45,18 @@ angular.module('ss.ui',[])
 			}
 		}
 	})
+	.directive('modalLink', function(modal) {
+		return {
+			restrict : 'C',
+			link : function(scope, element, attrs) {
+				element.bind('click', function(e) {
+					
+					//e.preventDefault();
+					modal.show(attrs.modalSrc, scope.$new());
+				})
+			}
+		}
+	})
 	.filter('logo', function() {
 		return function(name) {
 			if(name) {

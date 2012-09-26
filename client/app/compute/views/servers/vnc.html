@@ -1,12 +1,14 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ServerShowVncConsoleCtrl">
+<div ng-controller="ServerShowVncConsoleCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
 		<h3 id="myModalLabel">VNC Console</h3>
 	</div>
 	<div class="modal-body">
 		<iframe src="{{console.url}}" width="560px" height="600" frameBorder="0">Browser not compatible.</iframe>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</button>
+		</div>
 	</div>
 </div>

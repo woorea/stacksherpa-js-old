@@ -749,6 +749,10 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 		$scope.floating_ip_pools = floating_ip_pools;
 	}});
 	
+	$scope.on_associate = function() {
+		modal.show('app/compute/views/floatingips/associate.html', $scope.$new());
+	}
+	
 	$scope.onAllocate = function() {
 		
 		OpenStack.FloatingIps.allocate($routeParams.region, {

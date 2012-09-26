@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="ServerBackupCtrl">
+<div ng-controller="ServerBackupCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Backup</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Create Backup</h3>
 	</div>
 	<div class="modal-body">
 			<fieldset>
@@ -60,7 +60,9 @@
 			</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
 		<button class="btn btn-small btn-primary">Backup</button>
 	</div>
 </div>

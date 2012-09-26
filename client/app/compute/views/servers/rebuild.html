@@ -1,41 +1,31 @@
-<div data-ng-controller="ServerRebuildCtrl" wizard>
-	<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCancel()">×</button>
-			<h3 id="myModalLabel">Rebuild Server</h3>
+<div class="wizard" data-ng-controller="ServerRebuildCtrl">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Rebuild Server</h3>
+	</div>
+	<div class="modal-body">
+		<div class="step">
+			<div ng-include src="'app/compute/views/servers/launch-select-image.html'"></div>
 		</div>
-		<div class="modal-body">
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-select-image.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/rebuild-configuration.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-metadata.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/launch-personality.html'"></div>
-			</div>
-			<div class="step">
-				<div ng-include src="'app/compute/views/servers/rebuild-summary.html'"></div>
-			</div>
+		<div class="step">
+			<div ng-include src="'app/compute/views/servers/rebuild-configuration.html'"></div>
 		</div>
-		<div class="modal-footer">
-			
-			<table style="width: 100%">
-				<tr>
-					<td style="text-align: left">
-						<a data-ng-click="onCancel()">Cancel</a>
-					</td>
-					<td style="text-align: right">
-						<button class="btn btn-small btn-previous" data-ng-click="onPrevious()">Previous</button>
-						<button class="btn btn-small btn-next" data-ng-click="onNext()">Next</button>
-						<button class="btn btn-small btn-finish" data-ng-click="onRebuild()">Finish</button>
-					</td>
-				</tr>
-			</table>
-			
+		<div class="step">
+			<div ng-include src="'app/compute/views/servers/launch-metadata.html'"></div>
 		</div>
+		<div class="step">
+			<div ng-include src="'app/compute/views/servers/launch-personality.html'"></div>
+		</div>
+		<div class="step">
+			<div ng-include src="'app/compute/views/servers/rebuild-summary.html'"></div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
+		<button class="btn btn-small btn-previous" data-ng-click="on_previous()">Previous</button>
+		<button class="btn btn-small btn-next" data-ng-click="on_next()">Next</button>
+		<button class="btn btn-small btn-finish" data-ng-click="onRebuild()">Finish</button>
 	</div>
 </div>
