@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="EndpointCreateCtrl">
+<div ng-controller="EndpointCreateCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Endpoint</h3>
+		<h3>Create Endpoint</h3>
 	</div>
 	<div class="modal-body">
 		<fieldset>
@@ -38,8 +38,10 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
 		<input type="hidden" data-ng-model="endpoint.service_id" />
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
 		<button class="btn" data-ng-click="onCreate()">Create Endpoint</button>
 	</div>
 </div>
