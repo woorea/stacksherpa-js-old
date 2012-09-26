@@ -3,6 +3,21 @@ var stacksherpa = {
 		proxy : null,
 		providers : [
 			{
+				name : "stacksherpa",
+				title : "StackSherpa",
+				version : "folsom",
+				identity : {
+					authentication : ["passwordCredentials"],
+					endpoints : [
+						{ 
+							publicURL : "http://localhost:5000/v2.0",
+							adminURL : "http://localhost:35357/v2.0"
+						}
+					],
+					admin_roles : ["KeystoneAdmin", "KeystoneServiceAdmin"]
+				}
+			},
+			{
 				name : "devstack",
 				title : "DevStack",
 				version : "folsom",

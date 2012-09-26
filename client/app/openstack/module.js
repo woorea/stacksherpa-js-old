@@ -1,7 +1,53 @@
 var openstack = angular.module("openstack",[]);
+openstack.factory('notifications', function() {
+	var notifications = {
+		info : function(message) {
+			$.bootstrapGrowl(message);
+		},
+		success : function(message) {
+			$.bootstrapGrowl(message, {type : 'success'});
+		},
+		error : function(message) {
+			$.bootstrapGrowl(message, {type : 'error'});
+		},
+		log : function(message) {
+			console.log(message);
+		},
+		debug : function(message) {
+			console.log(message);
+		}
+	}
+	return notifications;
+});
+openstack.constant('compute_error_handler', function(notifications) {
+	return {
+		handler : function(data, status, headers, config) {
+			try {
+				if(data.badRequest) {
+					notifications.error(data.badRequest.message);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+		}
+	}
+})
+openstack.constant('identity_error_handler', function(notifications) {
+	return function(data, status, headers, config) {
+		try {
+	        if(data.error) {
+	        	notifications.error(data.error.message);
+	        }
+		} catch(e) {
+	        console.log(e);
+		}
+	}
+})
 openstack.factory("OpenStack", function($http, $cacheFactory) {
 	
-	return {
+	var topics = {};
+	
+	var os = {
 		proxy : stacksherpa.config.proxy || window.location.protocol + "//" + window.location.host + "/api",
 		cache : $cacheFactory('openstack'),
 		ajax : function(opts) {
@@ -82,8 +128,54 @@ openstack.factory("OpenStack", function($http, $cacheFactory) {
 			localStorage.removeItem("tenants");
 		},
 		compute : {},
-		storage : {}
+		storage : {},
+		broadcast : function(topic_name, message) {
+			var subscribers = topics[topic_name]
+			if(subscribers) {
+				_.each(subscribers, function(fn) {
+					fn.call(undefined, message);
+				});
+			}
+		},
+		on : function(topic_name, fn) {
+			var subscribers = topics[topic_name]
+			if(!subscribers) {
+				subscribers = topics[topic_name] = []
+			}
+			subscribers.push(fn);
+			return function() {
+				bus.broadcast('notification.debug', 'Unregister subscribers of ' + topic_name + ' topic.')
+				_.reject(subscribers, function(subscriber) {
+					fn == subscriber;
+				});
+			}
+		},
+		authenticate : function(auth) {
+			var url = os.getProvider().identity.endpoints[0].publicURL + "/tokens";
+			os.ajax({method : "POST", url : url, data : auth})
+				.success(function(data, status, headers, config) {
+					os.setAccess(data.access);
+					os.broadcast("access", data.access);
+				})
+				.error(identity_error_handler);
+		},
+		listTenants : function(opts) {
+			opts.method = 'GET'
+			opts.url = os.getProvider().identity.endpoints[0].publicURL + "/tenants";
+			os.ajax(opts)
+				.success(function(data, status, headers, config) {
+					if(!angular.isArray(data.tenants)) {
+						//weird json from trystack
+						data.tenants = data.tenants.values;
+					}
+					os.setTenants(data.tenants);
+					os.broadcast("tenants", data.tenants);
+				})
+				.error(identity_error_handler);
+		}
 	}
+	
+	return os;
 
 });
 
@@ -101,19 +193,7 @@ openstack.directive('ssResourceList', function(OpenStack) {
 		}
 	}
 })
-openstack.factory('compute_error_handler', function(bus) {
-	return {
-		handler : function(data, status, headers, config) {
-			try {
-				if(data.badRequest) {
-					bus.broadcast('notification.error', data.badRequest.message);
-				}
-			} catch(e) {
-				console.log(e);
-			}
-		}
-	}
-})
+
 
 var default_compute_options = {
 	service: "compute",

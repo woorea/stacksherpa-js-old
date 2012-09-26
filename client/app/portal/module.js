@@ -118,67 +118,39 @@ portal.controller("LoginCtrl",function($scope, $location, OpenStack) {
 	$scope.provider = $scope.providers[0];
 	
 	$scope.onLogin = function() {
-		OpenStack.ajax({
-			method : "POST",
-			url : $scope.endpoint + "/tokens",
-			data : {auth : $scope.auth[$scope.authentication]}
-		}).success(function(data, status, headers, config) {
-			$scope.$root.isLoggedIn = true;
-			OpenStack.setProvider($scope.provider);
-			OpenStack.setAccess(data.access);
-			$scope.$root.$broadcast('new.access');
-			$location.path("/unscoped");
-		}).error(function(data, status, headers, config) {
-			if(data.error) {
-				alert(data.error.message);
-			}
-		})
+		OpenStack.setProvider($scope.provider);
+		OpenStack.authenticate({auth : $scope.auth[$scope.authentication]});
 	}
+	
+	OpenStack.on('access', function() {
+		$scope.$root.isLoggedIn = true;
+		$location.path("/unscoped");
+	});
 	
 });
 portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 
 	$scope.onTenantSelected = function(tenant) {
-		OpenStack.ajax({
-			method : "POST",
-			url : OpenStack.getProvider().identity.endpoints[0].publicURL + "/tokens",
-			data : { auth : {
-				token : {
-					id : OpenStack.getAccess().token.id
-				},
-				tenantName : tenant.name
-			}}
-		}).success(function(data, status, headers, config) {
-			OpenStack.setAccess(data.access);
-			$scope.$root.$broadcast('new.access');
-			$.cookie("X-Auth-Token", data.access.token.id);
-			$location.path("/" + tenant.name + "/dashboard");
-		}).error(function(data, status, headers, config) {
-			if(data.error) {
-				alert(data.error.message);
-			}
-		})
+		OpenStack.authenticate({ auth : {
+			token : {
+				id : OpenStack.getAccess().token.id
+			},
+			tenantName : tenant.name
+		}})
 	}
 	
 	$scope.onRefresh = function(sync) {
-		OpenStack.ajax({
-			method : "GET",
-			url : OpenStack.getProvider().identity.endpoints[0].publicURL + "/tenants",
-			refresh : sync
-		}).success(function(data, status, headers, config) {
-			if(!angular.isArray(data.tenants)) {
-				//weird json from trystack
-				data.tenants = data.tenants.values;
-			}
-			OpenStack.setTenants(data.tenants);
-			$scope.tenants = data.tenants;
-		}).error(function(data, status, headers, config) {
-			$location.path("/login");
-			if(data.error) {
-				alert(data.error.message);
-			}
-		});
+		OpenStack.listTenants({refresh : sync});
 	}
+	
+	OpenStack.on('tenants', function(tenants) {
+		$scope.tenants = tenants;
+	});
+	
+	OpenStack.on('access', function(access) {
+		$.cookie("X-Auth-Token", access.token.id);
+		$location.path("/" + access.token.tenant.name + "/dashboard");
+	})
 	
 	$scope.onRefresh(true);
 

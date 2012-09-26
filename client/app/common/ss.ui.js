@@ -197,19 +197,5 @@ angular.module('ss.ui',[])
 		}
 	})
 	.run(function($rootScope, bus) {
-		bus.on('notification.info', function(message) {
-			$.bootstrapGrowl(message);
-		});
-		bus.on('notification.success', function(message) {
-			$.bootstrapGrowl(message, {type : 'success'});
-		});
-		bus.on('notification.error', function(message) {
-			$.bootstrapGrowl(message, {type : 'error'});
-		});
-		bus.on('notification.log', function(message) {
-			console.log(message);
-		});
-		bus.on('notification.debug', function(message) {
-			console.log(message);
-		});
+	
 	});
