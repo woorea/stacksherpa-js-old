@@ -180,7 +180,7 @@ identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack)
 		}).success(function(data, status, headers, config) {
 			$.bootstrapGrowl("Tenant created", {type : 'success'});
 			$scope.$root.$broadcast('tenants.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
 		}).error(identity_error_handler);
 	}
 
@@ -270,7 +270,7 @@ identity.controller("UserCreateCtrl",function($scope, $routeParams, OpenStack) {
 		}).success(function(data, status, headers, config) {
 			$.bootstrapGrowl("User created", {type : 'success'});
 			$scope.$root.$broadcast('users.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
 		}).error(identity_error_handler);
 	}
 
@@ -280,13 +280,13 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
 
-	$scope.onDelete = function() {
+	$scope.onDelete = function(item) {
 		if(typeof item != 'undefined') {
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/OS-KSADM/roles/" + item.id
 			}).success(function(data, status, headers, config) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
@@ -302,20 +302,21 @@ identity.controller("RoleListCtrl",function($scope, $routeParams, OpenStack) {
 		}
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/OS-KSADM/roles"
+			url : endpoint + "/OS-KSADM/roles",
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.roles = data.roles;
 		}).error(identity_error_handler);
 	}
 	
 	$scope.$on('roles.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 
 });
 identity.controller("RoleShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -346,7 +347,7 @@ identity.controller("RoleCreateCtrl",function($scope, $routeParams, OpenStack) {
 		}).success(function(data, status, headers, config) {
 			$.bootstrapGrowl("Role created", {type : 'success'});
 			$scope.$root.$broadcast('users.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
 		}).error(identity_error_handler);
 	}
 
@@ -356,14 +357,14 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 	
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
 
-	$scope.onDelete = function() {
+	$scope.onDelete = function(item) {
 		
 		if(typeof item != 'undefined') {
 			OpenStack.ajax({
 				method : "DELETE",
 				url : endpoint + "/OS-KSADM/services/" + item.id
 			}).success(function(data, status, headers, config) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			}).error(identity_error_handler);
 		} else {
 			angular.forEach($scope.tenants, function(item) {
@@ -379,20 +380,21 @@ identity.controller("ServiceListCtrl",function($scope, $routeParams, OpenStack) 
 		}
 	}
 
-	$scope.onRefresh = function() {
+	$scope.onRefresh = function(sync) {
 		OpenStack.ajax({
 			method : "GET",
-			url : endpoint + "/OS-KSADM/services"
+			url : endpoint + "/OS-KSADM/services",
+			refresh : sync
 		}).success(function(data, status, headers, config) {
 			$scope.services = data["OS-KSADM:services"];
 		}).error(identity_error_handler);
 	}
 	
 	$scope.$on('services.refresh', function(event, args) {
-		$scope.onRefresh();
+		$scope.onRefresh(true);
 	});
 	
-	$scope.onRefresh();
+	$scope.onRefresh(false);
 	
 });
 identity.controller("ServiceShowCtrl",function($scope, $routeParams, OpenStack) {
@@ -438,7 +440,7 @@ identity.controller("ServiceCreateCtrl",function($scope, $routeParams, OpenStack
 		}).success(function(data, status, headers, config) {
 			$.bootstrapGrowl("Service created", {type : 'success'});
 			$scope.$root.$broadcast('services.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
 		}).error(identity_error_handler);
 	}
 
@@ -510,8 +512,8 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 			data : { "endpoint" : $scope.endpoint }
 		}).success(function(data, status, headers, config) {
 			$.bootstrapGrowl("Endpoint created", {type : 'success'});
-			$scope.$root.$broadcast('endpoints.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.onRefreshEndpoints();
+			$scope.hide();
 		}).error(identity_error_handler);
 	}
 

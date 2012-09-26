@@ -3,20 +3,19 @@
 		<ng-include src="'app/identity/views/common/nav.html'">
 	</div>
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Roles <small></small></h1>
+</div>
 <div class="row">
 	<div class="span12">
-		<div class="well well-small">
-			<table style="width: 100%">
-				<tr>
-					<td>
-						<a class="btn modal-link" modal-src="app/identity/views/roles/create.html" class="btn"><i class="icon-plus"></i> Create</a>
-					</td>
-					<td style="text-align: right">
-						<button data-ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
-						<button data-ng-click="onRefresh()" class="btn"><i class="icon-refresh"></i> Refresh</button>
-					</td>
-				</tr>
-			</table>
+		<div class="well well-small" style="overflow:hidden">
+			<div class="pull-left">
+				<a class="btn btn-small modal-link" modal-src="app/identity/views/roles/create.html" class="btn"><i class="icon-plus"></i> Create</a>
+			</div>
+			<div class="pull-right">
+				<button data-ng-click="onDelete()" class="btn btn-small"><i class="icon-trash"></i> Delete</button>
+				<button data-ng-click="onRefresh(true)" class="btn btn-small"><i class="icon-refresh"></i> Refresh</button>
+			</div>
 		</div>
 		<table class="table table-striped" with-selection-checkboxes="roles">
 			<thead>
@@ -39,7 +38,7 @@
 							<ul class="dropdown-menu">
 								<li><a href="#/identity/users/{{item.id}}"><i class="icon-edit"></i> Edit</a></li>
 								<li class="divider"></li>
-								<li><a ng-click="onDelete()" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>
 						</div>
 					</td>
