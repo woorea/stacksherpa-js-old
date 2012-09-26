@@ -1,19 +1,28 @@
 <div class="row" data-ng-controller="ComputeCtrl">
 	<ng-include src="'app/compute/views/common/nav.html'">
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Images <small>{{$routeParams.region}}</small></h1>
+</div>
 <div class="row">
 	<div class="span12">
 		<div id="image-list">
-			<div class="well">
+			<div class="well well-small" style="overflow: hidden">
+				<div class="pull-left">
+					<button class="btn btn-small btn-small btn-create" ng-click="on_create()"><span class="icon-plus"></span> Create Image</button>
+				</div>
+				<div class="pull-right">
+					<button class="btn btn-small btn-small btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
+					<a class="btn btn-small btn-small btn-refresh" data-ng-click="onRefresh(true)"><span class="icon-refresh"></span> Refresh</a>
+				</div>
 			<table style="width: 100%">
 				<tbody>
 					<tr>
 						<td>
-							<button class="btn btn-launch" data-bootstrap-modal="app/compute/views/images/create.html"><span class="icon-plus"></span> Create Image</button>
+							
 						</td>
 						<td style="text-align: right">
-							<button class="btn btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
-							<a class="btn btn-refresh" data-ng-click="onRefresh(true)"><span class="icon-refresh"></span> Refresh</a>
+							
 						</td>
 					</tr>
 				</tbody>

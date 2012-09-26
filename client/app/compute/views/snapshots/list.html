@@ -1,21 +1,20 @@
 <div class="row" data-ng-controller="ComputeCtrl">
 	<ng-include src="'app/compute/views/common/nav.html'">
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Snapshots <small>{{$routeParams.region}}</small></h1>
+</div>
 <div class="row">
 	<div class="span12">
-		<div class="well">
-			<table style="width: 100%">
-				<tr>
-					<td>
-						<button class="btn" data-bootstrap-modal="app/compute/views/snapshots/create.html"><i class="icon-plus"></i> Create Snapshot</button>
-						<button class="btn" data-bootstrap-modal="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create Volume</button>
-					</td>
-					<td style="text-align: right">
-						<button class="btn" data-ng-click="onDelete()"><i class="icon-trash"></i> Delete</button>
-						<a data-ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</a>
-					</td>
-				</tr>
-			</table>
+		<div class="well well-small" style="overflow: hidden">
+			<div class="pull-left">
+				<button class="btn btn-small" ng-click="on_create_snapshot()"><i class="icon-plus"></i> Create Snapshot</button>
+				<button class="btn btn-small" ng-click="on_create_volume()"><i class="icon-plus"></i> Create Volume</button>
+			</div>
+			<div class="pull-right">
+				<button class="btn btn-small" data-ng-click="onDelete()"><i class="icon-trash"></i> Delete</button>
+				<a class="btn btn-small" data-ng-click="onRefresh(true)"><i class="icon-refresh"></i> Refresh</a>
+			</div>
 		</div>
 		<table class="table table-striped" with-selection-checkboxes="snapshots">
 			<thead>

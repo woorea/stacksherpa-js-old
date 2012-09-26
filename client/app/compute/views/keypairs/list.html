@@ -1,20 +1,19 @@
 <div class="row" data-ng-controller="ComputeCtrl">
 	<ng-include src="'app/compute/views/common/nav.html'">
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Key Pairs <small>{{$routeParams.region}}</small></h1>
+</div>
 <div class="row">
 	<div class="span12">
-		<div class="well">
-		<table style="width: 100%">
-		<tr>
-			<td>
-				<button data-bootstrap-modal="app/compute/views/keypairs/create.html" class="btn"><i class="icon-plus"></i> Create Key Pair</button>
-			</td>
-			<td style="text-align: right">
-				<button ng-click="onDelete()" class="btn"><i class="icon-trash"></i> Delete</button>
-				<button ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</button>
-			</td>
-		</tr>
-		</table>
+		<div class="well well-small" style="overflow:hidden">
+			<div class="pull-left">
+				<button ng-click="on_create()" class="btn btn-small"><i class="icon-plus"></i> Create Key Pair</button>
+			</div>
+			<div class="pull-right">
+				<button ng-click="onDelete()" class="btn btn-small"><i class="icon-trash"></i> Delete</button>
+				<button ng-click="onRefresh(true)" class="btn btn-small"><i class="icon-refresh"></i> Refresh</button>
+			</div>
 		</div>
 		<table class="table table-striped" with-selection-checkboxes="keypairs">
 			<thead>

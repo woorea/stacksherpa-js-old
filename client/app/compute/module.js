@@ -84,7 +84,7 @@ compute.controller("ComputeCtrl",function($scope, $location, $routeParams, $q, O
 	});
 	
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, bus, OpenStack) {
+compute.controller("ServerListCtrl",function($scope, $routeParams, modal, bus, OpenStack) {
 
 	$scope.onDelete = function(servers) {
 		if(_.isArray(servers)) {
@@ -100,6 +100,10 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, bus, OpenStac
 
 	$scope.onRefresh = function(sync) {
 		OpenStack.Servers.list({region : $routeParams.region, refresh : sync});
+	}
+	
+	$scope.on_launch = function() {
+		modal.show('app/compute/views/servers/launch.html', $scope.$new())
 	}
 	
 	bus.on('servers', function(servers) {
@@ -376,16 +380,27 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack)
 compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack) {
 	
 	$scope.steps = [
+		{title : "Select an image", src : "app/compute/views/servers/launch-select-image.html"},
+		{title : "Select a flavor", src : "app/compute/views/servers/launch-select-flavor.html"},
+		{title : "Configuration", src : "app/compute/views/servers/launch-configuration.html"},
+		{title : "Server metadata", src : "app/compute/views/servers/launch-metadata.html"},
+		{title : "Server personality", src : "app/compute/views/servers/launch-personality.html"}
+	]
+	
+	/*
+	$scope.steps = [
 		'app/compute/views/servers/launch-select-image.html',
 		'app/compute/views/servers/launch-select-flavor.html',
 		'app/compute/views/servers/launch-configuration.html',
 		'app/compute/views/servers/launch-metadata.html',
 		'app/compute/views/servers/launch-personality.html'
 	]
+	
 	if($scope.hasExtension('os-keypairs') || $scope.hasExtension('os-security-groups')) {
-		$scope.steps.push('app/compute/views/servers/launch-security.html');
+		$scope.steps.push({title : "Security", src : "app/compute/views/servers/launch-security.html"});
 	}
-	$scope.steps.push('app/compute/views/servers/launch-summary.html');
+	*/
+	$scope.steps.push({title : "Summary", src : "app/compute/views/servers/launch-summary.html"});
 	
 	$scope.keyPairs = []
 	$scope.securityGroups = []
@@ -432,7 +447,7 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 	
 	$scope.onSelectImage = function(image) {
 		$scope.selected_image = image;
-		$scope.onNext()
+		$scope.on_next();
 	}
 
 });
@@ -463,7 +478,7 @@ compute.controller("PersonalityCtrl",function($scope) {
 	
 });
 
-compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, modal) {
 
 	$scope.onDelete = function(image) {
 		
@@ -502,7 +517,11 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack) {
 		}});
 
 	}
-	
+
+	$scope.on_create = function() {
+		modal.show('app/compute/views/images/create.html', $scope.$new());
+	}
+
 	$scope.$on('images.refresh', function(event, args) {
 		$scope.onRefresh(true);
 	});
@@ -590,7 +609,7 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
 });
 
-compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack, modal) {
 
 	$scope.onDelete = function(flavor) {
 		
@@ -611,6 +630,10 @@ compute.controller("FlavorListCtrl",function($scope, $routeParams, OpenStack) {
 				}
 			});
 		}
+	}
+	
+	$scope.on_create = function() {
+		modal.show('app/compute/views/flavors/create.html', $scope.$new());
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -642,7 +665,7 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 		disk : 10
 	}
 	
-	$scope.onCreate = function() {
+	$scope.create = function() {
 		
 		OpenStack.Flavors.create({region : $routeParams.region, data : {
 			flavor : $scope.flavor
@@ -654,7 +677,11 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 	}
 	
 });
-compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack, modal) {
+	
+	$scope.on_allocate = function() {
+		modal.show('app/compute/views/floatingips/allocate.html', $scope.$new())
+	}
 	
 	$scope.onDisassociate = function(floatingIp) {
 		
@@ -755,7 +782,7 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 
 });
 
-compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack, modal) {
 	
 	var endpoint = OpenStack.endpoint("compute",$routeParams.region, "publicURL");
 	
@@ -779,6 +806,10 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack) {
 			});
 		}
 		
+	}
+	
+	$scope.on_create = function() {
+		modal.show("app/compute/views/volumes/create.html", $scope.$new());
 	}
 	
 	$scope.onDetach = function(volume) {
@@ -858,7 +889,7 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 	}
 	
 });
-compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack, modal) {
 
 	$scope.onDelete = function(snapshot) {
 		
@@ -878,6 +909,14 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack) 
 			});
 		}
 		
+	}
+	
+	$scope.on_create_snapshot = function() {
+		modal.show('app/compute/views/snapshots/create.html', $scope.$new());
+	}
+	
+	$scope.on_create_volume = function() {
+		modal.show('app/compute/views/volumes/create.html', $scope.$new());
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -929,7 +968,7 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack
 	}});
 	
 });
-compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack, modal) {
 
 	$scope.onDelete = function(keypair) {
 		
@@ -949,6 +988,10 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack) {
 			});
 		}
 
+	}
+	
+	$scope.on_create = function() {
+		modal.show('app/compute/views/keypairs/create.html', $scope.$new());
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -1008,7 +1051,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 	}
 	
 });
-compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenStack, modal) {
 
 	$scope.onDelete = function(sg) {
 		
@@ -1036,6 +1079,10 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 			$scope.security_groups = security_groups;
 		}});
 		
+	}
+	
+	$scope.on_create = function() {
+		modal.show('app/compute/views/securitygroups/create.html', $scope.$new());
 	}
 	
 	$scope.$on('security-groups.refresh', function(event, args) {

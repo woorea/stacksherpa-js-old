@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="SecurityGroupCreateCtrl">
+<div ng-controller="SecurityGroupCreateCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Security Group</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Create Security Group</h3>
 	</div>
 	<div class="modal-body">
 		<fieldset>
@@ -24,8 +24,10 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
-		<button class="btn" data-ng-click="onCreate()">Create Security Group</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
+		<button class="btn btn-primary" data-ng-click="onCreate()">Create Security Group</button>
 	</div>
 </div>
 

@@ -26,6 +26,25 @@ angular.module('ss.ui',[])
 		}
 		return bus;
 	})
+	.factory('modal', function($http, $compile) {
+		
+		var modal = $('#modal');
+		modal.addClass("modal fade hide");
+		
+		return {
+			show : function(src, scope) {
+				$http.get(src).success(function(response) {
+					modal.html(response);
+					$compile(modal.contents())(scope)
+					modal.modal();
+				});
+				scope.hide = function() {
+					modal.modal('hide');
+					modal.html('');
+				};
+			}
+		}
+	})
 	.filter('logo', function() {
 		return function(name) {
 			if(name) {
@@ -77,65 +96,68 @@ angular.module('ss.ui',[])
 
 	})
 	.directive("wizard", function($http, $compile) {
+		return {
+			restrict : 'C',
+			link : function(scope, element, attrs) {
+				
+				var $modal_body = $('.modal-body');
+				var $footer = $('.modal-footer')
+				var $previous = $footer.find('.btn-previous')
+				var $next = $footer.find('.btn-next')
+				var $finish = $footer.find('.btn-finish')
 
-		return function(scope, element, attrs) {
-			
-			var $modal_body = $('.modal-body')
-			var $footer = $('.modal-footer')
-			var $previous = $footer.find('.btn-previous')
-			var $next = $footer.find('.btn-next')
-			var $finish = $footer.find('.btn-finish')
-			
-			_.each(scope.steps, function(step) {
-				var ws = $('<div class="wizard-step"></div>').appendTo($modal_body);
-				$http.get(step).success(function(response) {
-					ws.html($compile(response)(scope));
+				
+
+				_.each(scope.steps, function(step) {
+
+					var ws = $('<div class="wizard-step"></div>').appendTo($modal_body);
+					
+					$http.get(step.src).success(function(response) {
+						ws.html(response)
+						$compile(ws.contents())(scope)
+					});
 				});
-			});
-			
-			var $steps = $('.wizard-step')
 
-			var ui = function() {
-				//$previous.prop("disabled", scope.step == 0)
-				$previous.hide();
-				$next.hide();
-				$finish.hide();
-				if(scope.step != 0) {
-					$previous.show();
-					if(scope.step == $steps.length - 1) {
-						$next.hide();
-						$finish.show();
-					} else {
-						$next.show();
-						$finish.hide();
+				var $steps = $('.wizard-step')
+
+				var ui = function() {
+					//$previous.prop("disabled", scope.step == 0)
+					$previous.hide();
+					$next.hide();
+					$finish.hide();
+					if(scope.step != 0) {
+						$previous.show();
+						if(scope.step == $steps.length - 1) {
+							$next.hide();
+							$finish.show();
+						} else {
+							$next.show();
+							$finish.hide();
+						}
 					}
 				}
-			}
 
-			scope.show = function(step) {
-				if(step >= 0 && step < $steps.length) {
-					scope.step = step;
-					$steps.hide().filter(":eq("+step+")").show();
-					ui();
+				scope.show = function(step) {
+					if(step >= 0 && step < $steps.length) {
+						scope.step = step;
+						$steps.hide().filter(":eq("+step+")").show();
+						ui();
+					}
 				}
-			}
 
-			scope.onCancel = function() {
-				scope.$root.$broadcast('modal.hide');
-			}
+				scope.on_previous = function() {
+					scope.show(scope.step - 1)
+				}
 
-			scope.onPrevious = function() {
-				scope.show(scope.step - 1)
-			}
+				scope.on_next = function() {
+					scope.show(scope.step + 1)
+				}
 
-			scope.onNext = function() {
-				scope.show(scope.step + 1)
-			}
+				scope.totalSteps = $steps.length;
 
-			scope.totalSteps = $steps.length;
-			
-			scope.show(0);
-			
+				scope.show(0);
+
+			}
 		}
 	})
 	.directive('withSelectionCheckboxes', function() {
@@ -165,37 +187,6 @@ angular.module('ss.ui',[])
 			};
 		}
 	})
-	.directive('bootstrapModal', function($http, $templateCache, $compile) {
-
-		return function(scope, element, attrs) {
-
-			$modal = $('#modal');
-
-			var modalScope;
-
-			element.click(function() {
-
-				if (modalScope) modalScope.$destroy();
-				modalScope = scope.$new();
-
-				var partial = attrs.bootstrapModal;
-
-				//TODO: use $templateCache
-				//$http.get(partial, {cache: $templateCache}).success(function(response) {
-				$http.get(partial).success(function(response) {
-					$modal.html(response);
-					$compile($modal.contents())(modalScope);
-				});
-				//scope.$root.$broadcast('modal.show',{view : partial});
-			});
-			scope.onCloseModal = function() {
-				$modal.html('');
-			}
-			scope.$on('modal.hide', function(event, args) {
-				$modal.html('');
-			})
-		}
-	})
-	.run(function($rootScope, bus) {
-	
+	.run(function() {
+		
 	});

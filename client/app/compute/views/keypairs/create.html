@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-ng-controller="KeyPairCreateCtrl">
+<div data-ng-controller="KeyPairCreateCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Key Pair</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Create Key Pair</h3>
 	</div>
 	<div class="modal-body">
 		<div class="tabbable tabs-left">
@@ -58,7 +58,7 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<a data-ng-click="hide()">Cancel</a>
 	</div>
 </div>
 

@@ -2,24 +2,23 @@
 	<div class="row">
 		<ng-include src="'app/compute/views/common/nav.html'">
 	</div>
-	
+	<div class="page-header" style="position: relative">
+		<h1>Servers <small>{{$routeParams.region}}</small></h1>
+	</div>
 	<div class="row">
 		<div class="span12">
 			<div id="server-list">
-				<div class="well">
-				<table style="width: 100%">
-					<tbody>
-						<tr>
-							<td>
-								<button class="btn btn-launch" data-bootstrap-modal="app/compute/views/servers/launch.html"><span class="icon-play"></span> Launch Server</button>
-							</td>
-							<td style="text-align: right">
-								<button class="btn btn-delete" data-ng-click="onDelete(servers)"><span class="icon-trash"></span> Delete</button>
-								<a class="btn btn-refresh" data-ng-click="onRefresh(true)"><span class="icon-refresh"></span> Refresh</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				
+				<div class="well well-small" style="overflow: hidden">
+					<div class="pull-left">
+						<button class="btn btn-small btn-small btn-launch" ng-click="on_launch()">
+							<span class="icon-play"></span> Launch Server
+						</button>
+					</div>
+					<div class="pull-right">
+						<button class="btn btn-small btn-small btn-delete" data-ng-click="onDelete(servers)"><span class="icon-trash"></span> Delete</button>
+						<a class="btn btn-small btn-small btn-refresh" data-ng-click="onRefresh(true)"><span class="icon-refresh"></span> Refresh</a>
+					</div>
 				</div>
 				<div class="list">
 				<table class="table table-stripped" with-selection-checkboxes="servers">
@@ -50,7 +49,7 @@
 
 							<td class="btn-toolbar">
 								<div class="btn-group" style="float: right; margin-right: 35px">
-									<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+									<button data-toggle="dropdown" class="btn btn-small btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu">
 										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/servers/{{server.id}}">Show</a>

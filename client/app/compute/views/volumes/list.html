@@ -1,13 +1,18 @@
 <div class="row" data-ng-controller="ComputeCtrl">
 	<ng-include src="'app/compute/views/common/nav.html'">
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Volumes <small>{{$routeParams.region}}</small></h1>
+</div>
 <div class="row">
 	<div class="span12">
-		<div class="well">
+		<div class="well well-small">
 			<table style="width: 100%">
 				<tr>
 					<td>
-						<button class="btn" data-bootstrap-modal="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create Volume</button>
+						<button class="btn btn-small" ng-click="on_create()">
+							<i class="icon-plus"></i> Create Volume
+						</button>
 						<!--
 						<button class="btn" data-bootstrap-modal="app/compute/views/volumes/attach.html"><i class="icon-plus"></i> Attach</button>
 						<button class="btn" data-ng-click="onDetach()"><i class="icon-minus"></i> Detach</button>
@@ -16,8 +21,8 @@
 						-->
 					</td>
 					<td style="text-align: right">
-						<button class="btn" data-ng-click="onDelete()"><i class="icon-trash"></i> Delete</button>
-						<a data-ng-click="onRefresh(true)" class="btn"><i class="icon-refresh"></i> Refresh</a>
+						<button class="btn btn-small" data-ng-click="onDelete()"><i class="icon-trash"></i> Delete</button>
+						<a data-ng-click="onRefresh(true)" class="btn btn-small"><i class="icon-refresh"></i> Refresh</a>
 					</td>
 				</tr>
 			</table>

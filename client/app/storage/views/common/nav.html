@@ -1,4 +1,4 @@
-<div class="well" ng-controller="ContainerListCtrl">
+<div class="well well-small" ng-controller="ContainerListCtrl">
 	<ul class="nav nav-pills nav-stacked" ng-repeat="container in containers">
 		<li><a href="#/{{$routeParams.tenant}}/object-store/{{$routeParams.region}}/containers/{{container.name}}"><i class="icon-briefcase"></i> {{container.name}}</a></li>
 	</ul>

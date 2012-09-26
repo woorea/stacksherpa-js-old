@@ -1,4 +1,4 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="SnapshotCreateCtrl">
+<div ng-controller="SnapshotCreateCtrl">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
 		<h3 id="myModalLabel">Create Snapshot</h3>
@@ -40,7 +40,11 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
-		<button class="btn" data-ng-click="onCreate()">Create Snapshot</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
+		<div class="pull-right">
+			<button class="btn btn-small btn-primary" data-ng-click="onCreate()">Create Snapshot</button>
+		</div>
 	</div>
 </div>

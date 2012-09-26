@@ -6,7 +6,7 @@
 		<h4>Identity</h4>
 		<p>OpenStack Identity provides a central directory of users mapped to the OpenStack services they can access. It acts as a common authentication system across the cloud operating system and can integrate with existing backend directory services like LDAP. </p>
 		<div class="btn-group">
-			<a ng-href="#/{{$routeParams.tenant}}/identity/tenants" class="btn btn-primary">Manage Identity</a>
+			<a ng-href="#/{{$routeParams.tenant}}/identity/tenants" class="btn btn-small btn-primary">Manage Identity</a>
 		</div>
 	</div>
 </div>
@@ -18,7 +18,7 @@
 		<h4>Compute ({{services.compute.name}})</h4>
 		<p>The OpenStack cloud operating system enables enterprises and service providers to offer on-demand computing resources, by provisioning and managing large networks of virtual machines. </p>
 		<div class="btn-group">
-			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
+			<button data-toggle="dropdown" class="btn btn-small btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li ng-repeat="endpoint in services.compute.endpoints">
 					<a ng-href="#/{{$routeParams.tenant}}/compute/{{endpoint.region}}/servers">{{endpoint.region}}</a>
@@ -31,7 +31,7 @@
 		<h4>Object Storage ({{services['object-store'].name}})</h4>
 		<p>Object Storage is ideal for cost effective, scale-out storage. It provides a fully distributed, API-accessible storage platform that can be integrated directly into applications or used for backup, archiving and data retention.</p>
 		<div class="btn-group">
-			<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
+			<button data-toggle="dropdown" class="btn btn-small btn-primary dropdown-toggle">Select a region <span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li ng-repeat="endpoint in services['object-store'].endpoints">
 					<a ng-href="#/{{$routeParams.tenant}}/object-store/{{endpoint.region}}/containers">{{endpoint.region}}</a>
@@ -58,7 +58,7 @@
 			</div>
 		</div><!--/span-->
 		<div class="span3 logo">
-			<div class="well">
+			<div class="well well-small">
 				<h3>SQL Database</h3>
 				<div class="logo-container">
 					<img src="images/paas/mysql.png" />
@@ -76,7 +76,7 @@
 			</div>
 		</div><!--/span-->
 		<div class="span3 logo">
-			<div class="well">
+			<div class="well well-small">
 				<h3>NoSQL Database</h3>
 				<div class="logo-container">
 					<img src="images/paas/mongodb.png" />
@@ -96,7 +96,7 @@
 			</div>
 		</div><!--/span-->
 		<div class="span3 logo">
-			<div class="well">
+			<div class="well well-small">
 				<h3>Web Server</h3>
 				<div class="logo-container">
 					<img src="images/paas/apache.png" />

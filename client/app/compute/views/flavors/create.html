@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="FlavorCreateCtrl">
+<div ng-controller="FlavorCreateCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Create Flavor</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Create Flavor</h3>
 	</div>
 	<div class="modal-body">
 		<fieldset>
@@ -51,7 +51,11 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
-		<button class="btn" data-ng-click="onCreate()">Create Flavor</button>
+		<div class="pull-left">
+			<a data-ng-click="onCloseModal()">Cancel</a>
+		</div>
+		<div class="pull-right">
+			<button class="btn btn-small btn-primary" data-ng-click="create()">Create Flavor</button>
+		</div>
 	</div>
 </div>
