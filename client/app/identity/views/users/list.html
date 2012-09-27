@@ -4,7 +4,7 @@
 	</div>
 </div>
 <div class="page-header" style="position: relative">
-	<h1>Users <small></small></h1>
+	<h1>Users <small>List</small></h1>
 </div>
 <div class="row">
 	<div class="span12">
@@ -20,13 +20,13 @@
 		<table class="table table-striped" with-selection-checkboxes="users">
 			<thead>
 				<tr>
-					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
-					<th>Id</th>
+					<th style="width: 1px"><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th style="width: 1px">Id</th>
 					<th>Name</th>
 					<th>eMail</th>
-					<th>Tenant</th>
-					<th>Enabled</th>
-					<th><br /></th>
+					<th style="width: 1px">Tenant</th>
+					<th style="width: 1px">Enabled</th>
+					<th style="width: 1px"><br /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -36,13 +36,13 @@
 					<td>{{item.name}}</td>
 					<td>{{item.email}}</td>
 					<td>
-						<a href="#/{{$routeParams.tenant}}/identity/tenants/{{item.tenantId}}" ng-show="item.tenantId.length">{{item.tenantId}}</a>
+						<a href="#/{{$routeParams.tenant}}/identity/tenants/{{item.tenantId}}/users" ng-show="item.tenantId.length">{{item.tenantId}}</a>
 						<span ng-show="!item.tenantId.length">N/A</span>
 					</td>
-					<td>{{item.enabled}}</td>
+					<td style="text-align: center"><i class="{{item.enabled|iconEnabledDisabled}}"></i></td>
 					<td class="btn-toolbar">
-						<div class="btn-group" style="float: right; margin-right: 35px">
-							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+						<div class="btn-group">
+							<button data-toggle="dropdown" class="btn btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li><a data-ng-click="onDelete(item)"><i class="icon-remove"></i> Delete</a></li>

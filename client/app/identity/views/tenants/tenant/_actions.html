@@ -1,0 +1,12 @@
+<div class="btn-toolbar" style="position: absolute; top: 0; right: 0">
+	<div class="btn-group">
+		<button data-toggle="dropdown" class="btn btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{$routeParams.id}}"><i class="icon-search"></i> Show</a></li>
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{$routeParams.id}}/users"><i class="icon-user"></i> Users</a></li>
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{$routeParams.id}}/usage"><i class="icon-calendar"></i> Usage</a></li>
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{$routeParams.id}}/quotas"><i class="icon-signal"></i> Quotas</a></li>
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,34 @@
+<div class="row">
+	<div class="span12">
+		<ng-include src="'app/identity/views/common/nav.html'">
+	</div>
+</div>
+<div class="page-header" style="position: relative">
+	<h1>Tenants <small>Quota class sets</small></h1>
+	<ng-include src="'app/identity/views/tenants/_actions.html'" />
+</div>
+<div class="row">
+	<div class="span12 quota-class-sets">
+		<form ng-submit="update()" ng-controller="TenantQuotaClassSetCtrl">
+			<table class="table table-stripped">
+				<thead>
+					<tr>
+						<th style="width: 1px">Resource</th>
+						<th style="width: 1px">Quota</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(k,v) in quota_class_set">
+						<th style="text-align: left">{{k}}</th>
+						<td><input type="text" ng-model="quota_class_set[k]" /></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: right">
+				<button class="btn btn-primary">Update</button>
+			</div>
+		</form>
+	</div>
+</div>

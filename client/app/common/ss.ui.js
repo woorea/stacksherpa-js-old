@@ -75,6 +75,11 @@ angular.module('ss.ui',[])
 			}
 		}
 	})
+	.filter('iconEnabledDisabled', function() {
+		return function(status) {
+			return status ? 'icon-ok' : 'icon-remove';
+		}
+	})
 	.filter('_rest', function() {
 		return function(array) {
 			if(array) {
@@ -197,6 +202,53 @@ angular.module('ss.ui',[])
 					return false;
 				}
 			};
+		}
+	})
+	.directive('datePicker', function() {
+		
+		return {
+			require: '?ngModel',
+			restrict: 'A',
+			link: function(scope, element, attrs, controller) {
+				var datepicker = element.datepicker({format: 'yyyy-mm-dd', weekStart : 1})
+				element.on('changeDate', function(e) {
+					element.datepicker('hide');
+					element.blur();
+					scope.$apply(function() {
+						return controller.$setViewValue(element[0].value);
+					});
+				});
+				
+				/*
+				var updateModel;
+				updateModel = function(ev) {
+					element.datepicker('hide');
+					element.blur();
+					return $scope.$apply(function() {
+						return controller.$setViewValue(ev.date);
+					});
+				};
+				if (controller != null) {
+					controller.$render = function() {
+						element.datepicker().data().datepicker.date = controller.$viewValue;
+						element.datepicker('setValue');
+						element.datepicker('update');
+						return controller.$viewValue;
+					};
+				}
+				return attrs.$observe('datePicker', function(value) {
+					var options = {};
+					
+					if (angular.isObject(value)) {
+						options = value;
+					}
+					if (typeof(value) === "string" && value.length > 0) {
+						options = angular.fromJson(value);
+					}
+					return element.datepicker().on('changeDate', updateModel);
+				});
+				*/
+			}
 		}
 	})
 	.run(function() {

@@ -1,0 +1,14 @@
+<div class="btn-toolbar" style="position: absolute; top: 0; right: 0">
+	<div class="btn-group">
+		<button data-toggle="dropdown" class="btn btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants"><i class="icon-list"></i> List</a></li>
+			<div class="divider"></div>
+			<li><a href="#/{{$routeParams.tenant}}/identity/tenants/usage"><i class="icon-calendar"></i> Global Usage</a></li>
+			<!--
+			<li><a ng-href="#/{{$routeParams.tenant}}/identity/tenants/quotas"><i class="icon-signal"></i> Quota Class Sets</a></li>
+			-->
+		</ul>
+	</div>
+</div>

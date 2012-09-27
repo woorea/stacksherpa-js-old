@@ -1151,3 +1151,18 @@ compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, Open
 	}
 
 });
+compute.directive('limits', function($routeParams, OpenStack) {
+	return {
+		restrict : 'C',
+		link : function(scope, element, attrs) {
+			OpenStack.ajax({
+				method : "GET",
+				url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/limits'
+			}).success(function(data) {
+				scope.limits = data.limits;
+			}).error(function(error) {
+				alert(error);
+			})
+		}
+	}
+});

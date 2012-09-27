@@ -3,27 +3,12 @@
 		<ng-include src="'app/identity/views/common/nav.html'">
 	</div>
 </div>
+<div class="page-header" style="position: relative">
+	<h1>Tenant <small>Users</small></h1>
+	<ng-include src="'app/identity/views/tenants/tenant/_actions.html'" />
+</div>
 <div class="row">
 	<div class="span12">
-		<table class="table">
-			<tr>
-				<th scope="row">ID</th>
-				<td>{{tenant.id}}</td>
-			</tr>
-			<tr>
-				<th scope="row">Name</th>
-				<td>{{tenant.name}}</td>
-			</tr>
-			<tr>
-				<th scope="row">Description</th>
-				<td>{{tenant.description}}</td>
-			</tr>
-			<tr>
-				<th scope="row">Enabled</th>
-				<td>{{tenant.enabled}}</td>
-			</tr>
-		</table>
-		<hr />
 		<div>
 			<select ng-model="userId" ng-options="user.id as user.name for user in users" >
 				<option value="">Select one user</option>
@@ -66,3 +51,4 @@
 		</table>
 	</div>
 </div>
+

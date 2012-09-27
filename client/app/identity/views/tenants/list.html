@@ -4,7 +4,8 @@
 	</div>
 </div>
 <div class="page-header" style="position: relative">
-	<h1>Tenants <small></small></h1>
+	<h1>Tenants <small>List</small></h1>
+	<ng-include src="'app/identity/views/tenants/_actions.html'" />
 </div>
 <div class="row">
 	<div class="span12">
@@ -20,24 +21,29 @@
 		<table class="table table-stripped" with-selection-checkboxes="tenants">
 			<thead>
 				<tr>
-					<th><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
+					<th style="width: 1px;"><input type="checkbox" ng-model="checkedAll" ng-click="checkAll()" ng-checked="allChecked()"></th>
 					<th>Name</th>
 					<th>Description</th>
-					<th>Enabled</th>
-					<th><br /></th>
+					<th style="width: 1px;">Enabled</th>
+					<th style="width: 1px;"><br /></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="tenant in tenants">
 					<td><input type="checkbox" ng-model="tenant.checked" /></td>
-					<td><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}">{{tenant.name}}</a></td>
+					<td>{{tenant.name}}</td>
 					<td>{{tenant.description}}</td>
-					<td>{{tenant.enabled}}</td>
+					<td style="text-align: center"><i class="{{tenant.enabled|iconEnabledDisabled}}"></i></td>
 					<td class="btn-toolbar">
-						<div class="btn-group" style="float: right; margin-right: 35px">
-							<button data-toggle="dropdown" class="btn dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
+						<div class="btn-group">
+							<button data-toggle="dropdown" class="btn btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
+								<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}"><i class="icon-search"></i> Show</a></li>
+								<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}/users"><i class="icon-user"></i> Users</a></li>
+								<li><a href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}/usage"><i class="icon-calendar"></i> Usage</a></li>
+								<li><a ng-href="#/{{$routeParams.tenant}}/identity/tenants/{{tenant.id}}/quotas"><i class="icon-signal"></i> Quotas</a></li>
+								<li class="divider"></li>
 								<li><a data-ng-click="onDelete(tenant)"><i class="icon-remove"></i> Delete</a></li>
 							</ul>
 						</div>

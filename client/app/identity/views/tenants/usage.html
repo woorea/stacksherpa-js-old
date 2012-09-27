@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="span12">
+		<ng-include src="'app/identity/views/common/nav.html'">
+	</div>
+</div>
+<div class="page-header" style="position: relative">
+	<h1>Tenants <small>Global Usage</small></h1>
+	<ng-include src="'app/identity/views/tenants/_actions.html'" />
+</div>
+<div class="row">
+	<div class="span12 tenants-usage" ng-controller="TenantsUsageCtrl">
+		<div class="well well-small">
+			<form class="form-inline" style="margin: 0" ng-submit="query()">
+			    <input type="text" class="input-small" placeholder="Period Start" ng-model="start" date-picker>
+			    <input type="text" class="input-small" placeholder="Period Stop" ng-model="end" date-picker>
+			    <button type="submit" class="btn">Query</button>
+		    </form>
+		</div>
+		<table class="table table-stripped" ng-repeat="tenant_usage in tenant_usages">
+			<tr ng-repeat="(k,v) in tenant_usage">
+				<th style="text-align: left">{{k}}</th>
+				<td>{{v}}</td>
+			</tr>
+		</table>
+	</div>
+</div>

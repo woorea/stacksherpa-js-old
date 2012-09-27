@@ -1,3 +1,5 @@
+//iPad & iPhone fix
+$('body').on('touchstart.dropdown', '.dropdown-menu', function (e) { e.stopPropagation(); });
 var stacksherpa = {
 	config : {
 		proxy : null,

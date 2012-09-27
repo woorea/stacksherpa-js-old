@@ -4,8 +4,23 @@ identity.config(function($routeProvider) {
 		.when("/:tenant/identity/tenants", {
 			controller : "TenantListCtrl", templateUrl : "app/identity/views/tenants/list.html", menu : "tenants"
 		})
+		.when("/:tenant/identity/tenants/usage", {
+			controller : "TenantListCtrl", templateUrl : "app/identity/views/tenants/usage.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/tenants/quotas", {
+			controller : "TenantListCtrl", templateUrl : "app/identity/views/tenants/quotas.html", menu : "tenants"
+		})
 		.when("/:tenant/identity/tenants/:id", {
-			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/show.html", menu : "tenants"
+			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/tenant/show.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/tenants/:id/users", {
+			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/tenant/users.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/tenants/:id/quotas", {
+			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/tenant/quotas.html", menu : "tenants"
+		})
+		.when("/:tenant/identity/tenants/:id/usage", {
+			controller : "TenantShowCtrl", templateUrl : "app/identity/views/tenants/tenant/usage.html", menu : "tenants"
 		})
 		.when("/:tenant/identity/users", {
 			controller : "identity.UserListCtrl", templateUrl : "app/identity/views/users/list.html", menu : "users"
@@ -95,6 +110,7 @@ identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 	var endpoint = OpenStack.endpoint("identity", null, "adminURL") || OpenStack.getProvider().identity.endpoints[0].adminURL;
 
 	$scope.onRefresh = function(sync) {
+		
 		OpenStack.ajax({
 			method : "GET",
 			url : endpoint + "/tenants/" + $routeParams.id,
@@ -139,6 +155,7 @@ identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 				});
 			});
 		}).error(identity_error_handler);
+		
 	}
 	
 	$scope.addUserOnTenant = function(user_id, role_id) {
@@ -159,8 +176,135 @@ identity.controller("TenantShowCtrl",function($scope, $routeParams, OpenStack) {
 		}).error(identity_error_handler);
 	}
 	
+	
+	
 	$scope.onRefresh(false);
 
+});
+identity.controller("TenantQuotaClassSetCtrl",function($scope, OpenStack) {
+	$scope.update = function() {
+		OpenStack.ajax({
+			method : "PUT",
+			url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-class-sets/default',
+			data : {quota_class_set : $scope.quota_class_set}
+		}).success(function(data) {
+			$scope.quota_class_set = data.quota_class_set;
+		}).error(function(error) {
+			console.error(error);
+		})
+	}
+	
+	$scope.refresh = function(sync) {
+		OpenStack.ajax({
+			method : "GET",
+			url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-class-sets/default',
+			refresh : sync
+		}).success(function(data) {
+			scope.quota_class_set = data.quota_class_set;
+		}).error(function(error) {
+			alert(error);
+		})
+	}
+	
+	$scope.refresh(false);
+	
+});
+identity.controller("TenantQuotaSetCtrl",function($scope, $routeParams, OpenStack) {
+	
+	$scope.form_fields = [
+		{name : "injected_file_content_bytes", description : ""},
+		{name : "metadata_items", description : ""},
+		{name : "volumes", description : ""},
+		{name : "gigabytes", description : ""},
+		{name : "ram", description : ""},
+		{name : "floating_ips", description : ""},
+		{name : "key_pairs", description : ""},
+		{name : "id", description : ""},
+		{name : "instances", description : ""},
+		{name : "security_group_rules", description : ""},
+		{name : "injected_files", description : ""},
+		{name : "injected_file_path_bytes", description : ""},
+		{name : "security_groups", description : ""},
+	]
+	
+	$scope.update = function() {
+		OpenStack.ajax({
+			method : "PUT",
+			url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-sets/' + $routeParams.id,
+			data : {quota_set : $scope.quota_set}
+		}).success(function(data) {
+			$scope.quota_set = data.quota_set;
+		}).error(function(error) {
+			console.error(error);
+		})
+	}
+	
+	$scope.refresh = function(sync) {
+		OpenStack.ajax({
+			method : "GET",
+			url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-sets/' + $routeParams.id,
+			refresh : true
+		}).success(function(data) {
+			$scope.quota_set = data.quota_set;
+		}).error(function(error) {
+			alert(error);
+		})
+	}
+	
+	$scope.refresh(false);
+	
+});
+identity.controller("TenantUsageCtrl",function($scope, $routeParams, OpenStack) {
+	$scope.query = function() {
+		
+		var url = OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-simple-tenant-usage?detailed=1'
+
+		if($scope.start) {
+			url += '&start=' + $scope.start + 'T00:00:00';
+		}
+		if($scope.end) {
+			url += '&endp='  + $scope.end + 'T00:00:00';
+		}
+		
+		OpenStack.ajax({
+			method : "GET",
+			url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-simple-tenant-usage/' + $routeParams.id
+		}).success(function(data) {
+			$scope.tenant_usage = data.tenant_usage;
+		}).error(function(error) {
+			alert(error);
+		})
+	}
+	
+	$scope.query(false)
+	
+});
+identity.controller("TenantsUsageCtrl",function($scope, OpenStack) {
+	
+	$scope.query = function(sync) {
+		
+		var url = OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-simple-tenant-usage?detailed=1'
+		
+		if($scope.start) {
+			url += '&start=' + $scope.start + 'T00:00:00';
+		}
+		if($scope.end) {
+			url += '&endp='  + $scope.end + 'T00:00:00';
+		}
+		
+		OpenStack.ajax({
+			method : "GET",
+			url : url,
+			refresh : sync
+		}).success(function(data) {
+			$scope.tenant_usages = data.tenant_usages;
+		}).error(function(error) {
+			console.error(error);
+		})
+	}
+	
+	$scope.query(false)
+	
 });
 identity.controller("TenantCreateCtrl",function($scope, $routeParams, OpenStack) {
 	
@@ -518,3 +662,39 @@ identity.controller("EndpointCreateCtrl",function($scope, $routeParams, OpenStac
 	}
 
 });
+identity.directive('quota', function($routeParams, OpenStack) {
+	return {
+		restrict : 'C',
+		link : function(scope, element, attrs) {
+			
+		}
+	}
+});
+identity.directive('tenantsUsage', function($routeParams, OpenStack) {
+	return {
+		restrict : 'C',
+		link : function(scope, element, attrs) {
+			
+		}
+	}
+});
+identity.directive('tenantUsage', function($routeParams, OpenStack) {
+	return {
+		restrict : 'C',
+		link : function(scope, element, attrs) {
+			
+		}
+	}
+});
+
+/*
+{'quota_set': {'instances': 50, 'cores': 50,
+                              'ram': 51200, 'volumes': 10,
+                              'gigabytes': 1000, 'floating_ips': 10,
+                              'metadata_items': 128, 'injected_files': 5,
+                              'injected_file_content_bytes': 10240,
+                              'security_groups': 10,
+                              'security_group_rules': 20,
+                              'key_pairs': 100}}
+
+*/
