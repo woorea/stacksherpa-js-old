@@ -744,8 +744,8 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 		OpenStack.FloatingIps.allocate($routeParams.region, {
 			pool : $scope.pool
 		}, function(data) {
-			$scope.$root.$broadcast('floating-ips.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		});
 	}
 
@@ -753,9 +753,11 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Servers.list({region : $routeParams.region, success : function(servers) {
+	OpenStack.Servers.list({region : $routeParams.region});
+	
+	OpenStack.on('servers', function(servers) {
 		$scope.servers = servers;
-	}});
+	});
 	
 	$scope.onAssociate = function() {
 		
@@ -764,8 +766,8 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 				address : $scope.floating_ips[0].ip
 			}
 		}, function(data) {
-			$scope.$root.$broadcast('floating-ips.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		})
 		
 	}
