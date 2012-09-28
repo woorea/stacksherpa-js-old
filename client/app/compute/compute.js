@@ -131,6 +131,15 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, $timeout, Ope
 		$scope.servers = servers;
 	});
 	
+	/*
+	var poller = function() {
+		$timeout(function poll() {
+			fn();
+			$timeout(poll, interval)
+		}, interval);
+	}
+	*/
+	
 	OpenStack.on('delete.success', function() {
 		$timeout(function() { $scope.refresh(true) }, 5000);
 	});
@@ -396,7 +405,11 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, $timeout, 
 			if(server.adminPass) {
 				$scope.adminPass = server.adminPass;
 				$scope.on_wizard_success();
-				$timeout(function() { OpenStack.Servers.show(server.id); }, 3000);
+				OpenStack.poller(
+					server.id,
+					OpenStack.Servers.show({region : $routeParams.region, id : server.id, refresh : true}),
+					3000
+				);
 			}
 		});
 	}

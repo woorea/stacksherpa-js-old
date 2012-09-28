@@ -45,7 +45,11 @@ angular.module("compute.directives",[])
 
 				scope.delete = function(server) {
 					OpenStack.Servers.delete($routeParams.region, server.id, function(data) {
-						OpenStack.broadcast('delete.success');
+						OpenStack.poller(
+							server.id,
+							OpenStack.Servers.show({region : $routeParams.region, id : server.id, refresh : true}),
+							3000
+						);
 					});
 				}
 				

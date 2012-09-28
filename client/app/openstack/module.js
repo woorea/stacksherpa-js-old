@@ -151,6 +151,13 @@ openstack.factory("OpenStack", function($http, $cacheFactory, error_handler) {
 				});
 			}
 		},
+		pollers : {},
+		poller : function(name, fn, interval) {
+			pollers[name] = $timeout(function poll() {
+				fn();
+				pollers[name] = $timeout(poll, interval)
+			}, interval);
+		},
 		authenticate : function(auth) {
 			var url = os.getProvider().identity.endpoints[0].publicURL + "/tokens";
 			os.ajax({method : "POST", url : url, data : auth})
@@ -321,8 +328,16 @@ openstack.run(function(OpenStack, bus, notifications, error_handler) {
 			var options = angular.extend({}, default_compute_options, {path : "/servers/" + opts.id}, opts);
 			
 			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				var server = data.server;
+				if(server.status && server.status == 'ACTIVE' || server.status == 'CONFIRM_RESIZE') {
+					console.log('cancel poll');
+					var poller = OpenStack.pollers[server.id];
+					if(poller) {
+						$timeout.cancel(poller);
+					}
+				}
 				notifications.success('server.show.success');
-				OpenStack.broadcast('server', data.server);
+				OpenStack.broadcast('server', server);
 			}).error(error_handler.compute);
 		},
 		delete : function(region, id, callback) {
