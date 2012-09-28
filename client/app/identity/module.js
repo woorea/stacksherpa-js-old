@@ -255,6 +255,17 @@ identity.controller("TenantQuotaSetCtrl",function($scope, $routeParams, OpenStac
 	
 });
 identity.controller("TenantUsageCtrl",function($scope, $routeParams, OpenStack) {
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-sets/' + $routeParams.id,
+		refresh : true
+	}).success(function(data) {
+		$scope.quota_set = data.quota_set;
+	}).error(function(error) {
+		alert(error);
+	})
+	
 	$scope.query = function() {
 		
 		var url = OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-simple-tenant-usage?detailed=1'

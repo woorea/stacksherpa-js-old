@@ -125,7 +125,7 @@ angular.module('ss.ui',[])
 
 				
 
-				_.each(scope.steps, function(step) {
+				_.each(scope.wizard.steps, function(step) {
 
 					var ws = $('<div class="wizard-step"></div>').appendTo($modal_body);
 					
@@ -134,6 +134,37 @@ angular.module('ss.ui',[])
 						$compile(ws.contents())(scope)
 					});
 				});
+				
+				if(scope.wizard.success) {
+					var $wizard_success = $('<div class="wizard-success"></div>').appendTo($modal_body);
+					
+					$http.get(scope.wizard.success.src).success(function(response) {
+						$wizard_success.html(response)
+						$compile($wizard_success.contents())(scope)
+					});
+					
+					scope.on_wizard_success = function() {
+						$steps.hide();
+						$previous.hide();
+						$next.hide();
+						$finish.hide();
+						$wizard_success.show();
+					}
+				}
+				
+				if(scope.wizard.error) {
+					var $wizard_error = $('<div class="wizard-success"></div>').appendTo($modal_body);
+					
+					$http.get(scope.wizard.error.src).success(function(response) {
+						$wizard_error.html(response)
+						$compile($wizard_error.contents())(scope)
+					});
+					
+					scope.on_wizard_error = function() {
+						$steps.hide();
+						$wizard_error.show();
+					}
+				}
 
 				var $steps = $('.wizard-step')
 
@@ -161,6 +192,8 @@ angular.module('ss.ui',[])
 						ui();
 					}
 				}
+				
+				
 
 				scope.on_previous = function() {
 					scope.show(scope.step - 1)

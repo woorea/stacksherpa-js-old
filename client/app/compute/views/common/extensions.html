@@ -1,0 +1,36 @@
+<div data-ng-controller="ComputeCtrl">
+	<div class="row">
+		<ng-include src="'app/compute/views/common/nav.html'"></ng-include>
+	</div>
+	<div class="page-header" style="position: relative">
+		<h1>Extensions <small>{{$routeParams.region}}</small></h1>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<table class="table table-stripped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Alias</th>
+						<th>Description</th>
+						<th style="width: 80px">Updated</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="extension in extensions">
+						<th scope="row" style="text-align: left">{{extension.name}}</th>
+						<td>{{extension.alias}}</td>
+						<td>
+							{{extension.description}}<br />
+							<strong>NS</strong>: {{extension.namespace}}
+						</td>
+						<td>{{extension.updated.substring(0,10)}}</td>
+						<!--
+						<td>{{extension.links}}</td>
+						-->
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

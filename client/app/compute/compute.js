@@ -1,4 +1,4 @@
-var compute = angular.module("compute",[]);
+var compute = angular.module("compute",['compute.directives','compute.filters']);
 compute.config(function($routeProvider) {
 	$routeProvider
 		.when("/:tenant/compute/:region/servers", {
@@ -43,6 +43,15 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups/:id", {
 			controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html", menu : "security-groups"
 		})
+		.when("/:tenant/compute/:region/extensions", {
+			templateUrl : "app/compute/views/common/extensions.html", menu : "extensions"
+		})
+		.when("/:tenant/compute/:region/limits", {
+			templateUrl : "app/compute/views/common/limits.html", menu : "limits"
+		})
+		.when("/:tenant/compute/:region/usage", {
+			templateUrl : "app/compute/views/common/usage.html", menu : "usage"
+		})
 		.when("/:tenant/compute/:region", { redirectTo : function(routeParams, locationPath, locationSearch) {
 			return locationPath + "/servers";
 		}})
@@ -84,29 +93,35 @@ compute.controller("ComputeCtrl",function($scope, $location, $routeParams, $q, O
 	});
 	
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, modal, bus, OpenStack) {
+compute.controller("ServerListCtrl",function($scope, $routeParams, $timeout, OpenStack) {
 
-	$scope.onDelete = function(servers) {
-		if(_.isArray(servers)) {
-			_.each(servers, function(server) {
-				if(server.checked) {
-					OpenStack.Servers.delete($routeParams.region, server.id)
-				}
-			});
-		} else {
-			OpenStack.Servers.delete($routeParams.region, servers.id)
-		}
+	$scope.delete_checked = function(servers) {
+		_.each(servers, function(server) {
+			if(server.checked) {
+				OpenStack.Servers.delete($routeParams.region, server.id)
+			}
+		});
+		OpenStack.broadcast('delete.success');
 	}
 
-	$scope.onRefresh = function(sync) {
+	$scope.refresh = function(sync) {
 		OpenStack.Servers.list({region : $routeParams.region, refresh : sync});
 	}
 	
-	$scope.on_launch = function() {
-		modal.show('app/compute/views/servers/launch.html', $scope.$new())
-	}
+	OpenStack.on('server', function(server) {
+		var add_server = true;
+		_.each($scope.servers, function(scope_server) {
+			if(scope_server.id == server.id) {
+				scope_server = server;
+				add_server = false;
+			}
+		});
+		if(add_server) {
+			$scope.servers.unshift(server);
+		}
+	});
 	
-	bus.on('servers', function(servers) {
+	OpenStack.on('servers', function(servers) {
 		_.each(servers, function(server) {
 			OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
 			OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
@@ -116,71 +131,16 @@ compute.controller("ServerListCtrl",function($scope, $routeParams, modal, bus, O
 		$scope.servers = servers;
 	});
 	
-	OpenStack.Servers.list({region : $routeParams.region, refresh : false});
+	OpenStack.on('delete.success', function() {
+		$timeout(function() { $scope.refresh(true) }, 5000);
+	});
+	
+	$scope.refresh(false);
 
 });
 compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, bus, OpenStack) {
-
-	$scope.onPause = function() {
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { pause : {} });
-		
-	}
 	
-	$scope.onUnpause = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unpause : {} });
-		
-	}
-	
-	$scope.onSuspend = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { suspend : {} });
-		
-	}
-	
-	$scope.onResume = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { resume : {} });
-		
-	}
-	
-	$scope.onLock = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { lock : {} });
-		
-	}
-	
-	$scope.onUnlock = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { unlock : {} });
-		
-	}
-	
-	$scope.onResizeConfirm = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { confirmResize : {} });
-		
-	}
-	
-	$scope.onResizeRevert = function() {
-		
-		OpenStack.Servers.action($routeParams.region, $routeParams.id, { revertResize : {} });
-		
-	}
-	
-	$scope.onDelete = function() {
-		
-		OpenStack.Servers.delete($routeParams.region, $routeParams.id, function(data) {
-			$location.path("/" + $routeParams.tenant + "/compute/" + $routeParams.region + "/servers")
-		});
-		
-	}
-
-	$scope.onRefresh = function(sync) {
-		OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : sync});
-	}
-	
-	bus.on('server', function(server) {
+	OpenStack.on('server', function(server) {
 		OpenStack.Images.show("compute", $routeParams.region, server.image.id, server);
 		OpenStack.Flavors.show({region : $routeParams.region, id : server.flavor.id, success : function(flavor) {
 			server.flavor = flavor;
@@ -192,8 +152,18 @@ compute.controller("ServerShowCtrl",function($scope, $routeParams, $location, bu
 			}, 15000);
 		}
 	});
-
-	OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : false});
+	
+	OpenStack.on('delete.success', function() {
+		$timeout(function() { 
+			$location.path("/" + $routeParams.tenant + "/compute/" + $routeParams.region + "/servers");
+		}, 5000);
+	});
+	
+	$scope.refresh = function(sync) {
+		OpenStack.Servers.show({region : $routeParams.region, id : $routeParams.id, refresh : sync});
+	}
+	
+	$scope.refresh(false);
 
 });
 compute.controller("ServerRebootCtrl", function($scope, $routeParams, OpenStack) {
@@ -269,6 +239,13 @@ compute.controller("ServerResizeCtrl", function($scope, $routeParams, OpenStack)
 
 compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack) {
 	
+	$scope.steps = [
+		{title : "Select an image", src : "app/compute/views/servers/launch-select-image.html"},
+		{title : "Configuration", src : "app/compute/views/servers/rebuild-configuration.html"},
+		{title : "Server metadata", src : "app/compute/views/servers/launch-metadata.html"},
+		{title : "Server personality", src : "app/compute/views/servers/rebuild-summary.html"}
+	]
+	
 	var server_id = $scope.server.id
 	
 	$scope.server = {
@@ -287,7 +264,7 @@ compute.controller("ServerRebuildCtrl", function($scope, $routeParams, OpenStack
 	
 	$scope.onSelectImage = function(image) {
 		$scope.selected_image = image;
-		$scope.onNext()
+		$scope.on_next();
 	}
 	
 	$scope.onRebuild = function() {
@@ -377,30 +354,25 @@ compute.controller("ServerBackupCtrl", function($scope, $routeParams, OpenStack)
 	
 });
 
-compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack) {
+compute.controller("ServerLaunchCtrl", function($scope, $routeParams, $timeout, OpenStack) {
 	
-	$scope.steps = [
-		{title : "Select an image", src : "app/compute/views/servers/launch-select-image.html"},
-		{title : "Select a flavor", src : "app/compute/views/servers/launch-select-flavor.html"},
-		{title : "Configuration", src : "app/compute/views/servers/launch-configuration.html"},
-		{title : "Server metadata", src : "app/compute/views/servers/launch-metadata.html"},
-		{title : "Server personality", src : "app/compute/views/servers/launch-personality.html"}
-	]
-	
-	/*
-	$scope.steps = [
-		'app/compute/views/servers/launch-select-image.html',
-		'app/compute/views/servers/launch-select-flavor.html',
-		'app/compute/views/servers/launch-configuration.html',
-		'app/compute/views/servers/launch-metadata.html',
-		'app/compute/views/servers/launch-personality.html'
-	]
+	$scope.wizard = {
+		steps : [
+			{title : "Select an image", src : "app/compute/views/servers/launch-select-image.html"},
+			{title : "Select a flavor", src : "app/compute/views/servers/launch-select-flavor.html"},
+			{title : "Configuration", src : "app/compute/views/servers/launch-configuration.html"},
+			{title : "Server metadata", src : "app/compute/views/servers/launch-metadata.html"},
+			{title : "Server personality", src : "app/compute/views/servers/launch-personality.html"}
+		],
+		success : {title : "Success", src : "app/compute/views/servers/launch-success.html"}
+	}
 	
 	if($scope.hasExtension('os-keypairs') || $scope.hasExtension('os-security-groups')) {
-		$scope.steps.push({title : "Security", src : "app/compute/views/servers/launch-security.html"});
+		$scope.wizard.steps.push({title : "Security", src : "app/compute/views/servers/launch-security.html"});
 	}
-	*/
-	$scope.steps.push({title : "Summary", src : "app/compute/views/servers/launch-summary.html"});
+	
+	$scope.wizard.steps.push({title : "Summary", src : "app/compute/views/servers/launch-summary.html"});
+	
 	
 	$scope.keyPairs = []
 	$scope.securityGroups = []
@@ -421,10 +393,11 @@ compute.controller("ServerLaunchCtrl", function($scope, $routeParams, OpenStack)
 			$scope.server.security_groups.push({name : sg.name});
 		});
 		OpenStack.Servers.create($routeParams.region, $scope.server, function(server) {
-			$scope.$root.$broadcast('modal.hide');
-			setTimeout(function() {
-				$scope.$root.$broadcast('servers.refresh');
-			}, 1000);
+			if(server.adminPass) {
+				$scope.adminPass = server.adminPass;
+				$scope.on_wizard_success();
+				$timeout(function() { OpenStack.Servers.show(server.id); }, 3000);
+			}
 		});
 	}
 	
@@ -1165,4 +1138,43 @@ compute.directive('limits', function($routeParams, OpenStack) {
 			})
 		}
 	}
+});
+compute.controller("ComputeTenantUsageCtrl",function($scope, $routeParams, OpenStack) {
+	
+	var tenant_id = $scope.access.token.tenant.id;
+	
+	OpenStack.ajax({
+		method : "GET",
+		url : OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-quota-sets/' + tenant_id,
+		refresh : true
+	}).success(function(data) {
+		$scope.quota_set = data.quota_set;
+	}).error(function(error) {
+		alert(error);
+	})
+	
+	$scope.query = function(sync) {
+		
+		var url = OpenStack.endpoint("compute", "CDG", "publicURL") + '/os-simple-tenant-usage/'+tenant_id+'?detailed=1'
+
+		if($scope.start) {
+			url += '&start=' + $scope.start + 'T00:00:00';
+		}
+		if($scope.end) {
+			url += '&endp='  + $scope.end + 'T00:00:00';
+		}
+		
+		OpenStack.ajax({
+			method : "GET",
+			url : url,
+			refresh : sync
+		}).success(function(data) {
+			$scope.tenant_usage = data.tenant_usage;
+		}).error(function(error) {
+			alert(error);
+		})
+	}
+	
+	$scope.query(false)
+	
 });

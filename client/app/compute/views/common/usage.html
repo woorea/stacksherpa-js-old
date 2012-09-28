@@ -1,16 +1,13 @@
 <div class="row">
-	<div class="span12">
-		<ng-include src="'app/identity/views/common/nav.html'">
-	</div>
+	<ng-include src="'app/compute/views/common/nav.html'"></ng-include>
 </div>
 <div class="page-header" style="position: relative">
-	<h1>Tenant <small>Usage</small></h1>
-	<ng-include src="'app/identity/views/tenants/tenant/_actions.html'" />
+	<h1>Usage <small>{{$routeParams.region}}</small></h1>
 </div>
 <div class="row">
-	<div class="span12" ng-controller="TenantUsageCtrl">
+	<div class="span12" ng-controller="ComputeTenantUsageCtrl">
 		<div class="well well-small">
-			<form class="form-inline" style="margin: 0" ng-submit="query()">
+			<form class="form-inline" style="margin: 0" ng-submit="query(true)">
 			    <input type="text" class="input-small" placeholder="Period Start" ng-model="start" date-picker>
 			    <input type="text" class="input-small" placeholder="Period Stop" ng-model="end" date-picker>
 			    <button type="submit" class="btn">Query</button>

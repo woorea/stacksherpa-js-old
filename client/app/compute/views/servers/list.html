@@ -11,13 +11,13 @@
 				
 				<div class="well well-small" style="overflow: hidden">
 					<div class="pull-left">
-						<button class="btn btn-small btn-small btn-launch" ng-click="on_launch()">
+						<button class="btn btn-small btn-small modal-link" modal-src="app/compute/views/servers/launch.html">
 							<span class="icon-play"></span> Launch Server
 						</button>
 					</div>
 					<div class="pull-right">
-						<button class="btn btn-small btn-small btn-delete" data-ng-click="onDelete(servers)"><span class="icon-trash"></span> Delete</button>
-						<a class="btn btn-small btn-small btn-refresh" data-ng-click="onRefresh(true)"><span class="icon-refresh"></span> Refresh</a>
+						<button class="btn btn-small btn-small btn-delete" data-ng-click="delete_checked(servers)"><span class="icon-trash"></span> Delete</button>
+						<a class="btn btn-small btn-small btn-refresh" data-ng-click="refresh(true)"><span class="icon-refresh"></span> Refresh</a>
 					</div>
 				</div>
 				<div class="list">
@@ -29,7 +29,7 @@
 							<th>Flavor</th>
 							<th>Image</th>
 							<th>Status</th>
-							<th><br /></th>
+							<th style="width: 1px"><br /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -38,23 +38,17 @@
 							<td>{{server.name}}</td>
 							<td>{{server.flavor.name}} - {{server.flavor.vcpus}} vCPUs, {{server.flavor.ram}} RAM, {{server.flavor.disk}} Disk</td>
 							<td>{{server.image.name}}</td>
-							<td ng-show="server.status == 'ACTIVE'" style="text-align: center">
-								<span class="label label-success">{{server.status}}</span>
+							<td style="text-align: center">
+								<span class="label label-{{server.status|serverStatus}}">{{server.status}}</span>
 							</td>
-							<td ng-hide="server.status == 'ACTIVE'">
-								<div class="progress progress-striped active">
-								  <div class="bar" style="width: {{server.progress}}%;"></div>
-								</div>
-							</td>
-
 							<td class="btn-toolbar">
-								<div class="btn-group" style="float: right; margin-right: 35px">
+								<div class="btn-group">
 									<button data-toggle="dropdown" class="btn btn-small btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu">
 										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/servers/{{server.id}}">Show</a>
 										<li class="divider"></li>
-										<li><a ng-click="onDelete(server)" class="confirm-delete">Delete ...</a></li>
+										<li><a ng-click="delete(server)" class="confirm-delete">Delete ...</a></li>
 									</ul>
 								</div>
 							</td>

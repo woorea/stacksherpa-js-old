@@ -12,6 +12,9 @@
 					<li data-menu="snapshots" ng-show="hasExtension('os-volumes')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/snapshots" >Snapshots</a></li>
 					<li data-menu="key-pairs" ng-show="hasExtension('os-keypairs')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/key-pairs" >Key Pairs</a></li>
 					<li data-menu="security-groups" ng-show="hasExtension('os-security-groups') || hasExtension('security_groups')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/security-groups">Security Grops</a></li>
+					<li data-menu="limits"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/limits">Limits</a></li>
+					<li data-menu="usage"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/usage">Usage</a></li>
+					<li data-menu="extensions"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/extensions">Extensions</a></li>
 				</ul>
 			</td>
 		</tr>
