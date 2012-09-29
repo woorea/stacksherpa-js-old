@@ -96,17 +96,17 @@ openstack.factory("OpenStack", function($http, $cacheFactory, error_handler) {
 			return null;
 		},
 		setProvider : function(provider) {
-			localStorage.setItem("provider", angular.toJson(provider));
+			sessionStorage.setItem("provider", angular.toJson(provider));
 		},
 		getProvider : function() {
-			var provider = localStorage.getItem("provider");
+			var provider = sessionStorage.getItem("provider");
 			return provider != null ? angular.fromJson(provider) : provider;
 		},
 		setAccess : function(access) {
-			localStorage.setItem("access", angular.toJson(access));
+			sessionStorage.setItem("access", angular.toJson(access));
 		},
 		getAccess : function() {
-			var access = localStorage.getItem("access");
+			var access = sessionStorage.getItem("access");
 			try {
 				return angular.fromJson(access)
 			} catch(e) {
@@ -114,19 +114,19 @@ openstack.factory("OpenStack", function($http, $cacheFactory, error_handler) {
 			}
 		},
 		setTenants : function(tenants) {
-			localStorage.setItem("tenants", angular.toJson(tenants));
+			sessionStorage.setItem("tenants", angular.toJson(tenants));
 		},
 		getTenants : function() {
-			var tenants = localStorage.getItem("tenants");
+			var tenants = sessionStorage.getItem("tenants");
 			return tenants != null ? angular.fromJson(tenants) : tenants;
 		},
 		reload : function() {
 			return this.getAccess() != null;
 		},
 		logout : function() {
-			localStorage.removeItem("provider");
-			localStorage.removeItem("access");
-			localStorage.removeItem("tenants");
+			sessionStorage.removeItem("provider");
+			sessionStorage.removeItem("access");
+			sessionStorage.removeItem("tenants");
 		},
 		compute : {},
 		storage : {},
@@ -153,9 +153,9 @@ openstack.factory("OpenStack", function($http, $cacheFactory, error_handler) {
 		},
 		pollers : {},
 		poller : function(name, fn, interval) {
-			pollers[name] = $timeout(function poll() {
+			OpenStack.pollers[name] = $timeout(function poll() {
 				fn();
-				pollers[name] = $timeout(poll, interval)
+				OpenStack.pollers[name] = $timeout(poll, interval)
 			}, interval);
 		},
 		authenticate : function(auth) {
@@ -180,7 +180,8 @@ openstack.factory("OpenStack", function($http, $cacheFactory, error_handler) {
 					os.broadcast("tenants", data.tenants);
 				})
 				.error(error_handler.identity);
-		}
+		},
+		error_handler : error_handler
 	}
 	
 	return os;

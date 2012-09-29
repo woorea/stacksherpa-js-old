@@ -9,7 +9,7 @@
 		<div id="image-list">
 			<div class="well well-small" style="overflow: hidden">
 				<div class="pull-left">
-					<button class="btn btn-small btn-small btn-create" ng-click="on_create()"><span class="icon-plus"></span> Create Image</button>
+					<button class="btn btn-small btn-small modal-link" modal-src="app/compute/views/images/create.html"><span class="icon-plus"></span> Create Image</button>
 				</div>
 				<div class="pull-right">
 					<button class="btn btn-small btn-small btn-delete" data-ng-click="onDelete()"><span class="icon-trash"></span> Delete</button>
@@ -55,7 +55,7 @@
 							</td>
 							<td ng-show="image.status == 'SAVING'">
 								<div class="progress progress-striped active">
-								  <div class="bar" style="width: {{image.progress}}%;"></div>
+								  <div class="bar" style="width: {{image.upload_progress}}%;"></div>
 								</div>
 							</td>
 							<td class="btn-toolbar">

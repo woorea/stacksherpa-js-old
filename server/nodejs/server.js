@@ -81,14 +81,14 @@ route.all('/api', function(req, res) {
 				});
 
 				req.on("end", function() {
-					preq.end("");
+					preq.end();
 				});
 			} catch (e) {
-				res.end("");
+				res.end();
 			}
 
 		} else {
-			res.end("");
+			res.end();
 		}
 	
 	

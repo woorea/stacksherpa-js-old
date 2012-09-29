@@ -93,15 +93,23 @@ compute.controller("ComputeCtrl",function($scope, $location, $routeParams, $q, O
 	});
 	
 });
-compute.controller("ServerListCtrl",function($scope, $routeParams, $timeout, OpenStack) {
+compute.controller("ServerListCtrl",function($scope, $routeParams, $q, $timeout, OpenStack) {
 
 	$scope.delete_checked = function(servers) {
+		
+		var delete_promises = [];
+		
 		_.each(servers, function(server) {
 			if(server.checked) {
-				OpenStack.Servers.delete($routeParams.region, server.id)
+				delete_promises.push(OpenStack.Servers.delete($routeParams.region, server.id));
 			}
 		});
-		OpenStack.broadcast('delete.success');
+		
+		$q.all(delete_promises).then(function() {
+			console.info('all promises resolved');
+			$scope.refresh(true);
+		})
+		
 	}
 
 	$scope.refresh = function(sync) {
@@ -470,7 +478,9 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, mod
 		
 		if(typeof image != 'undefined') {
 			
-			OpenStack.Images.delete($routeParams.region, image.id, function() { });
+			OpenStack.Images.delete($routeParams.region, image.id, function() { 
+				$scope.onRefresh(true);
+			});
 			
 		} else {
 			angular.forEach($scope.images, function(image) {
@@ -481,9 +491,6 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, mod
 				}
 			});
 		}
-		setTimeout(function() {
-			$scope.onRefresh(true);
-		}, 2000);
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -521,7 +528,7 @@ compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 	
 });
 
-compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("ImageCreateCtrl",function($scope, $routeParams, notifications, OpenStack) {
 	
 	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");
 	
@@ -558,11 +565,11 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 			processData: false,
 			contentType: "application/octet-stream",
 			success: function(data) {
-				$scope.$root.$broadcast('images.refresh');
-				$scope.$root.$broadcast('modal.hide');
+				$scope.hide();
+				$scope.onRefresh(true);
 			},
 			error: function(data) {
-				console.log(data);
+				notifications.error(data);
 			}
 		}
 		
@@ -571,7 +578,8 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, OpenStack) {
 			ajaxOptions.xhr = function() {
 				var xhr = new window.XMLHttpRequest();
 			    //Upload progress
-			    xhr.upload.addEventListener("progress", function(evt){
+			    xhr.upload.addEventListener("progress", function(evt) {
+					console.log(evt.lengthComputable);
 			      if (evt.lengthComputable) {
 					$scope.$apply(function() {
 						$scope.upload_progress = Math.floor((evt.loaded / evt.total) * 100);
@@ -1050,7 +1058,7 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 		if(typeof sg != 'undefined') {
 			
 			OpenStack.SecurityGroups.delete($routeParams.region, sg.id, function(data) {
-				$scope.onRefresh();
+				$scope.onRefresh(true);
 			});
 			
 		} else {
@@ -1124,17 +1132,17 @@ compute.controller("SecurityGroupShowCtrl",function($scope, $routeParams, OpenSt
 	$scope.onRefresh(false);
 	
 });
-compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, notifications, OpenStack) {
 	
 	$scope.security_group = {
-		name : "name",
-		description : "description"
+		name : "",
+		description : ""
 	}
 	
 	$scope.onCreate = function() {
 		OpenStack.SecurityGroups.create($routeParams.region, $scope.security_group, function(sgr) {
-			$scope.$root.$broadcast('security-groups.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.onRefresh(true);
+			$scope.hide();
 		})
 	}
 
