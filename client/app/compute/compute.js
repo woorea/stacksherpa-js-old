@@ -664,8 +664,8 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 		OpenStack.Flavors.create({region : $routeParams.region, data : {
 			flavor : $scope.flavor
 		}, success : function(data) {
-			$scope.$root.$broadcast('flavors.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		}});
 
 	}
@@ -808,10 +808,6 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack, mo
 		
 	}
 	
-	$scope.on_create = function() {
-		modal.show("app/compute/views/volumes/create.html", $scope.$new());
-	}
-	
 	$scope.onDetach = function(volume) {
 		
 		OpenStack.Servers.detach($routeParams.region, volume.attachments[0].serverId, volume.id, function() {
@@ -850,8 +846,8 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 	
 	$scope.volume = {
 		snapshot_id : snapshot_id,
-		"display_name": "vol-001",
-		"display_description": "Another volume.",
+		"display_name": "",
+		"display_description": "",
 		"size": 1
 		//"volume_type": "289da7f8-6440-407c-9fb4-7db01ec49164",
 		//"metadata": {"contents": "junk"},
@@ -861,8 +857,8 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 	$scope.onCreate = function() {
 		
 		OpenStack.Volumes.create($routeParams.region, $scope.volume, function(data) {
-			$scope.$root.$broadcast('volumes.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -870,9 +866,11 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 });
 compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Servers.list({region : $routeParams.region, success : function(servers) {
+	OpenStack.Servers.list({region : $routeParams.region});
+	
+	OpenStack.on('servers', function(servers) {
 		$scope.servers = servers;
-	}});
+	});
 	
 	$scope.onAttach = function() {
 		
@@ -882,8 +880,8 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 				device : $scope.device
 			}
 		}, function(data) {
-			$scope.$root.$broadcast('volumes.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		});
 		
 	}
@@ -909,14 +907,6 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack, 
 			});
 		}
 		
-	}
-	
-	$scope.on_create_snapshot = function() {
-		modal.show('app/compute/views/snapshots/create.html', $scope.$new());
-	}
-	
-	$scope.on_create_volume = function() {
-		modal.show('app/compute/views/volumes/create.html', $scope.$new());
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -950,15 +940,15 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack
 
 			$scope.snapshot = {
 				"volume_id": volume_id,
-				"display_name": "snap-002",
-				"display_description": "Daily backup",
+				"display_name": "",
+				"display_description": "",
 				"force": true
 			}
 
 			$scope.onCreate = function() {
 				OpenStack.Snapshots.create($routeParams.region, $scope.snapshot, function(data) {
-					$scope.$root.$broadcast('snapshots.refresh');
-					$scope.$root.$broadcast('modal.hide');
+					$scope.hide();
+					$scope.onRefresh(true);
 				});
 			}
 		} else {
@@ -988,10 +978,6 @@ compute.controller("KeyPairListCtrl",function($scope, $routeParams, OpenStack, m
 			});
 		}
 
-	}
-	
-	$scope.on_create = function() {
-		modal.show('app/compute/views/keypairs/create.html', $scope.$new());
 	}
 
 	$scope.onRefresh = function(sync) {
@@ -1028,8 +1014,8 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			url : endpoint + "/os-keypairs",
 			data : {keypair : $scope.import_keypair}
 		}).success(function(data, status, headers, config) {
-			$scope.$root.$broadcast('keypairs.refresh');
-			$scope.$root.$broadcast('modal.hide');
+			$scope.hide();
+			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -1043,7 +1029,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			data : {keypair : $scope.create_keypair}
 		}).success(function(data, status, headers, config) {
 			$scope.create_keypair.public_key = data.keypair["public_key"];
-			$scope.$root.$broadcast('keypairs.refresh');
+			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 
 		});
@@ -1079,10 +1065,6 @@ compute.controller("SecurityGroupListCtrl",function($scope, $routeParams, OpenSt
 			$scope.security_groups = security_groups;
 		}});
 		
-	}
-	
-	$scope.on_create = function() {
-		modal.show('app/compute/views/securitygroups/create.html', $scope.$new());
 	}
 	
 	$scope.$on('security-groups.refresh', function(event, args) {

@@ -7,10 +7,12 @@
 <div class="row">
 	<div class="span12">
 		<div class="well well-small" style="overflow: hidden">
+			<!--
 			<div class="pull-left">
-				<button class="btn btn-small" ng-click="on_create_snapshot()"><i class="icon-plus"></i> Create Snapshot</button>
-				<button class="btn btn-small" ng-click="on_create_volume()"><i class="icon-plus"></i> Create Volume</button>
+				<button class="btn btn-small modal-link" modal-src="app/compute/views/snapshots/create.html"><i class="icon-plus"></i> Create Snapshot</button>
+				<button class="btn btn-small modal-link" modal-src="app/compute/views/volumes/create.html"><i class="icon-plus"></i> Create Volume</button>
 			</div>
+			-->
 			<div class="pull-right">
 				<button class="btn btn-small" data-ng-click="onDelete()"><i class="icon-trash"></i> Delete</button>
 				<a class="btn btn-small" data-ng-click="onRefresh(true)"><i class="icon-refresh"></i> Refresh</a>
@@ -44,7 +46,7 @@
 								<span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a data-bootstrap-modal="app/compute/views/volumes/create.html">Create Volume</a></li>
+								<li><a class="modal-link" modal-src="app/compute/views/volumes/create.html">Create Volume</a></li>
 								<li class="divider"></li>
 								<li><a ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
 							</ul>

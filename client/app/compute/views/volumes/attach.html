@@ -1,7 +1,7 @@
-<div id="server-launch" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="VolumeAttachCtrl">
+<div ng-controller="VolumeAttachCtrl">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="onCloseModal()">×</button>
-		<h3 id="myModalLabel">Attach Volume IP</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="hide()">×</button>
+		<h3>Attach Volume IP</h3>
 	</div>
 	<div class="modal-body">
 		<fieldset>
@@ -10,7 +10,7 @@
 					<td>
 						<label>Server</label>
 						<select ng-model="server_id" ng-options="server.id as server.name for server in servers"></select>
-						<span class="help-block">Example block-level help text here.</span>
+						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
@@ -24,7 +24,11 @@
 		</fieldset>
 	</div>
 	<div class="modal-footer">
-		<button type="submit" class="btn btn-small btn-primary" ng-click="onAttach()">Attach</button>
-		<button class="btn" data-ng-click="onCloseModal()">Cancel</button>
+		<div class="pull-left">
+			<a data-ng-click="hide()">Cancel</a>
+		</div>
+		<div class="pull-right">
+			<button type="submit" class="btn btn-small btn-primary" ng-click="onAttach()">Attach</button>
+		</div>
 	</div>
 </div>

@@ -10,7 +10,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td>
-						<button class="btn btn-small" ng-click="on_create()">
+						<button class="btn btn-small modal-link" modal-src="app/compute/views/volumes/create.html">
 							<i class="icon-plus"></i> Create Volume
 						</button>
 						<!--
@@ -56,11 +56,17 @@
 									<!--
 									<li><a href="">Attach to server</a></li>
 									-->
-									<li ng-show="item.status != 'creating'"><a data-bootstrap-modal="app/compute/views/volumes/attach.html">Manage attachments</a></li>
-									<li ng-show="item.status == 'in-use'"><a ng-click="onDetach(item)">Detach</a></li>
-									<li ng-show="item.status == 'available'"><a data-bootstrap-modal="app/compute/views/snapshots/create.html">Create Snapshot</a></li>
+									<li ng-show="item.status != 'creating'"><a class="modal-link" modal-src="app/compute/views/volumes/attach.html">Manage attachments</a></li>
+									
+									<li ng-show="item.status == 'available'"><a class="modal-link" modal-src="app/compute/views/snapshots/create.html">Create Snapshot</a></li>
 									<li class="divider"></li>
-								<li><a data-ng-click="onDelete(item)" class="confirm-delete"><i class="icon-remove"></i> Delete</a></li>
+								<li>
+									<a ng-click="onDetach(item)" ng-show="item.status == 'in-use'">
+										<i class="icon-remove"></i> Detach</a>
+									<a data-ng-click="onDelete(item)" class="confirm-delete" ng-show="item.status == 'available'">
+										<i class="icon-remove"></i> Delete
+									</a>
+								</li>
 							</ul>
 						</div>
 					</td>
