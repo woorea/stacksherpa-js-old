@@ -404,6 +404,17 @@ openstack.run(function(OpenStack, bus, notifications, error_handler) {
 		}
 	}
 	
+	var networks_api = {
+		list : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {path : "/os-networks"}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				OpenStack.broadcast('networks', data.networks);
+			}).error(error_handler.compute);
+		}
+	}
+	
 	var floating_ips_api = {
 		listPools : function(opts) {
 			
@@ -648,15 +659,56 @@ openstack.run(function(OpenStack, bus, notifications, error_handler) {
 		}
 	};
 	
+	var certificates_api = {
+		create : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {path : "/os-certificates"}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				OpenStack.broadcast('certificate', data.certificate);
+			}).error(error_handler.compute);
+		},
+		show : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {path : "/os-certificates/root"}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				OpenStack.broadcast('certificate', data.certificate);
+			}).error(error_handler.compute);
+		}
+	};
+	
+	var hosts_api = {
+		list : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {path : "/os-hosts"}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				OpenStack.broadcast('hosts', data.hosts);
+			}).error(error_handler.compute);
+		},
+		show : function(opts) {
+			
+			var options = angular.extend({}, default_compute_options, {path : "/os-hosts/" + opts.id}, opts);
+			
+			OpenStack.ajax(options).success(function(data, status, headers, config) {
+				OpenStack.broadcast('host', data.host);
+			}).error(error_handler.compute);
+		}
+	};
+	
 	angular.extend(OpenStack, {
 		Flavors : flavors_api,
 		Images : images_api,
 		Servers : servers_api,
+		Networks : networks_api,
 		FloatingIps : floating_ips_api,
 		Volumes : volumes_api,
 		Snapshots : snapshots_api,
 		KeyPairs : keypairs_api,
-		SecurityGroups : security_groups_api
+		SecurityGroups : security_groups_api,
+		Certificates : certificates_api,
+		Hosts : hosts_api
 	});
 	
 });

@@ -7,11 +7,13 @@
 					<li data-menu="servers"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/servers">Servers</a></li>
 					<li data-menu="images"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/images">Images</a></li>
 					<li data-menu="flavors" ng-show="hasRole('admin')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/flavors">Flavors</a></li>
+					<li data-menu="networks"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/networks" ng-show="hasExtension('os-networks')">Networks</a></li>
 					<li data-menu="floating-ips"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/floating-ips" ng-show="hasExtension('os-floating-ips')">Floating Ips</a></li>
 					<li data-menu="volumes" ng-show="hasExtension('os-volumes')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/volumes">Volumes</a></li>
 					<li data-menu="snapshots" ng-show="hasExtension('os-volumes')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/snapshots" >Snapshots</a></li>
 					<li data-menu="key-pairs" ng-show="hasExtension('os-keypairs')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/key-pairs" >Key Pairs</a></li>
 					<li data-menu="security-groups" ng-show="hasExtension('os-security-groups') || hasExtension('security_groups')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/security-groups">Security Grops</a></li>
+					<li data-menu="certificates" ng-show="hasExtension('os-certificates')"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/certificate">Certificate</a></li>
 					<li data-menu="limits"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/limits">Limits</a></li>
 					<li data-menu="usage"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/usage">Usage</a></li>
 					<li data-menu="extensions"><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/extensions">Extensions</a></li>

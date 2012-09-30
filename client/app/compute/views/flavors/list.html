@@ -30,6 +30,7 @@
 					<th>RAM</th>
 					<th>vCPUs</th>
 					<th>Disk</th>
+					<th>Ephemeral</th>
 					<th>RX / TX</th>
 					<th style="width: 1px"><br /></th>
 				</tr>
@@ -42,6 +43,7 @@
 					<td>{{flavor.ram}}</td>
 					<td>{{flavor.vcpus}}</td>
 					<td>{{flavor.disk}}</td>
+					<td>{{flavor['OS-FLV-EXT-DATA:ephemeral']}}</td>
 					<td>{{flavor.rxtx_factor}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group">

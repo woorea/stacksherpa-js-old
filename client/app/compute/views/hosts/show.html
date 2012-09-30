@@ -1,0 +1,13 @@
+<div data-ng-controller="ComputeCtrl">
+	<div class="row">
+		<ng-include src="'app/compute/views/common/nav.html'"></ng-include>
+	</div>
+	<div class="page-header" style="position: relative">
+		<h1>Host <small>{{$routeParams.region}}</small></h1>
+	</div>
+	<div class="row">
+		<div class="span12">
+			{{host|json}}
+		</div>
+	</div>
+</div>

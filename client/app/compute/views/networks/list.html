@@ -1,0 +1,62 @@
+<div data-ng-controller="ComputeCtrl">
+	<div class="row">
+		<ng-include src="'app/compute/views/common/nav.html'"></ng-include>
+	</div>
+	<div class="page-header" style="position: relative">
+		<h1>Networks <small>{{$routeParams.region}}</small></h1>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<table class="table table-stripped">
+				<thead>
+					<tr>
+						<th style="width: 1px">Label</th>
+						<th>CIDR</th>
+						<th>CIDR IPv6</th>
+						<th>Gateway</th>
+						<th>Gateway IPv6</th>
+						<th>Broadcast</th>
+						<th>DNS1</th>
+						<th>DNS2</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="network in networks">
+					<tr>
+						<th scope="row">{{network.label}}</th>
+						<td scope="row">{{network.cidr}}</td>
+						<td scope="row">{{network.cidr_v6}}</td>
+						<td scope="row">{{network.gateway}}</td>
+						<td scope="row">{{network.gateway_v6}}</td>
+						<td scope="row">{{network.broadcast}}</td>
+						<td scope="row">{{network.dns1}}</td>
+						<td scope="row">{{network.dns2}}</td>
+					</tr>
+					<tr ng-show="network.bridge">
+						<td>
+							<!--
+							{{network.bridge}}
+							{{network.bridge_interface}}
+							{{network.created_at}}
+							{{network.deleted}}
+							{{network.deleted_at}}
+							{{network.dhcp_start}}
+							{{network.host}}
+							{{network.id}}
+							{{network.injected}}
+							{{network.multi_host}}
+							{{network.priority}}
+							{{network.project_id}}
+							{{network.rxtx_base}}
+							{{network.updated_at}}
+							{{network.vlan}}
+							{{network.vpn_private_address}}
+							{{network.vpn_public_address}}
+							{{network.vpn_public_port}}
+							-->
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

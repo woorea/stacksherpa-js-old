@@ -19,6 +19,9 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/flavors/:id", {
 			controller : "FlavorShowCtrl", templateUrl : "app/compute/views/flavors/show.html", menu : "flavors"
 		})
+		.when("/:tenant/compute/:region/networks", {
+			controller : "NetworkListCtrl", templateUrl : "app/compute/views/networks/list.html", menu : "networks"
+		})
 		.when("/:tenant/compute/:region/floating-ips", {
 			controller : "FloatingIpListCtrl", templateUrl : "app/compute/views/floatingips/list.html", menu : "floating-ips"
 		})
@@ -43,6 +46,9 @@ compute.config(function($routeProvider) {
 		.when("/:tenant/compute/:region/security-groups/:id", {
 			controller : "SecurityGroupShowCtrl", templateUrl : "app/compute/views/securitygroups/edit.html", menu : "security-groups"
 		})
+		.when("/:tenant/compute/:region/certificate", {
+			controller : "CertificateShowCtrl", templateUrl : "app/compute/views/certificates/show.html", menu : "certificates"
+		})
 		.when("/:tenant/compute/:region/extensions", {
 			templateUrl : "app/compute/views/common/extensions.html", menu : "extensions"
 		})
@@ -51,6 +57,12 @@ compute.config(function($routeProvider) {
 		})
 		.when("/:tenant/compute/:region/usage", {
 			templateUrl : "app/compute/views/common/usage.html", menu : "usage"
+		})
+		.when("/:tenant/compute/:region/hosts", {
+			controller : "HostListCtrl",  templateUrl : "app/compute/views/hosts/list.html", menu : "hosts"
+		})
+		.when("/:tenant/compute/:region/hosts/:id", {
+			controller : "HostShowCtrl",  templateUrl : "app/compute/views/hosts/show.html", menu : "hosts"
 		})
 		.when("/:tenant/compute/:region", { redirectTo : function(routeParams, locationPath, locationSearch) {
 			return locationPath + "/servers";
@@ -671,11 +683,24 @@ compute.controller("FlavorCreateCtrl",function($scope, $routeParams, OpenStack) 
 	}
 	
 });
-compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack, modal) {
+compute.controller("NetworkListCtrl", function($scope, $routeParams, OpenStack) {
 	
-	$scope.on_allocate = function() {
-		modal.show('app/compute/views/floatingips/allocate.html', $scope.$new())
+	$scope.onRefresh = function(sync) {
+		OpenStack.Networks.list({region : $routeParams.region, refresh : sync});
 	}
+	
+	OpenStack.on('networks', function(networks) {
+		console.info(networks);
+		$scope.networks = networks;
+	});
+	
+	$scope.onRefresh(false);
+	
+});
+
+
+
+compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack) {
 	
 	$scope.onDisassociate = function(floatingIp) {
 		
@@ -1128,6 +1153,48 @@ compute.controller("SecurityGroupCreateCtrl",function($scope, $routeParams, noti
 		})
 	}
 
+});
+compute.controller("CertificateShowCtrl", function($scope, $routeParams, OpenStack) {
+	
+	$scope.onRefresh = function(sync) {
+		OpenStack.Certificates.show({region : $routeParams.region, refresh : sync});
+	}
+	
+	OpenStack.on('certificate', function(certificate) {
+		console.info(certificate);
+		$scope.certificate = certificate;
+	});
+	
+	$scope.onRefresh(false);
+	
+});
+compute.controller("HostListCtrl", function($scope, $routeParams, OpenStack) {
+	
+	$scope.onRefresh = function(sync) {
+		OpenStack.Hosts.list({region : $routeParams.region, refresh : sync});
+	}
+	
+	OpenStack.on('hosts', function(hosts) {
+		console.info(hosts);
+		$scope.hosts = hosts;
+	});
+	
+	$scope.onRefresh(false);
+	
+});
+compute.controller("HostShowCtrl", function($scope, $routeParams, OpenStack) {
+	
+	$scope.onRefresh = function(sync) {
+		OpenStack.Hosts.show({region : $routeParams.region, id : $routeParams.id, refresh : sync});
+	}
+	
+	OpenStack.on('host', function(host) {
+		console.info(host);
+		$scope.host = host;
+	});
+	
+	$scope.onRefresh(false);
+	
 });
 compute.directive('limits', function($routeParams, OpenStack) {
 	return {
