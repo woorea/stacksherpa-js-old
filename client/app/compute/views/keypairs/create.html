@@ -20,10 +20,17 @@
 								<button class="btn" data-ng-click="onCreate()">Create Key Pair</button>
 								<span class="help-block"></span>
 							</td>
-							<tr>
+							<tr ng-show="create_keypair.private_key">
 								<td>
-									<label>Public Key (readonly)</label>
-									<textarea data-ng-model="create_keypair.public_key" readonly="readonly" style="width: 350px"/>
+									<label>Private Key</label>
+									<textarea data-ng-model="create_keypair.private_key" style="width: 350px" />
+									<span class="help-block"></span>
+								</td>
+							</tr>
+							<tr ng-show="create_keypair.public_key">
+								<td>
+									<label>Public Key</label>
+									<textarea data-ng-model="create_keypair.public_key" style="width: 350px"/>
 									<span class="help-block"></span>
 								</td>
 							</tr>

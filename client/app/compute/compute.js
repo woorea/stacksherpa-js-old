@@ -1064,6 +1064,7 @@ compute.controller("KeyPairCreateCtrl",function($scope, $routeParams, OpenStack)
 			data : {keypair : $scope.create_keypair}
 		}).success(function(data, status, headers, config) {
 			$scope.create_keypair.public_key = data.keypair["public_key"];
+			$scope.create_keypair.private_key = data.keypair["private_key"];
 			$scope.onRefresh(true);
 		}).error(function(data, status, headers, config) {
 
