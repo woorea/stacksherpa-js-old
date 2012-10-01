@@ -29,29 +29,29 @@
 				<tr>
 					<td colspan="4">
 						<label>Name</label>
-						<input type="text" data-ng-model="image['x-image-meta-name']"  placeholder="" style="width: 98%"/>
+						<input type="text" data-ng-model="image.name"  placeholder="" style="width: 98%"/>
 						<span class="help-block"></span>
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label>Disk Format</label>
-						<select data-ng-model="image['x-image-meta-disk_format']" ng-options="diskFormat for diskFormat in ['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']" class="span2"></select>
+						<select data-ng-model="image.disk_format" ng-options="diskFormat for diskFormat in ['aki', 'ari', 'ami', 'raw', 'iso', 'vhd', 'vdi', 'qcow2', 'vmdk']" class="span2"></select>
 						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>Container Format</label>
-						<select data-ng-model="image['x-image-meta-container_format']" ng-options="containerFormat for containerFormat in ['aki', 'ari', 'ami', 'bare', 'ovf']" class="span2"></select>
+						<select data-ng-model="image.container_format" ng-options="containerFormat for containerFormat in ['aki', 'ari', 'ami', 'bare', 'ovf']" class="span2"></select>
 						<span class="help-block"></span>
 					</td>
 					<td>
 						<label>Min. Disk</label>
-						<input type="number" data-ng-model="image['x-image-meta-min-disk']" placeholder="Type something…" class="span2" />
+						<input type="number" data-ng-model="image.min_disk" placeholder="Type something…" class="span2" />
 						<span class="help-block"></span>
 					</td>
 					<td colspan="2">
 						<label>Min. RAM</label>
-						<input type="number" data-ng-model="image['x-image-meta-min-ram']" placeholder="Type something…" class="span2" />
+						<input type="number" data-ng-model="image.min_ram" placeholder="Type something…" class="span2" />
 						<span class="help-block"></span>
 					</td>
 				</tr>

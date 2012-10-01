@@ -1,0 +1,27 @@
+<table class="table table-stripped">
+	<thead>
+		<tr>
+			<th>Key</th>
+			<th>Value</th>
+			<th><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="text" data-ng-model="key" /></td>
+			<td><input type="text" data-ng-model="value" /></td>
+			<td style="text-align: center">
+				<button class="btn" data-ng-click="onAddMetadata()"><span class="icon-plus"></span></a>
+			</td>
+		</tr>
+	<tbody>
+	<tbody>
+		<tr data-ng-repeat="(key, value) in metadata">
+			<td>{{key}}</td>
+			<td>{{value}}</td>
+			<td style="text-align: center">
+				<button class="btn" data-ng-click="onRemoveMetadata(key)"><span class="icon-minus"></span></a>
+			</td>
+		</tr>
+	<tbody>
+</table>

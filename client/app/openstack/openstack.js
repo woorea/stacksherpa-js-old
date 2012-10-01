@@ -260,20 +260,57 @@ openstack.run(function(OpenStack, bus, notifications, error_handler) {
 				opts.success(data.images);
 			}).error(error_handler.compute);
 		},
-		
+		create : function(region, image) {
+			
+			var endpoint = OpenStack.endpoint("image", region, "publicURL");
+			
+			OpenStack.ajax({
+				method : "POST",
+				url : endpoint + "/images",
+				data : image
+			}).success(function(data, status, headers, config) {
+				OpenStack.broadcast("image", data);
+			}).error(function(data, status, headers, config) {
+				alert('show image error');
+			});
+			
+		},
+		patch : function(service, region, id, op, key, value) {
+			
+			var endpoint = OpenStack.endpoint(service, region, "publicURL");
+			
+			var data = {}
+			data[op] = '/' + key
+			if(op != 'remove') { //add, replace
+				data.value = value;
+			}
+			
+			console.info(data);
+			
+			
+			OpenStack.ajax({
+				method : "PATCH",
+				url : endpoint + "/images/" + id,
+				headers : {
+					"Content-Type" : "application/openstack-images-v2.0-json-patch"
+				},
+				data : [ data ]
+			}).success(function(data, status, headers, config) {
+				OpenStack.broadcast("image", data);
+			}).error(function(data, status, headers, config) {
+				alert('show image error');
+			});
+		},
 		show : function(service, region, id, modelOrCallback) {
 			
 			var endpoint = OpenStack.endpoint(service, region, "publicURL");
 			
 			OpenStack.ajax({
 				method : "GET",
-				url : endpoint + "/images/" + id
+				url : endpoint + "/images/" + id,
+				refresh : true
 			}).success(function(data, status, headers, config) {
-				if(angular.isObject(modelOrCallback)) {
-					modelOrCallback.image = data.image;
-				} else { //isCallback
-					modelOrCallback(data.image)
-				}
+				OpenStack.broadcast("image", data);
 			}).error(function(data, status, headers, config) {
 				alert('show image error');
 			});

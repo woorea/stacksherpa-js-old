@@ -47,7 +47,7 @@
 							<td>
 								<img ng-src="{{image.name|logo}}" style="width: 32px" />
 							</td>
-							<td><a href="${g.createLink(action : 'show', params : [tenantId : params.tenantId, imageId : item.id])}">{{image.name}}</a></td>
+							<td>{{image.name}}</td>
 							<td>{{image.minRam}}</td>
 							<td>{{image.minDisk}}</td>
 							<td ng-hide="image.status == 'SAVING'" style="text-align: center">
@@ -63,9 +63,8 @@
 									<button data-toggle="dropdown" class="btn btn-small dropdown-toggle"><span class="icon-cog"></span> <span class="caret"></span>
 									</button>
 									<ul class="dropdown-menu">
-										<!--
 										<li><a href="#/{{$routeParams.tenant}}/compute/{{$routeParams.region}}/images/{{image.id}}">Show</a></li>
-										-->
+										
 										<li><a data-bootstrap-modal="app/compute/views/servers/launch.html"><span class="icon-play"></span> Launch</a></li>
 										<li class="divider"></li>
 										<li><a ng-click="onDelete(image)"><span class="icon-remove"></span> Delete</a></li>

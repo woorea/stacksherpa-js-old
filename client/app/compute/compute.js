@@ -536,42 +536,52 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, mod
 });
 compute.controller("ImageShowCtrl",function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Images.show($routeParams.region, $routeParams.id, $scope);
+	OpenStack.Images.show("image", $routeParams.region, $routeParams.id, $scope);
+	
+	OpenStack.on("image", function(image) {
+		$scope.metadata = image;
+	})
 	
 });
 
-compute.controller("ImageCreateCtrl",function($scope, $routeParams, notifications, OpenStack) {
+compute.controller("ImageCreateCtrl",function($scope, $routeParams, notifications, OpenStack, $timeout) {
 	
 	var endpoint = OpenStack.endpoint("image", $routeParams.region, "publicURL");
+	
+	$scope.image = {
+		disk_format : "qcow2",
+		container_format : "ovf",
+		min_disk : 0,
+		min_ram : 0,
+		store : "file"
+	}
 	
 	$scope.creation_method = "upload"
 	
 	$scope.upload_progress = 0;
 	
-	$scope.image = {
-		"X-Auth-Token" : OpenStack.getAccess().token.id,
-		"X-URI" : endpoint + "/images",
-		"x-image-meta-name" : "",
-		"x-image-meta-disk_format" : "qcow2",
-		"x-image-meta-container_format" : "ovf",
-		"x-image-meta-min-ram" : 0,
-		"x-image-meta-min-disk" : 0,
-		"x-image-meta-store" : "file"
-	}
-	
 	if($scope.creation_method == 'download') {
-		$scope.image["x-glance-api-copy-from"] = $scope.href;
+		//$scope.image["x-glance-api-copy-from"] = $scope.href;
 	} else if ($scope.creation_method == 'href') {
-		$scope.image["x-image-meta-location"] = $scope.href;
+		//$scope.image["x-image-meta-location"] = $scope.href;
 	}
 	
 	$scope.onUpload = function() {
+		//create and then upload
+		OpenStack.Images.create($routeParams.region, $scope.image);
 		
+	}
+	
+	OpenStack.on("image", function(image) {
+			
 		var ajaxOptions = {
 			crossDomain : true,
-			type: "POST",
+			type: "PUT",
 			url : OpenStack.proxy,
-			headers : $scope.image,
+			headers : {
+				"X-Auth-Token" : OpenStack.getAccess().token.id,
+				"X-URI" : endpoint + "/images/" + image.id + "/file" 
+			},
 			data: $scope.creation_method == 'upload' ? $scope.file : "",
 			dataType : "json",
 			processData: false,
@@ -584,14 +594,13 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, notification
 				notifications.error(data);
 			}
 		}
-		
+
 		if ($scope.creation_method == 'upload') {
 			$scope.image["x-image-meta-size"] = $scope.file.size;
 			ajaxOptions.xhr = function() {
 				var xhr = new window.XMLHttpRequest();
 			    //Upload progress
 			    xhr.upload.addEventListener("progress", function(evt) {
-					console.log(evt.lengthComputable);
 			      if (evt.lengthComputable) {
 					$scope.$apply(function() {
 						$scope.upload_progress = Math.floor((evt.loaded / evt.total) * 100);
@@ -609,9 +618,10 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, notification
 			    return xhr;
 			}
 		}
-		
+
 		$.ajax(ajaxOptions)
-	}
+
+	});
 	
 });
 
@@ -1211,6 +1221,29 @@ compute.directive('limits', function($routeParams, OpenStack) {
 		}
 	}
 });
+compute.directive("metadata",function(OpenStack, $routeParams) {
+	
+	return {
+		restrict : 'C',
+		templateUrl : 'app/compute/views/common/_metadata.html',
+		link : function(scope, element, attrs) {
+			
+			scope.key = "";
+			scope.value = "";
+			
+			scope.onAddMetadata = function() {
+				OpenStack.Images.patch("image", $routeParams.region, $routeParams.id, "add", scope.key, scope.value)
+				scope.key = scope.value = ''
+			}
+
+			scope.onRemoveMetadata = function(key) {
+				OpenStack.Images.patch("image", $routeParams.region, $routeParams.id, "remove", key)
+			}
+		}
+	}
+
+});
+
 compute.controller("ComputeTenantUsageCtrl",function($scope, $routeParams, OpenStack) {
 	
 	var tenant_id = $scope.access.token.tenant.id;

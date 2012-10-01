@@ -47,6 +47,11 @@ route.all('/api', function(req, res) {
 				var responseHandler = function(pres) {
 					
 					res.statusCode = pres.statusCode;
+					
+					//for(k in pres.headers) {
+					//res.setHeader(k, pres.headers[k]);
+					//}
+					
 					res.setHeader("Content-Type", pres.headers["content-type"]);
 					
 					pres.on("data", function(chunk) {
