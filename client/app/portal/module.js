@@ -148,8 +148,10 @@ portal.controller("UnscopedCtrl",function($scope, $location, OpenStack) {
 	});
 	
 	OpenStack.on('access', function(access) {
-		$.cookie("X-Auth-Token", access.token.id);
-		$location.path("/" + access.token.tenant.name + "/dashboard");
+		if(access.token.tenant) { //is a scoped token
+			$.cookie("X-Auth-Token", access.token.id);
+			$location.path("/" + access.token.tenant.name + "/dashboard");
+		}
 	})
 	
 	$scope.onRefresh(true);

@@ -710,7 +710,7 @@ compute.controller("NetworkListCtrl", function($scope, $routeParams, OpenStack) 
 
 
 
-compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack) {
+compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack, modal) {
 	
 	$scope.onDisassociate = function(floatingIp) {
 		
@@ -720,7 +720,9 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 				removeFloatingIp : {
 					address : floatingIp.ip
 				}
-			}, function(data) { });
+			}, function(data) { 
+				$scope.onRefresh(true);
+			});
 			
 		} else {
 			angular.forEach($scope.floating_ips, function(floatingIp) {
@@ -756,6 +758,11 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 			});
 		}
 	}
+	
+	$scope.on_associate = function(floating_ip) {
+		$scope.floating_ip = floating_ip;
+		modal.show("app/compute/views/floatingips/associate.html", $scope.$new());
+	}
 
 	$scope.onRefresh = function(sync) {
 		
@@ -774,13 +781,11 @@ compute.controller("FloatingIpListCtrl",function($scope, $routeParams, OpenStack
 });
 compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, OpenStack) {
 	
+	$scope.pool = "stacksherpa";
+	
 	OpenStack.FloatingIps.listPools({region : $routeParams.region, success : function(floating_ip_pools) {
 		$scope.floating_ip_pools = floating_ip_pools;
 	}});
-	
-	$scope.on_associate = function() {
-		modal.show('app/compute/views/floatingips/associate.html', $scope.$new());
-	}
 	
 	$scope.onAllocate = function() {
 		
@@ -796,7 +801,7 @@ compute.controller("FloatingIpAllocateCtrl", function($scope, $routeParams, Open
 
 compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, OpenStack) {
 	
-	OpenStack.Servers.list({region : $routeParams.region});
+	OpenStack.Servers.list({region : $routeParams.region, refresh : true});
 	
 	OpenStack.on('servers', function(servers) {
 		$scope.servers = servers;
@@ -806,7 +811,7 @@ compute.controller("FloatingIpAssociateCtrl", function($scope, $routeParams, Ope
 		
 		OpenStack.Servers.action($routeParams.region, $scope.serverId, {
 			addFloatingIp : {
-				address : $scope.floating_ips[0].ip
+				address : $scope.floating_ip.ip
 			}
 		}, function(data) {
 			$scope.hide();
@@ -843,6 +848,16 @@ compute.controller("VolumeListCtrl",function($scope, $routeParams, OpenStack, mo
 		
 	}
 	
+	$scope.on_attach_volume = function(volume) {
+		$scope.volume = volume;
+		modal.show("app/compute/views/volumes/attach.html", $scope.$new());
+	}
+	
+	$scope.on_create_snapshot = function(volume) {
+		$scope.volume = volume;
+		modal.show("app/compute/views/snapshots/create.html", $scope.$new());
+	}
+	
 	$scope.onDetach = function(volume) {
 		
 		OpenStack.Servers.detach($routeParams.region, volume.attachments[0].serverId, volume.id, function() {
@@ -875,8 +890,8 @@ compute.controller("VolumeCreateCtrl",function($scope, $routeParams, OpenStack) 
 	
 	var snapshot_id;
 	
-	if(typeof $scope.snapshots != 'undefined') {
-		snapshot_id = $scope.snapshots[0].id
+	if($scope.snapshot) {
+		snapshot_id = $scope.snapshot.id
 	}
 	
 	$scope.volume = {
@@ -911,7 +926,7 @@ compute.controller("VolumeAttachCtrl",function($scope, $routeParams, OpenStack) 
 		
 		OpenStack.Servers.attach($routeParams.region, $scope.server_id, {
 			volumeAttachment : {
-				volumeId : $scope.volumes[0].id,
+				volumeId : $scope.volume.id,
 				device : $scope.device
 			}
 		}, function(data) {
@@ -943,6 +958,11 @@ compute.controller("SnapshotListCtrl",function($scope, $routeParams, OpenStack, 
 		}
 		
 	}
+	
+	$scope.on_create_volume = function(snapshot) {
+		$scope.snapshot = snapshot;
+		modal.show("app/compute/views/volumes/create.html", $scope.$new());
+	}
 
 	$scope.onRefresh = function(sync) {
 		
@@ -969,8 +989,8 @@ compute.controller("SnapshotCreateCtrl",function($scope, $routeParams, OpenStack
 		$scope.volumes = volumes;
 		if($scope.volumes.length) {
 			var volume_id = ""
-			if(typeof $scope.volumes != 'undefined') {
-				volume_id = $scope.volumes[0].id
+			if($scope.volume) {
+				volume_id = $scope.volume.id
 			}
 
 			$scope.snapshot = {

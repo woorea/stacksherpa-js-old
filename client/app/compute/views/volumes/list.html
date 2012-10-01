@@ -49,17 +49,16 @@
 					<td>{{item.displayDescription}}</td>
 					<td class="btn-toolbar">
 						<div class="btn-group">
-							<button data-toggle="dropdown" class="btn btn-small dropdown-toggle">
+							<button data-toggle="dropdown" class="btn btn-small dropdown-toggle" ng-disabled="item.status == 'detaching' || item.status == 'attaching'">
 								<span class="icon-cog"></span> <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
 									<!--
 									<li><a href="">Attach to server</a></li>
 									-->
-									<li ng-show="item.status != 'creating'"><a class="modal-link" modal-src="app/compute/views/volumes/attach.html">Manage attachments</a></li>
+									<li ng-show="item.status == 'available'"><a ng-click="on_attach_volume(item)">Attach</a></li>
 									
-									<li ng-show="item.status == 'available'"><a class="modal-link" modal-src="app/compute/views/snapshots/create.html">Create Snapshot</a></li>
-									<li class="divider"></li>
+									<li ng-show="item.status == 'available'"><a ng-click="on_create_snapshot(item)">Take a Snapshot</a></li>
 								<li>
 									<a ng-click="onDetach(item)" ng-show="item.status == 'in-use'">
 										<i class="icon-remove"></i> Detach</a>

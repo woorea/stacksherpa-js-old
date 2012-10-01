@@ -43,7 +43,7 @@
 								<li><a data-ng-click="onDisassociate(item)" ng-show="item.instance_id">Disassociate from server</a></li>
 							</g:if>
 							<g:else>
-								<li><a class="modal-link" modal-src="app/compute/views/floatingips/associate.html" ng-hide="item.instance_id">Associate to server</a></li>
+								<li><a ng-click="on_associate(item)" ng-hide="item.instance_id">Associate to server</a></li>
 							</g:else>
 								<li class="divider"></li>
 								<li><a data-ng-click="onDeallocate(item)" class="confirm-delete">Deallocate ...</a></li>
