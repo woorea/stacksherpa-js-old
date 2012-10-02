@@ -511,6 +511,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, mod
 		}
 		OpenStack.Images.list({service : "compute", region : $routeParams.region, refresh : sync, success : function(images) {
 			$scope.images = images;
+			/*
 			var poll = images.filter(function(image) {
 				return image.status == 'SAVING'
 			}).length > 0;
@@ -519,6 +520,7 @@ compute.controller("ImageListCtrl",function($scope, $routeParams, OpenStack, mod
 					$scope.onRefresh(true);
 				}, 60000);
 			}
+			*/
 		}});
 
 	}
@@ -596,7 +598,7 @@ compute.controller("ImageCreateCtrl",function($scope, $routeParams, notification
 		}
 
 		if ($scope.creation_method == 'upload') {
-			$scope.image["x-image-meta-size"] = $scope.file.size;
+			//$scope.image["x-image-meta-size"] = $scope.file.size;
 			ajaxOptions.xhr = function() {
 				var xhr = new window.XMLHttpRequest();
 			    //Upload progress
